@@ -1,0 +1,11 @@
+sudo: required
+language: java
+jdk: openjdk11
+
+script:
+  - ./gradlew clean build -refresh-dependencies --stacktrace -x test
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always # default: always
