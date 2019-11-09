@@ -19,7 +19,6 @@ import us.ilite.common.types.drive.EDriveData;
 import us.ilite.common.types.input.EDriverInputMode;
 import us.ilite.common.types.input.ELogitech310;
 import us.ilite.common.types.sensor.EGyro;
-import us.ilite.common.types.EFourBarData;
 import us.ilite.common.types.sensor.EPowerDistPanel;
 
 import java.io.*;
@@ -37,25 +36,21 @@ public class Data {
     public final Codex<Double, EDriveData> drive = Codex.of.thisEnum(EDriveData.class);
     public final Codex<Double, ELogitech310> driverinput = Codex.of.thisEnum(ELogitech310.class);
     public final Codex<Double, ELogitech310> operatorinput = Codex.of.thisEnum(ELogitech310.class);
-    public final Codex<Double, EElevator> elevator = Codex.of.thisEnum(EElevator.class);
-    public final Codex<Double, EFourBarData> fourbar = Codex.of.thisEnum(EFourBarData.class);
-    public final Codex<Double, ECargoSpit> cargospit = Codex.of.thisEnum( ECargoSpit.class );
     public final Codex<Double, EPowerDistPanel> pdp = Codex.of.thisEnum(EPowerDistPanel.class);
-    public final Codex<Double, EIntake> intake = Codex.of.thisEnum(EIntake.class);
     public Codex<Double, ETargetingData> limelight = Codex.of.thisEnum(ETargetingData.class);
 
     private final List<CodexSender> mSenders = new ArrayList<>();
 
     public final Codex[] mAllCodexes = new Codex[] {
-            /*imu, drive, IGNORE THESE WE HANDLE TIMESTAMP MANUALLY*/ driverinput, operatorinput, elevator, cargospit, pdp, intake, /*limelight,*/ fourbar
+            /*imu, drive, IGNORE THESE WE HANDLE TIMESTAMP MANUALLY*/ driverinput, operatorinput,
     };
 
     public final Codex[] mLoggedCodexes = new Codex[] {
-        imu, drive, driverinput, /*operatorinput,*/ elevator, cargospit,  pdp, intake, limelight, fourbar
+        imu, drive, driverinput, /*operatorinput,*/pdp,  limelight,
     };
 
     public final Codex[] mDisplayedCodexes = new Codex[] {
-            imu, /*drive,*/ driverinput, operatorinput, elevator, cargospit, pdp
+            imu, /*drive,*/ driverinput, operatorinput, pdp
     };
 
     public static NetworkTableInstance kInst = NetworkTableInstance.getDefault();
