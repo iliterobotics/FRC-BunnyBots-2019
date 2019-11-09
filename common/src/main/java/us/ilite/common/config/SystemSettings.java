@@ -369,50 +369,21 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     };
 
     public static int kPowerDistPanelAddress = 21;
-    public static int kCargoSpitLeftSPXAddress = 13;
-    public static int kCargoSpitRightSPXAddress = 14;
-    public static int kCargoSpitBeamBreakAddress = 1;
-    public static double kCargoSpitRollerPower = 0.20; // 15% seems like adequate power (maybe more?)
-    public static double kCargoSpitSPXCurrentRatioLimit = 8.5; // Voltage ~ 1.8
 
-    // TO-DO: Elevator encoder address?
     // public static int kElevatorRedundantEncoderAddress = -1;
 
-    public static int kFourBarNEO1Address = 9;
-    public static int kFourBarNEO2Address = 10;
-    public static int kFourBarPusherAddress = 0;
 
-    // TO-DO: label solenoid as forward/reverse in spreadsheet
-    public static int kFourBarDoubleSolenoidForwardAddress = 0;
-    public static int kFourBarDoubleSolenoidReverseAddress = 1;
-    public static int kFourBarTBDSensorAddress = -1;
 
-    public static double kFourBarP = 8.0e-4;
-    public static double kFourBarI = 0.0;
-    public static double kFourBarD = 0.0;
-    public static double kFourBarF = 0.0;
 
-    public static double kFourbarStallPower = 0.05;
-    public static double kFourBarWarnCurrentLimitThreshold = 40;
 
     public static EPowerDistPanel[] kFourBarPdpSlots = new EPowerDistPanel[] {
             EPowerDistPanel.CURRENT0,
             EPowerDistPanel.CURRENT15
     };
 
-    public static double kMaxFourBarVelocity = 2000;
-    public static double kMinFourBarVelocity = 0;
-    public static double kMaxFourBarAcceleration = 2000;
-    public static double kFourBarClosedLoopAllowableError = 0;
 
-    public static int kHatchFlowerOpenCloseSolenoidAddress = 5;
-    public static int kHatchFlowerExtensionSolenoidAddress = 6;
 
-    //public static int kHatchIntakeSPXAddress = 11;
-    public static int kCargoIntakeSPXLowerAddress = 12;
     // TO-DO DO spreadsheet empty
 
-    public static int kIntakeWristSRXAddress = 16;
-    public static int kIntakeSolenoidAddress = 1;
 
 }
