@@ -16,6 +16,7 @@ import us.ilite.lib.drivers.IMU;
 import us.ilite.lib.drivers.Pigeon;
 import us.ilite.lib.drivers.SparkMaxFactory;
 import us.ilite.robot.modules.DriveMessage;
+import us.ilite.robot.modules.Elevator;
 
 public class NeoDriveHardware implements IDriveHardware {
 
@@ -73,6 +74,10 @@ public class NeoDriveHardware implements IDriveHardware {
         reloadVelocityGains(mLeftMaster);
         reloadVelocityGains(mRightMaster);
 
+        mRangeScale = new RangeScale(SystemSettings.kDriveMinOpenLoopVoltageRampRate,
+                SystemSettings.kDriveMaxOpenLoopVoltageRampRate,
+                Elevator.EElevatorPosition.CARGO_BOTTOM.getEncoderRotations(),
+                Elevator.EElevatorPosition.CARGO_TOP.getEncoderRotations());
     }
 
     @Override

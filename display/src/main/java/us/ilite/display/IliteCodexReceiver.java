@@ -8,6 +8,7 @@ import org.apache.commons.lang3.EnumUtils;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.types.drive.EDriveData;
 import us.ilite.common.types.input.ELogitech310;
+import us.ilite.common.types.manipulator.EElevator;
 import us.ilite.common.types.sensor.EPowerDistPanel;
 
 import java.util.HashMap;

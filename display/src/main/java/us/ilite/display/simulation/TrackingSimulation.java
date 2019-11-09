@@ -1,5 +1,6 @@
 package us.ilite.display.simulation;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.flybotix.hfr.util.log.ELevel;
@@ -8,7 +9,9 @@ import com.team254.lib.geometry.Pose2d;
 import com.team254.lib.geometry.Pose2dWithCurvature;
 import com.team254.lib.geometry.Rotation2d;
 import com.team254.lib.trajectory.Trajectory;
+import com.team254.lib.trajectory.timing.CentripetalAccelerationConstraint;
 import com.team254.lib.trajectory.timing.TimedState;
+import com.team254.lib.trajectory.timing.TimingConstraint;
 import com.team254.lib.util.ReflectingCSVWriter;
 
 import us.ilite.common.Data;
@@ -20,6 +23,7 @@ import us.ilite.common.lib.trajectory.TrajectoryGenerator;
 import us.ilite.lib.drivers.Clock;
 import us.ilite.robot.StrongholdProfile;
 import us.ilite.robot.auto.AutonomousRoutines;
+import us.ilite.robot.auto.paths.middle.MiddleToMiddleCargoToSideRocket;
 import us.ilite.robot.modules.Drive;
 
 public class TrackingSimulation {
