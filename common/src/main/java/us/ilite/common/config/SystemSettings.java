@@ -35,7 +35,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // =============================================================================
     // Drive Train Constants
     // =============================================================================
-    public static double kDriveGearboxRatio = (12.0 / 80.0) * (42.0 / 80.0);
+    public static double kDriveGearboxRatio = 0;
     public static double kDriveWheelDiameterInches = 6.0;
     public static double kDriveWheelCircumference = kDriveWheelDiameterInches * Math.PI;
     public static double kDriveTicksPerRotation = 1.0;
@@ -111,48 +111,6 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kDrivePosition_kF = 0;
 
     // =============================================================================
-    // Elevator Constants
-    // =============================================================================
-
-    public static double kElevatorClosedLoopMinPower = -0.3;
-    public static double kElevatorClosedLoopMaxPower = 0.80;
-
-    public static double kElevatorAllowableError = 1.0;
-    public static int kElevatorNEOAddress = 15;
-
-    public static int kElevatorSmartMotionSlot = 0;
-    public static double kElevatorOpenLoopMinPower = -1.0;
-    public static double kElevatorOpenLoopMaxPower = 1.0;
-
-    public static double kElevatorOpenLoopRampRate = 0.1;
-    public static int kElevatorSmartCurrentLimit = 60;
-    public static int kElevatorSecondaryCurrentLimit = 80;
-
-    // If the elevator's PDP slot draws more than this much current we flash the LEDs
-    public static int kElevatorWarnCurrentLimitThreshold = 30;
-
-    /*
-    Smart Motion Constants
-
-    Units are RPM
-     */
-    public static double kElevatorMotionP = 5.0e-4;
-    public static double kElevatorMotionI = 0.0;
-    public static double kElevatorMotionD = 0.0;
-    public static double kElevatorMotionFF = 0.000391419;
-    public static double kElevatorFrictionVoltage = 0.02 * 12.0;
-
-    public static double kMaxElevatorVelocity = 3700;
-    public static double kMinElevatorVelocity = 0;
-    public static double kMaxElevatorUpAcceleration = 4000 * 1.5;
-    public static double kMaxElevatorDownAcceleration = 4000 * 1.5;
-    public static double kElevatorClosedLoopAllowableError = 0; //The allowed deficit in rotations
-
-    public static double kElevatorManualUpThrottleReduction = 0.8;
-    public static double kElevatorManualDownThrottleReduction = 0.3;
-
-
-    // =============================================================================
     // Closed-Loop Velocity Constants
     // =============================================================================
     public static int kDriveVelocityTolerance = 0;
@@ -173,96 +131,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // Robot constants (configure later)
     // TO-DO: Configure torque constant
     // =============================================================================
-    public static double kTFourBar = 0;
-    public static double kFourBarPusherDelay = 0.5;
 
-    // Pnuematic Intake
-    public static double kPneumaticIntakeIntakePower = 0.5;
-
-    // =============================================================================
-    // Arm Constants
-    // =============================================================================
-
-    // Predefined arm  positions
-    public enum ArmPosition {
-        FULLY_OUT(90.0),
-        FULLY_UP(135.0),
-        FULLY_DOWN(0.0);
-
-        private final double angle;
-
-        ArmPosition( double angle ) {
-            this.angle = angle;
-        }
-
-        public double getAngle() {
-            return this.angle;
-        }
-    }
-
-    //public static int kArmPositionEncoderTicksPerRotation = 3552;
-    public static int kArmPositionEncoderTicksPerRotation = 4096;
-    public static double kArmMinAngle = 0.0;
-    public static double kArmMaxAngle = 135.0;
-    public static double kArmMaxCurrentVoltRatio = 20; //tune - overcurrent ratio for arm motor
-    public static double kArmMotorOffTimeSec = 0.5; // seconds
-    public static double kArmMaxStallTimeSec = 0.1; // seconds
-    public static double kArmMinMotorStallVoltage = 0.1;
-
-
-    //////// BasicArm Constants /////////
-    // TODO We may need to increase kD for stability
-    // PID Gains                                        kP,    kI,    kD
-    public static PIDGains kArmPIDGains = new PIDGains( 0.01, 0.000, 0.0008 );
-    // Dampen as we get close to our target
-    public static PIDGains kArmLandingPIDGains = new PIDGains( 0.02, 0.003, 0.001 );
-    // public static PIDGains kArmLandingPIDGains = kArmPIDGains;
-    // Range +/- of target angle where we apply the landing PID Gains
-    public static double kArmLandingRangeAngle = 10.0;
-
-    // We measured .7 volts on the motor to hold the arm horizontal
-    // For gravity compensation Kg = % power to hold arm horizontal, which is
-    // the measured voltage / 12 volts
-    public static double kArmKg = 1.1;
-
-    // Control power clamping limits
-    public static double kArmPIDOutputMaxLimit = 1.0; // max 1.0
-    public static double kArmPIDOutputMinLimit = -1.0; // min -1.0
-    /////////////////////////////////////
-
-
-    ///// MotionMagicArm Constants //////
-    // PID Gains
-    public static double kArmPidP = 0.1;
-    public static double kArmPidI = 0.020;
-    public static double kArmPidD = 0.0;
-    public static double kArmPidF = 0.1;
-
-    public static double kIntakeWristPidP = 0.0;
-    public static double kIntakeWristPidI = 0.0;
-    public static double kIntakeWristPidD = 0.0;
-    public static double kIntakeWristPidF = 0.008903875;
-    public static int kIntakeWristAcceleration = 1000;
-    // ticks per 100 ms, or N * 10 = ticks / sec
-    public static int kIntakeWristCruise = 200;
-
-
-    public static double kIntakeRollerHatchPower = .25;
-    public static double kIntakeRollerCargoPower = .15;
-    public static double kIntakeRollerHoldPower = .25;
-    public static double kIntakeWristStowedAngle = 0;
-    public static double kIntakeWristHandoffAngle = 48;
-    // temp set to 90 to validate angles
-    public static double kIntakeWristGroundAngle = 90;
-    public static double kCargoSpitDelay = 4;
-    // public static double kIntakeWristGroundAngle = 105;
-    //The minimum angle where it is safe to continue intake process (engage solenoid/roller)
-    public static double kIntakeWristGroundMinBound = 95;
-
-
-    public static int kArmAcceleration = 5;
-    public static int kArmCruise = 30;
-    
     // =============================================================================
     // LimeLight Camera Constants
     // Note: These constants need to be recalculted for a specific robot geometry
@@ -329,20 +198,6 @@ public class SystemSettings extends NetworkTablesConstantsBase {
          * @return the pipelineName
          */
     }
-
-    // =============================================================================
-    // Hatch Flower constants
-    // =============================================================================
-    public static double kHatchFlowerSolenoidReleaseTimeSec = 0.250;
-    public static double kHatchFlowerPushDurationSec = 0.250;
-
-    // kHatchFlowerGrabToPushTransitionTimeSec is the time between releasing the 
-    // grab solenoid and engaging the push solenoid.
-    public static double kHatchFlowerGrabToPushTransitionTimeSec = 0.250;
-    public static double kHatchFlowerExtendStatusTimerDuration = 0.5;
-    public static double kHatchFlowerReleaseDistance = 5.0;
-    public static double kHatchFlowerReleaseTime = 1.0;
-
 
     // =============================================================================
     // 2019 Module Addresses
