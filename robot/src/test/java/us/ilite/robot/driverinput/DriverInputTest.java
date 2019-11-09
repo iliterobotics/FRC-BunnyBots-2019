@@ -25,18 +25,10 @@ public class DriverInputTest {
 
     // We're only testing integration between CommandManager and DriverInput, so we can mock this
     @Mock private Drive mDrive;
-    @Mock private HatchFlower mHatchFlower;
     private CommandManager mAutonomousCommandManager;
     // We want to see CommandManager's actual behavior, so we make it a spy
     private CommandManager mTeleopCommandManager;
-    @Mock private FourBar mFourBar;
-    @Mock private Elevator mElevator;
-    @Mock private Intake mIntake;
-    @Mock private CargoSpit mCargospit;
-    @Mock private Arm mArm;
     @Mock private TalonSRX mTalon;
-    @Mock private PneumaticIntake mPneumaticIntake;
-    @Mock private CargoSpit mCargoSpit;
 
     private DriverInput mDriverInput;
     private Limelight mLimelight;
@@ -56,7 +48,7 @@ public class DriverInputTest {
         mTeleopCommandManager = spy(new CommandManager());
         mAutonomousCommandManager = spy(new CommandManager());
         mLimelight = new Limelight(mData);
-        mDriverInput = spy(new DriverInput( mDrive, mElevator, mHatchFlower, mIntake, mPneumaticIntake, mCargoSpit, mLimelight, mData, mTeleopCommandManager, mAutonomousCommandManager, mFourBar, true ) );
+        mDriverInput = spy(new DriverInput( ) );
         
         mModuleList.setModules(mDriverInput, mTeleopCommandManager, mAutonomousCommandManager, mDrive);
         mModuleList.modeInit(mClock.getCurrentTime());
@@ -106,7 +98,6 @@ public class DriverInputTest {
             mData.driverinput.set(commandTrigger, 1.0);
             updateRobot();
 
-            verify(mDriverInput).updateVisionCommands(anyDouble());
 
             resetSpies();
         }

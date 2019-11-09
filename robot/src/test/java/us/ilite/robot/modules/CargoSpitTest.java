@@ -16,18 +16,9 @@ public class CargoSpitTest {
 
     // We're only testing integration between CommandManager and DriverInput, so we can mock this
     @Mock private Drive mDrive;
-    @Mock private HatchFlower mHatchFlower;
     private CommandManager mAutonomousCommandManager;
     private CommandManager mTeleopCommandManager;
-    @Mock private FourBar mFourBar;
-    @Mock private Elevator mElevator;
-    @Mock private Intake mIntake;
-    @Mock private CargoSpit mCargospit;
-    @Mock private Arm mArm;
     @Mock private TalonSRX mTalon;
-    @Mock private PneumaticIntake mPneumaticIntake;
-    @Mock private CargoSpit mCargoSpit;
-
     private DriverInput mDriverInput;
     private Limelight mLimelight;
 
@@ -41,14 +32,9 @@ public class CargoSpitTest {
         mData = new Data();
         mClock = new Clock().simulated();
         mModuleList = new ModuleList();
-        mCargoSpit = new CargoSpit( mData );
-        mIntake = new Intake( mData );
-        mArm = new MotionMagicArm();
         mLimelight = new Limelight( mData );
         mAutonomousCommandManager = new CommandManager();
-        mPneumaticIntake = new PneumaticIntake( mData );
-
-        mDriverInput = spy(new DriverInput( mDrive, mElevator, mHatchFlower, mIntake, mPneumaticIntake, mCargoSpit, mLimelight, mData, mTeleopCommandManager, mAutonomousCommandManager, mFourBar) );
+        mDriverInput = spy(new DriverInput() );
         mModuleList.setModules( mDriverInput, mDrive );
         mModuleList.modeInit( mClock.getCurrentTime() );
     }
@@ -58,11 +44,8 @@ public class CargoSpitTest {
         mData = new Data();
         mClock = new Clock().simulated();
         mModuleList = new ModuleList();
-        mCargoSpit = new CargoSpit( mData );
-        mIntake = new Intake( mData );
-        mArm = new MotionMagicArm();
 
-        mDriverInput = spy(new DriverInput( mDrive, mElevator, mHatchFlower, mIntake, mPneumaticIntake, mCargoSpit, mLimelight, mData, mTeleopCommandManager, mAutonomousCommandManager, mFourBar, true));
+        mDriverInput = spy(new DriverInput( ));
         mModuleList.setModules( mDriverInput, mDrive );
         mModuleList.modeInit( mClock.getCurrentTime() );
     }
