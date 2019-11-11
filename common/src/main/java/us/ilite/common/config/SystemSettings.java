@@ -184,7 +184,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
 
         private final double height;
 
-        VisionTarget( double height)  {
+        VisionTarget( double height )  {
             this.height = height;
         }
 
