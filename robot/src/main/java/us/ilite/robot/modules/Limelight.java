@@ -36,17 +36,17 @@ public class Limelight extends Loop implements ITargetDataProvider {
     }
 
     @Override
-    public void modeInit(double pNow) {
+    public void modeInit ( double pNow ) {
         setTracking(ETrackingType.NONE);
     }
 
     @Override
-    public void periodicInput(double pNow) {
-        mData.limelight.reset();
-        boolean targetValid = mTable.getEntry("tv").getDouble(0.0) > 0.0;
+    public void periodicInput(double pNow) { // Periodically runs the method
+        mData.limelight.reset(); // Resets the limelight
+        boolean targetValid = mTable.getEntry("tv").getDouble(0.0) > 0.0; // Boolean to check if the target
         mData.limelight.set(ETargetingData.tv, targetValid ? 1.0d : null);
 
-        if(targetValid) {
+        if ( targetValid ) { // Checks to see if the target exists
             mData.limelight.set(ETargetingData.tx, mTable.getEntry("tx").getDouble(Double.NaN));
             mData.limelight.set(ETargetingData.ty,mTable.getEntry("ty").getDouble(Double.NaN));
             mData.limelight.set(ETargetingData.ta,mTable.getEntry("ta").getDouble(Double.NaN));
@@ -61,8 +61,10 @@ public class Limelight extends Loop implements ITargetDataProvider {
                 mData.limelight.set(ETargetingData.targetOrdinal, (double)mVisionTarget.ordinal());
                 mData.limelight.set(ETargetingData.calcDistToTarget, calcTargetDistance(mVisionTarget));
                 mData.limelight.set(calcAngleToTarget, calcTargetApproachAngle());
+                // Unknown object in the code don't mess with it
+                // Can morph into whatever you want
                 Optional<Translation2d> p = calcTargetLocation(mVisionTarget);
-                if(p.isPresent()) {
+                if ( p.isPresent() ) {
                     mData.limelight.set(ETargetingData.calcTargetX, p.get().x());
                     mData.limelight.set(ETargetingData.calcTargetY, p.get().y());
                 }
@@ -120,74 +122,58 @@ public class Limelight extends Loop implements ITargetDataProvider {
     public void setCamMode(boolean pMode) {
         mTable.getEntry("camMode").setBoolean(pMode);
     }
-
     public void setLedMode(LedMode pMode) {
         mTable.getEntry("ledMode").setNumber(pMode.ordinal());
     }
-
     public void setPipeline(int pipeline) {
         mTable.getEntry("pipeline").setNumber(pipeline);
     }
-
     public void setSnapshot(boolean snapshot) {
         mTable.getEntry("snapshot").setBoolean(snapshot);
     }
-
     public void setStream(Stream stream) { 
         mTable.getEntry("stream").setNumber(stream.ordinal());
     }
-
-
     @Override
     public String toString() {
         return mData.limelight.toCSV();
     }
-
     @Override
     public Codex<Double, ETargetingData> getTargetingData() {
         return mData.limelight;
     }
-
     @Override
     public double getCameraHeightIn() {
         return SystemSettings.llCameraHeightIn;
     }
-
     @Override
     public double getCameraAngleDeg() {
         return SystemSettings.llCameraAngleDeg;
     }
-
     @Override
     public double getCameraToBumperIn() {
         return SystemSettings.llCameraToBumperIn;
     }
-
     @Override
     public double getLeftCoeffA() {
         return SystemSettings.llLeftACoeff;
     }
-
     @Override
     public double getLeftCoeffB() {
         return SystemSettings.llLeftBCoeff;
     }
-
     @Override
     public double getLeftCoeffC() {
         return SystemSettings.llLeftCCoeff;
     }
-
     @Override
     public double getRightCoeffA() {
         return SystemSettings.llRightACoeff;
     }
-
     @Override
     public double getRightCoeffB() {
         return SystemSettings.llRightBCoeff;
     }
-
     @Override
     public double getRightCoeffC() {
         return SystemSettings.llRightCCoeff;
