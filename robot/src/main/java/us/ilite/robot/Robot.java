@@ -36,7 +36,7 @@ import us.ilite.robot.modules.*;
 
 public class Robot extends TimedRobot {
 
-    private final ILog mLogger = Logger.createLog(this.getClass());
+    private final ILog mLogger = Logger.createLog( this.getClass() );
 
     private final LoopManager mLoopManager = new LoopManager(SystemSettings.kControlLoopPeriod);
     private final ModuleList mRunningModules = new ModuleList();
