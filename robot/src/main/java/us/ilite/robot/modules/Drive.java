@@ -108,13 +108,13 @@ public class Drive extends Loop {
 		mTargetAngleLockPid.reset();
 
 		mDriveController.setPlannerMode(DriveMotionPlanner.PlannerMode.FEEDBACK);
-        // Other gains to try: (2.0, 0.7), (0.65, 0.175), (0.0, 0.0)
+		// Other gains to try: (2.0, 0.7), (0.65, 0.175), (0.0, 0.0)
 		mDriveController.getController().setGains(2.0, 0.7);
 
 		mDriveHardware.zero();
 
-	  	setDriveMessage(DriveMessage.kNeutral);
-	  	setDriveState(EDriveState.NORMAL);
+		setDriveMessage(DriveMessage.kNeutral);
+		setDriveState(EDriveState.NORMAL);
 
 //	  	startCsvLogging();
 	}
@@ -168,7 +168,7 @@ public class Drive extends Loop {
 
 	@Override
 	public void update(double pNow) {
-        if(mDriveState != EDriveState.NORMAL) {
+		if(mDriveState != EDriveState.NORMAL) {
 			mLogger.error("Invalid drive state - maybe you meant to run this a high frequency?");
 			mDriveState = EDriveState.NORMAL;
 		} else {
@@ -177,7 +177,7 @@ public class Drive extends Loop {
 
 		mPreviousTime = pNow;
 	}
-	
+
 	@Override
 	public void shutdown(double pNow) {
 		stopCsvLogging();
@@ -214,7 +214,7 @@ public class Drive extends Loop {
 				 * which means that the derivative of error would be highly inaccurate and cause oscillation.
 				 * Since kD * de/dt = kD * (SP - PV)/dt = ((kD * SP) - (kD * PV)) / dt, and dt = 1 for the Talon, we can add the
 				 * setpoint derivative calculation back in.
-					*/
+				 */
 				double leftDemand = (output.left_feedforward_voltage / 12.0) + SystemSettings.kDriveVelocity_kD * leftAccel / 1023.0;
 				double rightDemand = (output.right_feedforward_voltage / 12.0) + SystemSettings.kDriveVelocity_kD * rightAccel / 1023.0;
 
@@ -292,7 +292,7 @@ public class Drive extends Loop {
 
 	@Override
 	public boolean checkModule(double pNow) {
-        return mDriveHardware.checkHardware();
+		return mDriveHardware.checkHardware();
 	}
 
 
@@ -313,10 +313,10 @@ public class Drive extends Loop {
 	}
 
 	public synchronized IDriveHardware getDriveHardware() {
-	    return mDriveHardware;
-    }
+		return mDriveHardware;
+	}
 
-    public synchronized DriveMessage getDriveMessage() {
+	public synchronized DriveMessage getDriveMessage() {
 		return mDriveMessage;
 	}
 
@@ -397,4 +397,3 @@ public class Drive extends Loop {
 
   
 
-	
