@@ -131,6 +131,9 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // Robot constants (configure later)
     // TO-DO: Configure torque constant
     // =============================================================================
+    // TODO find shooter values
+    public final double kShotTheta = 0.0; // Angle of flywheel shot
+    public final double kShooterOutput = 0.0; //Constant percent output of flywheel
 
     // =============================================================================
     // LimeLight Camera Constants
@@ -198,6 +201,10 @@ public class SystemSettings extends NetworkTablesConstantsBase {
          * @return the pipelineName
          */
     }
+
+    public final double kDistanceFromHighTarget = 0.0; // Required distance from high target in feet
+    public final double kDistanceFromLowTarget = 0.0; // Required distance from low target in feet
+
 
     // =============================================================================
     // 2019 Module Addresses
