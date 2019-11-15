@@ -18,7 +18,7 @@ public class Intake extends Module {
 
     public Intake() {
         mIntakeRoller = new TalonSRX(SystemSettings.kIntakeId);
-        mDesiredPower = 0;
+        mDesiredPower = 0d;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Intake extends Module {
                 mIntakeRoller.set(ControlMode.PercentOutput, -mDesiredPower);
                 break;
             default:
-                mIntakeRoller.set(ControlMode.PercentOutput, 0);
+                mIntakeRoller.set(ControlMode.PercentOutput, 0d);
                 break;
         }
     }
@@ -51,10 +51,16 @@ public class Intake extends Module {
         mDesiredPower = 0d;
     }
 
+    public void setIntakeState(EIntakeState pIntakeState) {
+        mDesiredIntakeState = pIntakeState;
+    }
+
     private enum EIntakeState {
         INTAKING,
         OUTTAKING;
     }
+
+
 
 
 }
