@@ -15,7 +15,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
 
     public static double kControlLoopPeriod = 0.01; // seconds
     public static double kCSVLoggingPeriod = 0.02;  // seconds
-
+    public static double kMaxShooter = 1.0;
     public static double kNetworkTableUpdateRate = 0.01;
 
     public static int sCODEX_COMMS_PORT = 5805;
@@ -92,6 +92,14 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static List<ELogitech310> kAutonOverrideTriggers = Arrays.asList(DriveTeamInputMap.DRIVER_THROTTLE_AXIS,
                                                                             DriveTeamInputMap.DRIVER_TURN_AXIS);
     public static double kAutonOverrideAxisThreshold = 0.3;
+
+    // ============================================================================
+    // Shooter
+    // ============================================================================
+
+    public static PIDGains kShooterGains = new PIDGains( 0 ,0,0,0);
+    public static double kShooterTalonLeftID = -1;
+    public static double kShooterTalonRightID = -1;
 
     // =============================================================================
     // Motion Magic Constants
