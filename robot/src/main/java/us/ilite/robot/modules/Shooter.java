@@ -1,7 +1,6 @@
 package us.ilite.robot.modules;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.control.PIDController;
@@ -9,7 +8,7 @@ import us.ilite.common.lib.control.PIDController;
 public class Shooter extends Module {
     private Talon mShooterLeft;
     private Talon mShooterRight;
-    private boolean spinning;
+    private static boolean spinning;
 
     private PIDController kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooter, SystemSettings.kControlLoopPeriod );
 
@@ -18,12 +17,12 @@ public class Shooter extends Module {
         kShooterPidController.setSetpoint( SystemSettings.kMaxShooter );
     }
 
-    public void activate()
+    public static void activate()
     {
         spinning = true;
     }
 
-    public void deactivate()
+    public static void deactivate()
     {
         spinning = false;
     }
