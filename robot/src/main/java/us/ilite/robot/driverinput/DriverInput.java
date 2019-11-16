@@ -41,7 +41,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Shooter pShooter, Hopper pHopper) {
+    public DriverInput(Shooter pShooter, Hopper pHopper, Intake pIntake) {
         mShooter = pShooter;
         mHopper = pHopper;
         mIntake = pIntake;
@@ -69,29 +69,30 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
-        updateIntakeSystem();
+        updateShooter();
         updateOutTakeFuel();
-    }
         updateIntake();
     }
 
-    public void updateIntakeSystem() {
-        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT ) ) {
+    private void updateShooter() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT)) {
             mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
             mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
         } else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
             mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
+    }
+
     private void updateIntake() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE_BTN)) {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE)) {
             mIntake.setIntakeState(Intake.EIntakeState.INTAKING);
         } else {
             mIntake.setIntakeState(Intake.EIntakeState.STOP);
         }
     }
 
-    public void updateOutTakeFuel() {
+    private void updateOutTakeFuel() {
         if (mOperatorInputCodex.isSet( DriveTeamInputMap.OUTTAKE ) ) {
             mHopper.setHopperState(Hopper.EHopperState.REVERSE);
             mIntake.setIntakeState(Intake.EIntakeState.OUTTAKING);

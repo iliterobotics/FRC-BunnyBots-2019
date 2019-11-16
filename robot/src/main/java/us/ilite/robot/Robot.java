@@ -48,19 +48,20 @@ public class Robot extends TimedRobot {
     private final SystemSettings mSettings = new SystemSettings();
     private final PowerDistributionPanel pdp = new PowerDistributionPanel(SystemSettings.kPowerDistPanelAddress);
     private final DriveController mDriveController = new DriveController(new HenryProfile());
-    private Hopper mHopper = new Hopper( mData );
     // Module declarations here
     private final CommandManager mAutonomousCommandManager = new CommandManager().setManagerTag("Autonomous Manager");
     private final CommandManager mTeleopCommandManager = new CommandManager().setManagerTag("Teleop Manager");
     private final Drive mDrive = new Drive(mData, mDriveController);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
-    private final DriverInput mDriverInput = new DriverInput( mHopper);
+    private final Hopper mHopper = new Hopper();
+    private final Shooter mShooter = new Shooter();
+    private final Intake mIntake = new Intake();
+    private final DriverInput mDriverInput = new DriverInput(mShooter, mHopper, mIntake);
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
     private MatchMetadata mMatchMeta = null;
-    private final Shooter mShooter = new Shooter();
 
     private final PerfTimer mClockUpdateTimer = new PerfTimer();
 
@@ -129,7 +130,7 @@ public class Robot extends TimedRobot {
         mSettings.loadFromNetworkTables();
 
         // Init modules after commands are set
-        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mHopper);
+        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mHopper, mShooter, mIntake);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
@@ -153,7 +154,7 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mShooter);
+        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mShooter, mHopper, mIntake);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
