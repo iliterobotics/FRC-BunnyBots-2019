@@ -2,7 +2,6 @@ package us.ilite.robot.commands;
 
 import us.ilite.common.Data;
 import us.ilite.common.types.drive.EDriveData;
-import us.ilite.common.types.manipulator.EElevator;
 import us.ilite.lib.drivers.ECommonControlMode;
 import us.ilite.robot.modules.Drive;
 import us.ilite.robot.modules.DriveMessage;
@@ -12,7 +11,6 @@ public class YeetLeftRight implements ICommand {
     private Data mData;
     private Drive mDrive;
 
-    private double mElevatorTicks;
     private double mCurrentLeftPercentOutput;
     private double mDesiredLeftPercentOutput;
     private double mCurrentRightPercentOutput;
@@ -32,7 +30,6 @@ public class YeetLeftRight implements ICommand {
     public YeetLeftRight(Data pData, Drive pDrive) {
         this.mData = pData;
         this.mDrive = pDrive;
-        mElevatorTicks = mData.elevator.get(EElevator.CURRENT_ENCODER_TICKS);
     }
 
     @Override
@@ -42,8 +39,6 @@ public class YeetLeftRight implements ICommand {
 
     @Override
     public boolean update(double pNow) {
-
-        mElevatorTicks = mData.elevator.get(EElevator.CURRENT_ENCODER_TICKS);
 
         switch(mSideToTurn) {
             case LEFT:
@@ -78,19 +73,20 @@ public class YeetLeftRight implements ICommand {
     public void ramp() {
         switch(mSideToTurn){
             case LEFT:
-                if (mCurrentLeftPercentOutput == kCruisePercentOutput || mDesiredLeftPercentOutput + kRampRate <= kCruisePercentOutput) {
+
+                // Whether mCurrentPercentOutput is less than or equal to kCruisePercentOutput may be subject to change.
+
+                if (mCurrentLeftPercentOutput < kCruisePercentOutput || mDesiredLeftPercentOutput + kRampRate <= kCruisePercentOutput) {
                     mDesiredLeftPercentOutput += kRampRate;
                 }
 
             case RIGHT:
-                if (mCurrentRightPercentOutput == kCruisePercentOutput || mDesiredRightPercentOutput + kRampRate <= kCruisePercentOutput) {
+                if (mCurrentRightPercentOutput < kCruisePercentOutput || mDesiredRightPercentOutput + kRampRate <= kCruisePercentOutput) {
                     mDesiredRightPercentOutput += kRampRate;
                 }
         }
     }
 
-
-    // Output and ramp rate methods based on elevator ticks
 //    public void getMaxOutput() {
 //
 //    }
