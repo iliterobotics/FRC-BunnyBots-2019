@@ -43,9 +43,6 @@ public class Intake extends Module {
             case STOP:
                 mIntakeRoller.set(ControlMode.PercentOutput, 0 );
                 break;
-            default:
-                mIntakeRoller.set(ControlMode.PercentOutput, 0d);
-                break;
         }
     }
 
