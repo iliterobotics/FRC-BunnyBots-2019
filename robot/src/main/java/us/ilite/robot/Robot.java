@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
     private MatchMetadata mMatchMeta = null;
+    private final Shooter mShooter = new Shooter();
 
     private final PerfTimer mClockUpdateTimer = new PerfTimer();
 
@@ -152,7 +153,7 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mRunningModules.setModules(mDriverInput, mTeleopCommandManager);
+        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mShooter);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 

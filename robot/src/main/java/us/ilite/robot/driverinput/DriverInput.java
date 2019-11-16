@@ -3,6 +3,7 @@ package us.ilite.robot.driverinput;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
+import us.ilite.common.config.DriveTeamInputMap;
 import us.ilite.common.lib.util.CheesyDriveHelper;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -28,6 +29,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final Data mData;
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
+    private Shooter mShooter;
 
     private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
@@ -64,12 +66,25 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
+        updateShooter();
         updateHopper(pNow);
     }
 
     @Override
     public void shutdown(double pNow) {
 
+    }
+
+    public void updateShooter()
+    {
+        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT ) )
+        {
+            mShooter.activate();
+        }
+        else
+        {
+            mShooter.deactivate();
+        }
     }
     public void updateHopper(double pNow)
     {

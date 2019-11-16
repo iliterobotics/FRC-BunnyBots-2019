@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.control.PIDController;
+import us.ilite.robot.driverinput.DriverInput;
 
 public class Shooter extends Module {
     private Talon mShooterLeft;
@@ -44,8 +45,8 @@ public class Shooter extends Module {
             mShooterRight.set( kShooterPidController.calculate( mShooterRight.getSpeed(), pNow ) );
         }
         else {
-            mShooterLeft.set( kShooterPidController.calculate( mShooterLeft.getSpeed(), 0 ) );
-            mShooterRight.set( kShooterPidController.calculate( mShooterRight.getSpeed(), 0 ) );
+            mShooterLeft.set(0);
+            mShooterRight.set(0);
         }
 
     }
@@ -54,6 +55,5 @@ public class Shooter extends Module {
     public void shutdown(double pNow) {
 
     }
-
 
 }
