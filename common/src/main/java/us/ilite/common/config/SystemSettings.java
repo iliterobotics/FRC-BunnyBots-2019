@@ -177,15 +177,14 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // The current target values assume the limelight processing stream is configured to target
     // the bottom of the vision target
     public enum VisionTarget {
-        HatchPort(25.6875), // height of the bottom of the reflective tape in inches for the hatch port
-        CargoPort(33.3125), // height of the bottom of the reflective tape in inches for the cargo port
-        Ground(0.0), //The ground
-        CargoHeight(6.5d);//This may change, not sure what the correct value
+        High(0.0, 0.0), // height of the bottom of the reflective tape in inches for the high port
+        Low(0.0, 0.0); // height of the bottom of the reflective tape in inches for the low port
 
-        private final double height;
+        private final double height, distanceNeeded;
 
-        VisionTarget( double height)  {
+        VisionTarget( double height, double distanceNeeded)  {
             this.height = height;
+            this.distanceNeeded = distanceNeeded;
         }
 
         /**
@@ -194,9 +193,9 @@ public class SystemSettings extends NetworkTablesConstantsBase {
         public double getHeight() {
             return height;
         }
-        /**
-         * @return the pipelineName
-         */
+        public double getDistanceNeeded() {
+            return distanceNeeded;
+        }
     }
 
     // =============================================================================
