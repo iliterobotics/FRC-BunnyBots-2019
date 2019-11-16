@@ -25,16 +25,6 @@ public class Shooter extends Module {
         kShooterPidController.setSetpoint( SystemSettings.kMaxShooter );
     }
 
-    public static void activate()
-    {
-        spinning = true;
-    }
-
-    public static void deactivate()
-    {
-        spinning = false;
-    }
-
     @Override
     public void modeInit(double pNow) {
 
