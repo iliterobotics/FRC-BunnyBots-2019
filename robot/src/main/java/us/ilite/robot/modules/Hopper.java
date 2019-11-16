@@ -1,33 +1,36 @@
 package us.ilite.robot.modules;
+import com.revrobotics.CANSparkMaxLowLevel;
 import us.ilite.common.config.SystemSettings;
 import com.revrobotics.CANSparkMax;
 
 
 public class Hopper extends Module {
-    private HopperState kHopperState;
+    private EHopperState mHopperState;
     private CANSparkMax mHopperMotor;
     private int mMotorInt;
     //Enum for the current state of the hopper
-    public enum HopperState
+    public enum EHopperState
     {
-        GIVETOSHOOTER(1.0),
-        REVERSE(1.0),
-        NORMALSTATE(1.0),
+        GIVE_TO_SHOOTER(1.0),
+        REVERSE(-1.0),
         STOP(0.0);
 
         private double power;
 
-        HopperState(double pow ) {
+        EHopperState(double pow ) {
             power = pow;
         }
-    }
-    public Hopper( CANSparkMax pHopperMotor)
-    {
 
+        public double getPower() {
+            return power;
+        }
+    }
+    public Hopper()
+    {
+        mHopperMotor = new CANSparkMax( SystemSettings.kHopperCANMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mHopperState = EHopperState.STOP;
     }
 
-    {
-    }
     @Override
     public void modeInit(double pNow) {
 
@@ -38,24 +41,28 @@ public class Hopper extends Module {
     }
     @Override
     public void update(double pNow) {
+        switch(mHopperState){
+            case GIVE_TO_SHOOTER:
+                mHopperMotor.set(mHopperState.getPower());
 
+            case REVERSE:
+                mHopperMotor.set(mHopperState.getPower());
+
+            case STOP:
+                mHopperMotor.set(mHopperState.getPower());
+
+        }
     }
     @Override
     public void shutdown(double pNow) {
-        kHopperState = HopperState.STOP;
+        mHopperState = EHopperState.STOP;
     }
-    public void ballsJammedInHopper ()
+    public void setHopperState ( EHopperState pHopperState )
     {
-        kHopperState = HopperState.REVERSE;
+        mHopperState = pHopperState;
     }
-    public void giveBallsToShooter ()
-    {
-        kHopperState = HopperState.GIVETOSHOOTER;
-    }
-    public void normalHopperMethod()
-    {
-        kHopperState = HopperState.NORMALSTATE;
-    }
+
+
 
 
 
