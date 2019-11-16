@@ -213,6 +213,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static  int kDriveRightRearTalonId = 6;
     public static int kCatapultServoChannel = -1;
     public static int kHopperCANMotor = 1;
+    public static int kHopperMotorId = 0;
 
 
     public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{

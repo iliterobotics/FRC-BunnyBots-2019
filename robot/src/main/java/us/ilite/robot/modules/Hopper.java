@@ -3,13 +3,14 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
 import com.revrobotics.CANSparkMax;
+import us.ilite.lib.drivers.SparkMaxFactory;
+import us.ilite.robot.hardware.NeoDriveHardware;
 
 
 public class Hopper extends Module {
     private EHopperState mHopperState;
     private CANSparkMax mHopperMotor;
     private Data mData;
-    private int mMotorInt;
     //Enum for the current state of the hopper
     public enum EHopperState
     {
@@ -31,6 +32,7 @@ public class Hopper extends Module {
     {
         mHopperMotor = new CANSparkMax( SystemSettings.kHopperCANMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
         mHopperState = EHopperState.STOP;
+        mHopperMotor = SparkMaxFactory.createDefaultSparkMax( SystemSettings.kHopperMotorId , CANSparkMaxLowLevel.MotorType.kBrushless);
         this.mData = pData;
     }
 
@@ -60,10 +62,14 @@ public class Hopper extends Module {
     public void shutdown(double pNow) {
         mHopperState = EHopperState.STOP;
     }
+
     public void setHopperState ( EHopperState pHopperState )
     {
         mHopperState = pHopperState;
     }
+
+
+
 
 
 
