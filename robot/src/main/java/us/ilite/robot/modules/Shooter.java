@@ -16,7 +16,7 @@ public class Shooter extends Module {
 
     private PIDController kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooter, SystemSettings.kControlLoopPeriod );
 
-    private enum EShooterState {
+    public enum EShooterState {
         SHOOTING,
         GIVE_TO_HOPPER,
         STOP;
@@ -25,17 +25,7 @@ public class Shooter extends Module {
     public Shooter() {
         kShooterPidController.setOutputRange( 0, 1 );
         kShooterPidController.setSetpoint( SystemSettings.kMaxShooter );
-        mShootingState = EShootingState.STOP;
-    }
-
-    public static void activate()
-    {
-        spinning = true;
-    }
-
-    public static void deactivate()
-    {
-        spinning = false;
+        mShooterState = EShooterState.STOP;
     }
 
     @Override
@@ -75,30 +65,5 @@ public class Shooter extends Module {
     public boolean getSpinningStatus()
     {
         return spinning;
-    }
-
-    public enum EShootingState
-    {
-        FORWARD( 1.0 ),
-        BACKWARD( -1.0 ),
-        STOP( 0.0 );
-
-        private double mDesiredPower;
-
-        EShootingState( double pDesiredPower )
-        {
-            mDesiredPower = pDesiredPower;
-        }
-
-        public double getDesiredPower()
-        {
-            return mDesiredPower;
-        }
-
-    }
-
-    public void setEShootingState( EShootingState pShootingState )
-    {
-        mShootingState = pShootingState;
     }
 }

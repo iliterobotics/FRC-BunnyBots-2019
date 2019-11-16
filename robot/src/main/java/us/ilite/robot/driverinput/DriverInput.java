@@ -75,10 +75,10 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public void updateIntakeSystem() {
         if ( mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT ) ) {
             mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
-            mShooter.activate();
+            mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
         } else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
-            mShooter.deactivate();
+            mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
     }
 
@@ -86,11 +86,12 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         if (mOperatorInputCodex.isSet( DriveTeamInputMap.OUTTAKE ) ) {
             mHopper.setHopperState(Hopper.EHopperState.REVERSE);
             mIntake.setIntakeState(Intake.EIntakeState.OUTTAKING);
+            mShooter.setShooterState(Shooter.EShooterState.GIVE_TO_HOPPER);
         }
         else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
             mIntake.setIntakeState(Intake.EIntakeState.STOP);
-            mShooter.deactivate();
+            mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
     }
 
