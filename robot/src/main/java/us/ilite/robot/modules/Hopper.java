@@ -4,7 +4,6 @@ import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
 import com.revrobotics.CANSparkMax;
 import us.ilite.lib.drivers.SparkMaxFactory;
-import us.ilite.robot.hardware.NeoDriveHardware;
 
 
 public class Hopper extends Module {
@@ -28,14 +27,12 @@ public class Hopper extends Module {
             return power;
         }
     }
-    public Hopper( Data pData)
-    {
-        mHopperMotor = new CANSparkMax( SystemSettings.kHopperCANMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
+    public Hopper( Data pData) {
+        mHopperMotor = new CANSparkMax(SystemSettings.kHopperCANMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
         mHopperState = EHopperState.STOP;
-        mHopperMotor = SparkMaxFactory.createDefaultSparkMax( SystemSettings.kHopperMotorId , CANSparkMaxLowLevel.MotorType.kBrushless);
+        mHopperMotor = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kHopperMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
         this.mData = pData;
     }
-
     @Override
     public void modeInit(double pNow) {
 
