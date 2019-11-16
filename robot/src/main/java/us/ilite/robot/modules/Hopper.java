@@ -1,5 +1,6 @@
 package us.ilite.robot.modules;
 import com.revrobotics.CANSparkMaxLowLevel;
+import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
 import com.revrobotics.CANSparkMax;
 
@@ -7,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 public class Hopper extends Module {
     private EHopperState mHopperState;
     private CANSparkMax mHopperMotor;
+    private Data mData;
     private int mMotorInt;
     //Enum for the current state of the hopper
     public enum EHopperState
@@ -25,10 +27,11 @@ public class Hopper extends Module {
             return power;
         }
     }
-    public Hopper()
+    public Hopper( Data pData)
     {
         mHopperMotor = new CANSparkMax( SystemSettings.kHopperCANMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
         mHopperState = EHopperState.STOP;
+        this.mData = pData;
     }
 
     @Override

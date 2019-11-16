@@ -36,6 +36,7 @@ import us.ilite.robot.modules.*;
 
 public class Robot extends TimedRobot {
 
+
     private final ILog mLogger = Logger.createLog(this.getClass());
 
     private final LoopManager mLoopManager = new LoopManager(SystemSettings.kControlLoopPeriod);
@@ -47,14 +48,14 @@ public class Robot extends TimedRobot {
     private final SystemSettings mSettings = new SystemSettings();
     private final PowerDistributionPanel pdp = new PowerDistributionPanel(SystemSettings.kPowerDistPanelAddress);
     private final DriveController mDriveController = new DriveController(new HenryProfile());
-
+    private Hopper mHopper = new Hopper( mData );
     // Module declarations here
     private final CommandManager mAutonomousCommandManager = new CommandManager().setManagerTag("Autonomous Manager");
     private final CommandManager mTeleopCommandManager = new CommandManager().setManagerTag("Teleop Manager");
     private final Drive mDrive = new Drive(mData, mDriveController);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
-    private final DriverInput mDriverInput = new DriverInput( );
+    private final DriverInput mDriverInput = new DriverInput( mHopper);
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
@@ -127,7 +128,7 @@ public class Robot extends TimedRobot {
         mSettings.loadFromNetworkTables();
 
         // Init modules after commands are set
-        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager);
+        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mHopper);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
