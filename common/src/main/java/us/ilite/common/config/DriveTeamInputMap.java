@@ -22,6 +22,8 @@ public class    DriveTeamInputMap {
     OPERATOR_INTAKE = ELogitech310.LEFT_TRIGGER_AXIS,
 
     //Arbitrary Value for SHOOT
-    SHOOT = ELogitech310.START;
+    SHOOT = ELogitech310.START,
+    //Arbitrary Value for OUTTAKE
+    OUTTAKE = ELogitech310.BACK;
 
 }

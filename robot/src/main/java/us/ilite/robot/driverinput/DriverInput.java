@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.RangeScale;
 import us.ilite.common.types.input.ELogitech310;
+import us.ilite.robot.commands.OutTakeFuel;
 import us.ilite.robot.commands.ShootFuel;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
@@ -19,16 +20,17 @@ import static us.ilite.common.config.DriveTeamInputMap.*;
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
     protected static final double
-    DRIVER_SUB_WARP_AXIS_THRESHOLD = 0.5;
+            DRIVER_SUB_WARP_AXIS_THRESHOLD = 0.5;
     private ILog mLog = Logger.createLog(DriverInput.class);
 
 
-//    protected final Drive mDrive;
+    //    protected final Drive mDrive;
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
 //    private final Data mData;
     private ShootFuel mShootFuel;
+    private OutTakeFuel mOutTakeFuel;
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
 
@@ -69,6 +71,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     @Override
     public void update(double pNow) {
         updateIntakeSystem();
+        updateOutTakeFuel();
     }
 
     @Override
@@ -77,13 +80,22 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     public void updateIntakeSystem() {
-        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT ) )
-        {
+        if (mOperatorInputCodex.isSet(SHOOT)) {
             mShootFuel.shoot(true);
+        } else {
+            mShootFuel.shoot(false);
+        }
+    }
+
+    public void updateOutTakeFuel()
+    {
+        if (mOperatorInputCodex.isSet( OUTTAKE ) )
+        {
+            mOutTakeFuel.setmOutTake( true );
         }
         else
         {
-            mShootFuel.shoot(false);
+            mOutTakeFuel.setmOutTake( false );
         }
     }
 

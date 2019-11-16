@@ -24,9 +24,11 @@ public class ShootFuel implements ICommand
     public boolean update(double pNow) {
         if (mShouldShoot) {
             mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+            mShooter.setEShootingState(Shooter.EShootingState.FORWARD);
             mShooter.activate();
         } else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
+            mShooter.setEShootingState( Shooter.EShootingState.STOP);
             mShooter.deactivate();
         }
         return mShouldShoot;
