@@ -11,7 +11,6 @@ public class Shooter extends Module {
     private Talon mShooterLeft;
     private Talon mShooterRight;
     private EShooterState mShooterState;
-    private static boolean spinning;
     private double mDesiredOutput;
 
     private PIDController kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooter, SystemSettings.kControlLoopPeriod );
@@ -60,10 +59,5 @@ public class Shooter extends Module {
     @Override
     public void shutdown(double pNow) {
 
-    }
-
-    public boolean getSpinningStatus()
-    {
-        return spinning;
     }
 }
