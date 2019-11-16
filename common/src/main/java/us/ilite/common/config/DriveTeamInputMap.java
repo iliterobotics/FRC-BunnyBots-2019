@@ -45,6 +45,8 @@ public class    DriveTeamInputMap {
 
     DRIVER_CLIMBER_ALLOW = ELogitech310.START,
     OPERATOR_CLIMBER_AXIS = ELogitech310.LEFT_Y_AXIS,
-    OPERATOR_PUSHER_BUTTON = ELogitech310.START;
+    OPERATOR_PUSHER_BUTTON = ELogitech310.START,
+
+    OPERATOR_CATAPULT_BTN = null;
 
 }
