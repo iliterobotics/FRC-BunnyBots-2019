@@ -27,7 +27,7 @@ public class DriveToTargetDistance implements ICommand {
         mLimelight = pLimelight;
         mDrive = pDrive;
         mTarget = pVisionTarget;
-        mDistanceGains = new PIDGains(0.0, 0.0, 0.0);
+        mDistanceGains = new PIDGains(0.0, 0.0, 0.0); //find values
         mPIDController = new PIDController(mDistanceGains, kMinDistance, kMaxDistance, SystemSettings.kControlLoopPeriod);
     }
 
