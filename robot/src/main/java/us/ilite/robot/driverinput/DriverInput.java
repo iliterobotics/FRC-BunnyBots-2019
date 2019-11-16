@@ -3,6 +3,7 @@ package us.ilite.robot.driverinput;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
+import us.ilite.common.config.DriveTeamInputMap;
 import us.ilite.common.lib.util.CheesyDriveHelper;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -24,6 +25,8 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
 //    private final Data mData;
+    private Intake mIntake;
+
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
 
@@ -35,8 +38,8 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput() {
-
+    public DriverInput(Intake pIntake) {
+        mIntake = pIntake;
     }
 
     @Override
@@ -61,7 +64,15 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
+        updateIntake();
+    }
 
+    private void updateIntake() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE_BTN)) {
+            mIntake.setIntakeState(Intake.EIntakeState.INTAKING);
+        } else {
+            mIntake.setIntakeState(Intake.EIntakeState.STOP);
+        }
     }
 
     @Override

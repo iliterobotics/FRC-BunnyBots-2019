@@ -55,7 +55,7 @@ public class Intake extends Module {
         mDesiredIntakeState = pIntakeState;
     }
 
-    private enum EIntakeState {
+    public enum EIntakeState {
         INTAKING,
         STOP,
         OUTTAKING;
