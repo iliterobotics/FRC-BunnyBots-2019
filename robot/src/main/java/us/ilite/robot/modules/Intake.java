@@ -40,6 +40,9 @@ public class Intake extends Module {
             case OUTTAKING:
                 mIntakeRoller.set(ControlMode.PercentOutput, -mDesiredPower);
                 break;
+            case STOP:
+                mIntakeRoller.set(ControlMode.PercentOutput, 0 );
+                break;
             default:
                 mIntakeRoller.set(ControlMode.PercentOutput, 0d);
                 break;
@@ -57,6 +60,7 @@ public class Intake extends Module {
 
     private enum EIntakeState {
         INTAKING,
+        STOP,
         OUTTAKING;
     }
 
