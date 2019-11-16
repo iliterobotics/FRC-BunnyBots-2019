@@ -72,30 +72,31 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         updateOutTakeFuel();
     }
 
-    @Override
-    public void shutdown(double pNow) {
-
-    }
-
     public void updateIntakeSystem() {
-        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT ) )
-        {
+        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT ) ) {
             mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
             mShooter.activate();
-        }
-    }
-
-    public void updateOutTakeFuel()
-    {
-        if (mOperatorInputCodex.isSet( DriveTeamInputMap.OUTTAKE ) )
-        {
-
-        }
-        else
-        {
+        } else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
             mShooter.deactivate();
         }
+    }
+
+    public void updateOutTakeFuel() {
+        if (mOperatorInputCodex.isSet( DriveTeamInputMap.OUTTAKE ) ) {
+            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+            mIntake.setIntakeState(Intake.EIntakeState.OUTTAKING);
+        }
+        else {
+            mHopper.setHopperState(Hopper.EHopperState.STOP);
+            mIntake.setIntakeState(Intake.EIntakeState.STOP);
+            mShooter.deactivate();
+        }
+    }
+
+    @Override
+    public void shutdown(double pNow) {
+
     }
 
 }
