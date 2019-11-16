@@ -12,13 +12,13 @@ import us.ilite.common.lib.control.PIDController;
 public class Shooter extends Module {
     private TalonSRX mTalonShooter;
     private VictorSPX mVictorShooter;
-    private EShooterState mShooterState;
+    public static EShooterState mShooterState;
     private static boolean spinning;
     private double mDesiredOutput;
 
     private PIDController kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooter, SystemSettings.kControlLoopPeriod );
 
-    private enum EShooterState {
+    public enum EShooterState {
         SHOOTING,
         GIVE_TO_HOPPER,
         STOP;
@@ -57,7 +57,7 @@ public class Shooter extends Module {
         mTalonShooter.set(ControlMode.PercentOutput, mDesiredOutput);
     }
 
-    public void setShooterState(EShooterState pState) {
+    public static void setShooterState(EShooterState pState) {
         mShooterState = pState;
     }
 
