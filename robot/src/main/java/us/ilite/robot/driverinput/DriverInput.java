@@ -85,8 +85,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
                 mLog.error("Requesting command start");
                 mLog.error("Stopping teleop command queue");
                 mTeleopCommandManager.stopRunningCommands(pNow);
-                mTeleopCommandManager.startCommands(new LimelightTargetLock(mDrive, mLimelight, 2, mTrackingType, this, false).setStopWhenTargetLost(false),
-                                                    new DriveToTargetDistance(mLimelight, mDrive, visionTarget));
+                mTeleopCommandManager.startCommands(new LimelightTargetLock(mDrive, mLimelight, 2, mTrackingType, new DriveToTargetDistance(mLimelight, mDrive, visionTarget), false).setStopWhenTargetLost(false);
             }
         } else {
             mTrackingType = null;

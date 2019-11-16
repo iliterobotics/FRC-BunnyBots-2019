@@ -6,11 +6,12 @@ import us.ilite.common.lib.control.PIDGains;
 import us.ilite.lib.drivers.ECommonControlMode;
 import us.ilite.robot.modules.Drive;
 import us.ilite.robot.modules.DriveMessage;
+import us.ilite.robot.modules.IThrottleProvider;
 import us.ilite.robot.modules.Limelight;
 
 import javax.swing.*;
 
-public class DriveToTargetDistance implements ICommand {
+public class DriveToTargetDistance implements ICommand, IThrottleProvider {
 
     private Limelight mLimelight;
     private Drive mDrive;
@@ -51,5 +52,10 @@ public class DriveToTargetDistance implements ICommand {
     @Override
     public void shutdown(double pNow) {
         mDrive.setNormal();
+    }
+
+    @Override
+    public double getThrottle() {
+        return mOutput;
     }
 }
