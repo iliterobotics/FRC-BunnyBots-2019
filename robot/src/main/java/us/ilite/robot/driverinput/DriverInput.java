@@ -12,6 +12,8 @@ import us.ilite.common.types.input.ELogitech310;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
 
+import static us.ilite.common.config.DriveTeamInputMap.*;
+
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
     protected static final double
@@ -30,13 +32,14 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
+    private Hopper mHopper;
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput() {
-
+    public DriverInput( Hopper pHopper) {
+        this.mHopper = pHopper;
     }
 
     @Override
@@ -61,11 +64,28 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
-
+        updateHopper(pNow);
     }
 
     @Override
     public void shutdown(double pNow) {
 
     }
+    public void updateHopper(double pNow)
+    {
+        if ( mOperatorInputCodex.isSet(OPERATOR_SHOOT))
+        {
+            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+        }
+        else if ( mOperatorInputCodex.isSet((OPERATOR_STOP)))
+        {
+            mHopper.setHopperState(Hopper.EHopperState.STOP);
+        }
+        else if ( mOperatorInputCodex.isSet(OPERATOR_REVERSE))
+        {
+            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+
+        }
+    }
+
 }
