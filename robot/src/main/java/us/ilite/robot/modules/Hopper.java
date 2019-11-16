@@ -8,18 +8,17 @@ import com.revrobotics.CANSparkMax;
 public class Hopper extends Module {
     private EHopperState mHopperState;
     private CANSparkMax mHopperMotor;
-    private Data mData;
-    private int mMotorInt;
     //Enum for the current state of the hopper
     public enum EHopperState
     {
-        GIVE_TO_SHOOTER(1.0),
-        REVERSE(-1.0),
-        STOP(0.0);
+        GIVE_TO_SHOOTER(1.0, true),
+        REVERSE(-1.0, false ),
+        STOP(0.0, false );
+
 
         private double power;
 
-        EHopperState(double pow ) {
+        EHopperState(double pow, boolean isFeeding ) {
             power = pow;
         }
 
@@ -27,11 +26,10 @@ public class Hopper extends Module {
             return power;
         }
     }
-    public Hopper( Data pData)
+    public Hopper()
     {
         mHopperMotor = new CANSparkMax( SystemSettings.kHopperCANMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
         mHopperState = EHopperState.STOP;
-        this.mData = pData;
     }
 
     @Override
@@ -64,9 +62,4 @@ public class Hopper extends Module {
     {
         mHopperState = pHopperState;
     }
-
-
-
-
-
 }

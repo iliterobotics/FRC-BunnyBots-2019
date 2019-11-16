@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.RangeScale;
 import us.ilite.common.types.input.ELogitech310;
+import us.ilite.robot.commands.ShootFuel;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
 
@@ -27,21 +28,22 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
 //    private final Data mData;
+    private ShootFuel mShootFuel;
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
-    private Shooter mShooter;
+
 
     private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
-    private Hopper mHopper;
+
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput( Hopper pHopper) {
-        this.mHopper = pHopper;
+    public DriverInput() {
+
     }
 
     @Override
@@ -66,8 +68,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
-        updateShooter();
-        updateHopper(pNow);
+        updateIntakeSystem();
     }
 
     @Override
@@ -75,31 +76,14 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     }
 
-    public void updateShooter()
-    {
+    public void updateIntakeSystem() {
         if ( mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT ) )
         {
-            mShooter.activate();
+            mShootFuel.shoot(true);
         }
         else
         {
-            mShooter.deactivate();
-        }
-    }
-    public void updateHopper(double pNow)
-    {
-        if ( mOperatorInputCodex.isSet(OPERATOR_SHOOT))
-        {
-            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
-        }
-        else if ( mOperatorInputCodex.isSet((OPERATOR_STOP)))
-        {
-            mHopper.setHopperState(Hopper.EHopperState.STOP);
-        }
-        else if ( mOperatorInputCodex.isSet(OPERATOR_REVERSE))
-        {
-            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
-
+            mShootFuel.shoot(false);
         }
     }
 

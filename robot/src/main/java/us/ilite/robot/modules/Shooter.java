@@ -56,4 +56,8 @@ public class Shooter extends Module {
 
     }
 
+    public boolean getSpinningStatus()
+    {
+        return spinning;
+    }
 }
