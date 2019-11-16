@@ -1,6 +1,9 @@
 package us.ilite.robot.modules;
 
-import com.flybotix.hfr.codex.Codex;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.team254.lib.drivers.talon.TalonSRXFactory;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import us.ilite.common.config.SystemSettings;
@@ -8,8 +11,8 @@ import us.ilite.common.lib.control.PIDController;
 import us.ilite.robot.driverinput.DriverInput;
 
 public class Shooter extends Module {
-    private Talon mShooterLeft;
-    private Talon mShooterRight;
+    private TalonSRX mTalonShooter;
+    private VictorSPX mVictorShooter;
     private EShooterState mShooterState;
     private double mDesiredOutput;
 
@@ -22,6 +25,10 @@ public class Shooter extends Module {
     }
 
     public Shooter() {
+        mTalonShooter = TalonSRXFactory.createDefaultTalon(SystemSettings.kShooterTalonID);
+        mVictorShooter = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kShooterVictorID, mTalonShooter);
+        mVictorShooter.setInverted(true);
+
         kShooterPidController.setOutputRange( 0, 1 );
         kShooterPidController.setSetpoint( SystemSettings.kMaxShooter );
         mShooterState = EShooterState.STOP;
@@ -41,15 +48,14 @@ public class Shooter extends Module {
     public void update(double pNow) {
         switch (mShooterState) {
             case SHOOTING:
-                mDesiredOutput = kShooterPidController.calculate(mShooterLeft.getSpeed(), pNow);
+                mDesiredOutput = kShooterPidController.calculate(mTalonShooter.getSelectedSensorVelocity(), pNow);
             case GIVE_TO_HOPPER:
                 mDesiredOutput = -1.0;
             case STOP:
                 mDesiredOutput = 0.0;
         }
 
-        mShooterLeft.set(mDesiredOutput);
-        mShooterRight.set(-mDesiredOutput);
+        mTalonShooter.set(ControlMode.PercentOutput, mDesiredOutput);
     }
 
     public void setShooterState(EShooterState pState) {
