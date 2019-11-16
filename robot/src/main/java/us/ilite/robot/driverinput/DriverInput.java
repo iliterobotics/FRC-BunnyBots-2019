@@ -10,12 +10,8 @@ import edu.wpi.first.wpilibj.Timer;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.RangeScale;
 import us.ilite.common.types.input.ELogitech310;
-import us.ilite.robot.commands.OutTakeFuel;
-import us.ilite.robot.commands.ShootFuel;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
-
-import static us.ilite.common.config.DriveTeamInputMap.*;
 
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
@@ -29,11 +25,12 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
 //    private final Data mData;
-    private ShootFuel mShootFuel;
-    private OutTakeFuel mOutTakeFuel;
+    private Shooter mShooter;
+    private Hopper mHopper;
+    private Intake mIntake;
+
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
-
 
     private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
@@ -44,8 +41,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput() {
-
+    public DriverInput(Shooter pShooter, Hopper pHopper) {
+        mShooter = pShooter;
+        mHopper = pHopper;
     }
 
     @Override
@@ -80,22 +78,23 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     public void updateIntakeSystem() {
-        if (mOperatorInputCodex.isSet(SHOOT)) {
-            mShootFuel.shoot(true);
-        } else {
-            mShootFuel.shoot(false);
+        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT ) )
+        {
+            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+            mShooter.activate();
         }
     }
 
     public void updateOutTakeFuel()
     {
-        if (mOperatorInputCodex.isSet( OUTTAKE ) )
+        if (mOperatorInputCodex.isSet( DriveTeamInputMap.OUTTAKE ) )
         {
-            mOutTakeFuel.setmOutTake( true );
+
         }
         else
         {
-            mOutTakeFuel.setmOutTake( false );
+            mHopper.setHopperState(Hopper.EHopperState.STOP);
+            mShooter.deactivate();
         }
     }
 
