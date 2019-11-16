@@ -1,13 +1,17 @@
 package us.ilite.robot.modules;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.team254.lib.drivers.talon.TalonSRXFactory;
 import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
 import com.revrobotics.CANSparkMax;
+import us.ilite.lib.drivers.SparkMaxFactory;
 
 
 public class Hopper extends Module {
     private EHopperState mHopperState;
-    private CANSparkMax mHopperMotor;
+    private TalonSRX mHopperMotor;
     //Enum for the current state of the hopper
     public enum EHopperState
     {
@@ -31,7 +35,6 @@ public class Hopper extends Module {
         mHopperMotor = new CANSparkMax( SystemSettings.kHopperCANMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
         mHopperState = EHopperState.STOP;
     }
-
     @Override
     public void modeInit(double pNow) {
 
@@ -44,13 +47,13 @@ public class Hopper extends Module {
     public void update(double pNow) {
         switch(mHopperState){
             case GIVE_TO_SHOOTER:
-                mHopperMotor.set(mHopperState.getPower());
+                mHopperMotor.set(ControlMode.PercentOutput, mHopperState.getPower());
 
             case REVERSE:
-                mHopperMotor.set(mHopperState.getPower());
+                mHopperMotor.set(ControlMode.PercentOutput, mHopperState.getPower());
 
             case STOP:
-                mHopperMotor.set(mHopperState.getPower());
+                mHopperMotor.set(ControlMode.PercentOutput, mHopperState.getPower());
 
         }
     }
@@ -58,8 +61,14 @@ public class Hopper extends Module {
     public void shutdown(double pNow) {
         mHopperState = EHopperState.STOP;
     }
+
     public void setHopperState ( EHopperState pHopperState )
     {
         mHopperState = pHopperState;
     }
+
+
+
+
+
 }
