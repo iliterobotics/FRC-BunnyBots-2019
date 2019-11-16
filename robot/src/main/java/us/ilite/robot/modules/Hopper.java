@@ -12,7 +12,6 @@ import us.ilite.lib.drivers.SparkMaxFactory;
 public class Hopper extends Module {
     private EHopperState mHopperState;
     private TalonSRX mHopperMotor;
-    private Data mData;
     //Enum for the current state of the hopper
     public enum EHopperState
     {
@@ -30,10 +29,9 @@ public class Hopper extends Module {
             return power;
         }
     }
-    public Hopper( Data pData) {
+    public Hopper() {
         mHopperState = EHopperState.STOP;
         mHopperMotor = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperMotorId);
-        this.mData = pData;
     }
     @Override
     public void modeInit(double pNow) {
