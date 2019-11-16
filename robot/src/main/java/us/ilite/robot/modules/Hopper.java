@@ -32,7 +32,7 @@ public class Hopper extends Module {
     }
     public Hopper()
     {
-        mHopperMotor = new CANSparkMax( SystemSettings.kHopperCANMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mHopperMotor = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperMotorId);
         mHopperState = EHopperState.STOP;
     }
     @Override
