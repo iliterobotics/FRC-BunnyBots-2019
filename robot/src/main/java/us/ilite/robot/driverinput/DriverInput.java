@@ -45,6 +45,12 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public DriverInput(Data pData, Drive pDrive) {
         this.mDrive = pDrive;
         this.mData = pData;
+
+        this.mDriverInputCodex = mData.driverinput;
+        this.mOperatorInputCodex = mData.operatorinput;
+
+        this.mDriverJoystick = new Joystick(0);
+        this.mOperatorJoystick = new Joystick(1);
     }
 
     @Override
@@ -73,7 +79,8 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void periodicInput(double pNow) {
-
+        ELogitech310.map(mData.driverinput, mDriverJoystick);
+        ELogitech310.map(mData.operatorinput, mOperatorJoystick);
     }
 
     @Override
@@ -90,12 +97,15 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         double throttle = getThrottle();
         double rotate = getTurn();
 
-        double leftDemand = (throttle + rotate) * SystemSettings.kDriveTrainMaxVelocity ;
-        double rightDemand = ( throttle - rotate ) * SystemSettings.kDriveTrainMaxVelocity;
+        double leftDemand = (throttle + rotate) /** SystemSettings.kDriveTrainMaxVelocity */;
+        double rightDemand = ( throttle - rotate )/* * SystemSettings.kDriveTrainMaxVelocity*/;
+
+        leftDemand = Math.abs(leftDemand) > 0.01 ? leftDemand : 0.0;
+        rightDemand = Math.abs(rightDemand) > 0.01 ? rightDemand : 0.0;
 
         mDrive.setDriveMessage(driveMessage);
-        mLog.error("Left Demand:" + mData.driverinput.get(ELogitech310.RIGHT_X_AXIS) + " Right Demand: " + rightDemand );
-        driveMessage = new DriveMessage(0.5 * SystemSettings.kDriveTrainMaxVelocity, 0.5 * SystemSettings.kDriveTrainMaxVelocity, ECommonControlMode.VELOCITY);
+        mLog.error("Left Demand:" + leftDemand + " Right Demand: " + rightDemand );
+        driveMessage = new DriveMessage(leftDemand * SystemSettings.kDriveTrainMaxVelocity, rightDemand * SystemSettings.kDriveTrainMaxVelocity, ECommonControlMode.VELOCITY);
 
     }
 }
