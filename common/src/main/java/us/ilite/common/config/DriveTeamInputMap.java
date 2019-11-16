@@ -19,6 +19,10 @@ public class    DriveTeamInputMap {
     DRIVER_TRACK_TARGET_BTN = ELogitech310.A_BTN,
     DRIVER_TRACK_HATCH_BTN = ELogitech310.B_BTN,
 
+    //Vision
+    DRIVER_TRACK_HIGH_BTN = null,
+    DRIVER_TRACK_LOW_BTN = null,
+
     // Elevator
     OPERATOR_GROUND_POSITION_ELEVATOR = ELogitech310.X_BTN,
     OPERATOR_BOTTOM_POSITION_ELEVATOR = ELogitech310.A_BTN,

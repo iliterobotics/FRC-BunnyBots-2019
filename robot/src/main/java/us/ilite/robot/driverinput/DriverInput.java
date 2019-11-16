@@ -62,6 +62,10 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     @Override
     public void update(double pNow) {
 
+        if(mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_TRACK_HIGH_BTN)) {
+            if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_TRACK_LOW_BTN)) {
+            }
+        }
     }
 
     @Override
