@@ -10,6 +10,7 @@ import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.timing.TimedState;
 import com.team254.lib.util.ReflectingCSVWriter;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.Data;
 import us.ilite.common.config.AbstractSystemSettingsUtils;
 import us.ilite.common.config.SystemSettings;
@@ -159,6 +160,9 @@ public class Drive extends Loop {
 		mData.drive.set(EDriveData.RIGHT_MESSAGE_NEUTRAL_MODE, (double)mDriveMessage.rightNeutralMode.ordinal());
 		mData.drive.set(EDriveData.LEFT_MESSAGE_DEMAND, mDriveMessage.leftDemand);
 		mData.drive.set(EDriveData.RIGHT_MESSAGE_DEMAND, mDriveMessage.rightDemand);
+
+        SmartDashboard.putNumber("Left Output", mDriveMessage.leftOutput);
+        SmartDashboard.putNumber("Right Output", mDriveMessage.rightOutput);
 //
 		mData.imu.set(EGyro.YAW_DEGREES, getHeading().getDegrees());
 		mData.drive.meta().next(true);
