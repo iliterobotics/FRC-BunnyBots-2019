@@ -140,6 +140,10 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // TO-DO: Configure torque constant
     // =============================================================================
 
+
+
+
+
     // =============================================================================
     // LimeLight Camera Constants
     // Note: These constants need to be recalculted for a specific robot geometry
@@ -219,6 +223,12 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static  int kDriveRightMasterTalonId = 2;
     public static int kDriveRightMiddleTalonId = 4;
     public static  int kDriveRightRearTalonId = 6;
+
+
+    // =============================================================================
+    // Intake Constants
+    // =============================================================================
+    public static int kIntakeId = -1; //TODO
 
     public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{
             /* Left */
