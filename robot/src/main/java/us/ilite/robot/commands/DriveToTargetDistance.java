@@ -37,6 +37,9 @@ public class DriveToTargetDistance implements ICommand {
     public boolean update(double pNow) {
 //        mOutput = mPIDController.calculate(mLimelight.calcTargetDistance());
         mDrive.setDriveMessage(new DriveMessage());
+        if (mError <= SystemSettings.kDistanceToTargetThreshold) {
+            return true;
+        }
         return false;
     }
 
