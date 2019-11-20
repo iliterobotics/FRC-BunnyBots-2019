@@ -15,7 +15,7 @@ public class Catapult extends Module {
 
         private double position;
 
-        private CatapultState(double position) {
+        CatapultState(double position) {
             this.position = position;
         }
     }
