@@ -232,7 +232,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // =============================================================================
     // Intake Constants
     // =============================================================================
-    public static int kIntakeId = -1; //TODO
+    public static final int kIntakeId = -1; //TODO
+    public static final double kIntakeOutput = 1;
 
     public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{
             /* Left */
