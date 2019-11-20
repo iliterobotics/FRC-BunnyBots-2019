@@ -69,9 +69,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
-        updateShooter();
-        updateOutTakeFuel();
-        updateIntake();
+        updateHopper();
     }
 
     private void updateShooter() {
@@ -92,13 +90,13 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         }
     }
 
-    private void updateOutTakeFuel() {
-        if (mOperatorInputCodex.isSet( DriveTeamInputMap.OUTTAKE ) ) {
-            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
-            mIntake.setIntakeState(Intake.EIntakeState.OUTTAKING);
-            mShooter.setShooterState(Shooter.EShooterState.GIVE_TO_HOPPER);
+    public void updateHopper()
+    {
+        if (mOperatorInputCodex.isSet(OPERATOR_SHOOT)) {
+
         }
-        else {
+        else if ( mOperatorInputCodex.isSet(OPERATOR_STOP))
+        {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
             mIntake.setIntakeState(Intake.EIntakeState.STOP);
             mShooter.setShooterState(Shooter.EShooterState.STOP);
