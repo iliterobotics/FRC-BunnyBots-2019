@@ -31,8 +31,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
-
-    private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
 
@@ -70,7 +68,19 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     @Override
     public void update(double pNow) {
         updateHopper();
-    }
+        updateShooter();
+
+    public void updateShooter() {
+
+        if ( mOperatorInputCodex.isSet( DriveTeamInputMap.OPERATOR_SHOOT_FLYWHEEL ) ) {
+            mShooter.setShooterState( Shooter.EShooterState.SHOOTING );
+        }
+        else if ( mOperatorInputCodex.isSet ( DriveTeamInputMap.OPERATOR_CLEAN_FLYWHEEL ) ) {
+            mShooter.setShooterState( Shooter.EShooterState.CLEAN );
+        }
+        else {
+            mShooter.setShooterState(( Shooter.EShooterState.STOP ) );
+        }
 
 
     public void updateHopper()
