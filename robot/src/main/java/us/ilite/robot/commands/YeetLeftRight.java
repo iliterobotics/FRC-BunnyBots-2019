@@ -8,17 +8,10 @@ import us.ilite.robot.modules.DriveMessage;
 public class YeetLeftRight implements ICommand {
 
     private Drive mDrive;
-
-    private double mCurrentLeftPercentOutput;
-    private double mDesiredLeftPercentOutput;
-    private double mCurrentRightPercentOutput;
-    private double mDesiredRightPercentOutput;
-    private double mCurrentTurn;
-    private double mDesiredTurn;
-    private double kCruisePercentOutput = 1.0;
-
     private EYeetSide mSideToTurn;
     private EYeetceleration mYeetceleration;
+    private double mCurrentTurn;
+    private double mDesiredTurn;
 
     public enum EYeetSide {
         LEFT,
@@ -48,15 +41,15 @@ public class YeetLeftRight implements ICommand {
 
     @Override
     public boolean update(double pNow) {
+        double output = mDesiredTurn;
         ramp();
-        switch (mSideToTurn) {
-            case LEFT:
-                mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, -mDesiredTurn));
-            case RIGHT:
-                mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, mDesiredTurn));
+        if (mSideToTurn == EYeetSide.LEFT) {
+            output *= -1;
         }
-        
+
+        mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, output));
         mCurrentTurn = mDesiredTurn;
+
         if (mYeetceleration.mDesiredOutput == 0 && mCurrentTurn == 0) {
             return true;
         }
