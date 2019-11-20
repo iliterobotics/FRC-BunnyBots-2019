@@ -19,10 +19,6 @@ public class    DriveTeamInputMap {
     DRIVER_TRACK_TARGET_BTN = ELogitech310.A_BTN,
     DRIVER_TRACK_HATCH_BTN = ELogitech310.B_BTN,
 
-    // Elevator
-    OPERATOR_SHOOT = null,
-    OPERATOR_STOP= null,
-    OPERATOR_REVERSE= null,
     OPERATOR_MIDDLE_POSITION_ELEVATOR = ELogitech310.Y_BTN,
     OPERATOR_TOP_POSITION_ELEVATOR = ELogitech310.R_BTN,
     OPERATOR_CONTROL_ELEVATOR = ELogitech310.RIGHT_Y_AXIS,
@@ -45,6 +41,10 @@ public class    DriveTeamInputMap {
 
     DRIVER_CLIMBER_ALLOW = ELogitech310.START,
     OPERATOR_CLIMBER_AXIS = ELogitech310.LEFT_Y_AXIS,
-    OPERATOR_PUSHER_BUTTON = ELogitech310.START;
+    OPERATOR_PUSHER_BUTTON = ELogitech310.START,
+
+    OPERATOR_SHOOT = null,
+    OPERATOR_STOP = null,
+    OPERATOR_REVERSE= null;
 
 }

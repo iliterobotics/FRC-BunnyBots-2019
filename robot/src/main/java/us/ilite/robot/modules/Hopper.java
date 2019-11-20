@@ -11,8 +11,8 @@ import us.ilite.lib.drivers.SparkMaxFactory;
 
 public class Hopper extends Module {
     private EHopperState mHopperState;
-    private TalonSRX mHopperMotor;
-    //Enum for the current state of the hopper
+    private TalonSRX mTalon;
+
     public enum EHopperState
     {
         GIVE_TO_SHOOTER(1.0),
@@ -29,9 +29,10 @@ public class Hopper extends Module {
             return power;
         }
     }
+    
     public Hopper() {
         mHopperState = EHopperState.STOP;
-        mHopperMotor = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperMotorId);
+        mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperMotorId);
     }
     @Override
     public void modeInit(double pNow) {
@@ -43,18 +44,9 @@ public class Hopper extends Module {
     }
     @Override
     public void update(double pNow) {
-        switch(mHopperState){
-            case GIVE_TO_SHOOTER:
-                mHopperMotor.set(ControlMode.PercentOutput, mHopperState.getPower());
-
-            case REVERSE:
-                mHopperMotor.set(ControlMode.PercentOutput, mHopperState.getPower());
-
-            case STOP:
-                mHopperMotor.set(ControlMode.PercentOutput, mHopperState.getPower());
-
-        }
+        mTalon.set(ControlMode.PercentOutput, mHopperState.getPower());
     }
+
     @Override
     public void shutdown(double pNow) {
         mHopperState = EHopperState.STOP;

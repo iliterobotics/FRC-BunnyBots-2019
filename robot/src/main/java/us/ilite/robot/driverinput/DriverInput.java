@@ -64,20 +64,20 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
-        updateHopper(pNow);
+        updateHopper();
     }
 
     @Override
     public void shutdown(double pNow) {
 
     }
-    public void updateHopper(double pNow)
+
+    public void updateHopper()
     {
-        if ( mOperatorInputCodex.isSet(OPERATOR_SHOOT))
-        {
-            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+        if (mOperatorInputCodex.isSet(OPERATOR_SHOOT)) {
+
         }
-        else if ( mOperatorInputCodex.isSet((OPERATOR_STOP)))
+        else if ( mOperatorInputCodex.isSet(OPERATOR_STOP))
         {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
         }
