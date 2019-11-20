@@ -2,21 +2,18 @@ package us.ilite.robot.commands;
 
 import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
-import us.ilite.common.types.drive.EDriveData;
-import us.ilite.lib.drivers.ECommonControlMode;
-import us.ilite.robot.commands.ICommand;
 import us.ilite.robot.modules.Drive;
 import us.ilite.robot.modules.DriveMessage;
 
 public class YeetLeftRight implements ICommand {
 
-    private Data mData;
     private Drive mDrive;
 
     private double mCurrentLeftPercentOutput;
     private double mDesiredLeftPercentOutput;
     private double mCurrentRightPercentOutput;
     private double mDesiredRightPercentOutput;
+    private double mCurrentTurn;
     private double mDesiredTurn;
     private double kCruisePercentOutput = 1.0;
 
@@ -29,54 +26,40 @@ public class YeetLeftRight implements ICommand {
     }
 
     public enum EYeetceleration {
-        A(SystemSettings.kYeetPositiveRampRate),
-        DE(SystemSettings.kYeetNegativeRampRate);
+        A(SystemSettings.kYeetPositiveRampRate, SystemSettings.kYeetCruiseOutput),
+        DE(SystemSettings.kYeetNegativeRampRate, 0.0);
 
         private double mRampRate;
+        private double mDesiredOutput;
 
-        EYeetceleration(double pRampRate) {
+        EYeetceleration(double pRampRate, double pDesiredOutput) {
             mRampRate = pRampRate;
+            mDesiredOutput = pDesiredOutput;
         }
     }
 
-    public YeetLeftRight(Data pData, Drive pDrive) {
-        this.mData = pData;
+    public YeetLeftRight(Drive pDrive) {
         this.mDrive = pDrive;
     }
 
     @Override
     public void init(double pNow) {
-
     }
 
     @Override
     public boolean update(double pNow) {
-        if (mYeetceleration == EYeetceleration.A) {
-            switch (mSideToTurn) {
-                case LEFT:
-                    mCurrentLeftPercentOutput = mData.drive.get(EDriveData.LEFT_MESSAGE_OUTPUT);
-                    mDesiredLeftPercentOutput = mCurrentLeftPercentOutput;
-                    mDesiredRightPercentOutput = 0.0;
-                    ramp();
-                    break;
-
-                case RIGHT:
-                    mCurrentRightPercentOutput = mData.drive.get(EDriveData.RIGHT_MESSAGE_OUTPUT);
-                    mDesiredRightPercentOutput = mCurrentRightPercentOutput;
-                    mDesiredLeftPercentOutput = 0.0;
-                    ramp();
-                    break;
-
-                default:
-                    mDesiredLeftPercentOutput = 0.0;
-                    mDesiredRightPercentOutput = 0.0;
-                    break;
-            }
-        } else {
-
+        ramp();
+        switch (mSideToTurn) {
+            case LEFT:
+                mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, -mDesiredTurn));
+            case RIGHT:
+                mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, mDesiredTurn));
         }
-
-        mDrive.setDriveMessage(new DriveMessage(mDesiredLeftPercentOutput, mDesiredRightPercentOutput, ECommonControlMode.PERCENT_OUTPUT));
+        
+        mCurrentTurn = mDesiredTurn;
+        if (mYeetceleration.mDesiredOutput == 0 && mCurrentTurn == 0) {
+            return true;
+        }
         return false;
     }
 
@@ -90,17 +73,8 @@ public class YeetLeftRight implements ICommand {
     }
 
     public void ramp() {
-        switch(mSideToTurn){
-            case LEFT:
-
-                if (mCurrentLeftPercentOutput < kCruisePercentOutput || mDesiredLeftPercentOutput + mYeetceleration.mRampRate <= kCruisePercentOutput) {
-                    mDesiredLeftPercentOutput += SystemSettings.kYeetPositiveRampRate;
-                }
-
-            case RIGHT:
-                if (mCurrentRightPercentOutput < kCruisePercentOutput || mDesiredRightPercentOutput + mYeetceleration.mRampRate <= kCruisePercentOutput) {
-                    mDesiredRightPercentOutput += SystemSettings.kYeetPositiveRampRate;
-                }
+        if (mCurrentTurn != mYeetceleration.mDesiredOutput) {
+            mDesiredTurn += mYeetceleration.mRampRate;
         }
     }
 

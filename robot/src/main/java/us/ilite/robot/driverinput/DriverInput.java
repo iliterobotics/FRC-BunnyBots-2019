@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.RangeScale;
 import us.ilite.common.types.input.ELogitech310;
+import us.ilite.robot.commands.YeetLeftRight;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
 
@@ -21,11 +22,12 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private ILog mLog = Logger.createLog(DriverInput.class);
 
 
-//    protected final Drive mDrive;
+    protected final Drive mDrive;
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
 //    private final Data mData;
+    private YeetLeftRight mYeets;
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
 
@@ -37,8 +39,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput() {
-
+    public DriverInput(Drive pDrive) {
+        mDrive = pDrive;
+        mYeets = new YeetLeftRight(mDrive);
     }
 
     @Override
@@ -68,9 +71,11 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     public void updateYeets() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
-
+            mYeets.turn(YeetLeftRight.EYeetSide.LEFT);
         } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
-
+            mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
+        } else {
+            mYeets.slowToStop();
         }
     }
 
