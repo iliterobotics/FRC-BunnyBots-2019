@@ -39,20 +39,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public DriverInput() {
     }
 
-    public void updateShooter() {
-
-        if ( mOperatorInputCodex.isSet( DriveTeamInputMap.FLYWHEEL_STARTUP_BUTTON ) ) {
-            Shooter.setShooterState( Shooter.EShooterState.SHOOTING );
-        }
-        else if ( mOperatorInputCodex.isSet ( DriveTeamInputMap.OUTTAKE ) ) {
-            Shooter.setShooterState( Shooter.EShooterState.GIVE_TO_HOPPER );
-        }
-        else {
-            Shooter.setShooterState(( Shooter.EShooterState.STOP ) );
-        }
-
-    }
-
     @Override
     public double getThrottle() {
         return 0;
@@ -76,6 +62,20 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     @Override
     public void update(double pNow) {
         updateShooter();
+    }
+
+    public void updateShooter() {
+
+        if ( mOperatorInputCodex.isSet( DriveTeamInputMap.FLYWHEEL_STARTUP_BUTTON ) ) {
+            Shooter.setShooterState( Shooter.EShooterState.SHOOTING );
+        }
+        else if ( mOperatorInputCodex.isSet ( DriveTeamInputMap.OUTTAKE ) ) {
+            Shooter.setShooterState( Shooter.EShooterState.GIVE_TO_HOPPER );
+        }
+        else {
+            Shooter.setShooterState(( Shooter.EShooterState.STOP ) );
+        }
+
     }
 
     @Override
