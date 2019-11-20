@@ -2,14 +2,10 @@ package us.ilite.robot.modules;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.flybotix.hfr.util.log.ILog;
-import com.flybotix.hfr.util.log.Logger;
 import us.ilite.common.config.SystemSettings;
 
 
 public class Intake extends Module {
-
-    private ILog mLog = Logger.createLog(Intake.class);
     private TalonSRX mIntakeRoller = new TalonSRX(SystemSettings.kIntakeId);
     private EIntakeState mDesiredIntakeState;
 
@@ -18,7 +14,6 @@ public class Intake extends Module {
 
     @Override
     public void modeInit(double pNow) {
-        mLog.error("MODE INIT");
     }
 
     @Override
