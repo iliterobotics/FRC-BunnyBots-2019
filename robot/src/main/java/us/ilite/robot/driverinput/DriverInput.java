@@ -3,6 +3,7 @@ package us.ilite.robot.driverinput;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
+import us.ilite.common.config.DriveTeamInputMap;
 import us.ilite.common.lib.util.CheesyDriveHelper;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,6 +12,7 @@ import us.ilite.common.lib.util.RangeScale;
 import us.ilite.common.types.input.ELogitech310;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
+
 
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
@@ -61,7 +63,15 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
+        updateYeets();
+    }
 
+    public void updateYeets() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
+
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+
+        }
     }
 
     @Override

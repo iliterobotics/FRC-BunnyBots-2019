@@ -3,6 +3,7 @@ package us.ilite.robot.commands;
 import us.ilite.common.Data;
 import us.ilite.common.types.drive.EDriveData;
 import us.ilite.lib.drivers.ECommonControlMode;
+import us.ilite.robot.commands.ICommand;
 import us.ilite.robot.modules.Drive;
 import us.ilite.robot.modules.DriveMessage;
 
@@ -16,9 +17,7 @@ public class YeetLeftRight implements ICommand {
     private double mCurrentRightPercentOutput;
     private double mDesiredRightPercentOutput;
 
-    //Temporary constant, varies when considering elevator position
-    private double kRampRate = .06; //percent per cycle | 0 to .75 in .25 seconds
-    private double kCruisePercentOutput = 0.75;
+    private double kCruisePercentOutput = 1.0;
 
     private EYeetSide mSideToTurn;
 
@@ -62,7 +61,6 @@ public class YeetLeftRight implements ICommand {
         }
 
         mDrive.setDriveMessage(new DriveMessage(mDesiredLeftPercentOutput, mDesiredRightPercentOutput, ECommonControlMode.PERCENT_OUTPUT));
-
         return false;
     }
 
@@ -76,24 +74,16 @@ public class YeetLeftRight implements ICommand {
 
                 // Whether mCurrentPercentOutput is less than or equal to kCruisePercentOutput may be subject to change.
 
-                if (mCurrentLeftPercentOutput < kCruisePercentOutput || mDesiredLeftPercentOutput + kRampRate <= kCruisePercentOutput) {
-                    mDesiredLeftPercentOutput += kRampRate;
+                if (mCurrentLeftPercentOutput < kCruisePercentOutput || mDesiredLeftPercentOutput + SystemSettings.kPositiveRampRate <= kCruisePercentOutput) {
+                    mDesiredLeftPercentOutput += SystemSettings.kPositiveRampRate;
                 }
 
             case RIGHT:
-                if (mCurrentRightPercentOutput < kCruisePercentOutput || mDesiredRightPercentOutput + kRampRate <= kCruisePercentOutput) {
-                    mDesiredRightPercentOutput += kRampRate;
+                if (mCurrentRightPercentOutput < kCruisePercentOutput || mDesiredRightPercentOutput + SystemSettings.kPositiveRampRate <= kCruisePercentOutput) {
+                    mDesiredRightPercentOutput += SystemSettings.kPositiveRampRate;
                 }
         }
     }
-
-//    public void getMaxOutput() {
-//
-//    }
-//
-//    public void setRampRate() {
-//
-//    }
 
     @Override
     public void shutdown(double pNow) {
