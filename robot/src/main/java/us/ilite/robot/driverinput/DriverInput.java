@@ -72,34 +72,15 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         updateHopper();
     }
 
-    private void updateShooter() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.SHOOT)) {
-            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
-            mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
-        } else {
-            mHopper.setHopperState(Hopper.EHopperState.STOP);
-            mShooter.setShooterState(Shooter.EShooterState.STOP);
-        }
-    }
-
-    private void updateIntake() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE)) {
-            mIntake.setIntakeState(Intake.EIntakeState.INTAKING);
-        } else {
-            mIntake.setIntakeState(Intake.EIntakeState.STOP);
-        }
-    }
 
     public void updateHopper()
     {
-        if (mOperatorInputCodex.isSet(OPERATOR_SHOOT)) {
-
-        }
-        else if ( mOperatorInputCodex.isSet(OPERATOR_STOP))
-        {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
+            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+        } else if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
+            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+        } else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
-            mIntake.setIntakeState(Intake.EIntakeState.STOP);
-            mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
     }
 

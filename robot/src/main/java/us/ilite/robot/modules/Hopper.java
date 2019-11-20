@@ -15,19 +15,15 @@ public class Hopper extends Module {
 
     public enum EHopperState
     {
-        GIVE_TO_SHOOTER(1.0, true),
-        REVERSE(-1.0, false ),
-        STOP(0.0, false );
+        GIVE_TO_SHOOTER(1.0),
+        REVERSE(-1.0 ),
+        STOP(0.0 );
 
 
         private double power;
 
-        EHopperState(double pow, boolean isFeeding ) {
+        EHopperState(double pow) {
             power = pow;
-        }
-
-        public double getPower() {
-            return power;
         }
     }
     
@@ -45,7 +41,7 @@ public class Hopper extends Module {
     }
     @Override
     public void update(double pNow) {
-        mTalon.set(ControlMode.PercentOutput, mHopperState.getPower());
+        mTalon.set(ControlMode.PercentOutput, mHopperState.power);
     }
 
     @Override

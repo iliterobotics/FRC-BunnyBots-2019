@@ -23,11 +23,6 @@ public class    DriveTeamInputMap {
     OPERATOR_TOP_POSITION_ELEVATOR = ELogitech310.R_BTN,
     OPERATOR_CONTROL_ELEVATOR = ELogitech310.RIGHT_Y_AXIS,
 
-    //Arbitrary Value for SHOOT
-    SHOOT = ELogitech310.START,
-    //Arbitrary Value for OUTTAKE
-    OUTTAKE = ELogitech310.BACK;
-
     // Human Intake/Outake
     OPERATOR_SCORE = ELogitech310.RIGHT_TRIGGER_AXIS,
 
@@ -43,8 +38,8 @@ public class    DriveTeamInputMap {
     OPERATOR_CLIMBER_AXIS = ELogitech310.LEFT_Y_AXIS,
     OPERATOR_PUSHER_BUTTON = ELogitech310.START,
 
-    OPERATOR_SHOOT = null,
-    OPERATOR_STOP = null,
-    OPERATOR_REVERSE= null;
+    OPERATOR_SHOOT = ELogitech310.START,
+    OPERATOR_INTAKE = null,
+    OPERATOR_SPIT_OUT = null;
 
 }
