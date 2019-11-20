@@ -69,7 +69,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private void updateIntake() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE_BTN)) {
-            mIntake.setIntakeState(Intake.EIntakeState.INTAKING);
+            mIntake.setIntakeState(Intake.EIntakeState.INTAKE);
         } else {
             mIntake.setIntakeState(Intake.EIntakeState.STOP);
         }
