@@ -49,7 +49,7 @@ public class    DriveTeamInputMap {
 
     // Change these driver inputs upon driver's request.
 
-    FLYWHEEL_STARTUP_BUTTON = ELogitech310.START,
-    OUTTAKE = ELogitech310.BACK;
+    OPERATOR_SHOOT_FLYWHEEL = ELogitech310.START,
+    OPERATOR_CLEAN_FLYWHEEL = ELogitech310.BACK;
 
 }

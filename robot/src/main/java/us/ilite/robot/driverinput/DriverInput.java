@@ -25,10 +25,10 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
 //    private final Data mData;
+    private Shooter mShooter;
+
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
-    private Shooter mShooter;
-    private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
 
@@ -66,14 +66,14 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     public void updateShooter() {
 
-        if ( mOperatorInputCodex.isSet( DriveTeamInputMap.FLYWHEEL_STARTUP_BUTTON ) ) {
-            Shooter.setShooterState( Shooter.EShooterState.SHOOTING );
+        if ( mOperatorInputCodex.isSet( DriveTeamInputMap.OPERATOR_SHOOT_FLYWHEEL ) ) {
+            mShooter.setShooterState( Shooter.EShooterState.SHOOTING );
         }
-        else if ( mOperatorInputCodex.isSet ( DriveTeamInputMap.OUTTAKE ) ) {
-            Shooter.setShooterState( Shooter.EShooterState.GIVE_TO_HOPPER );
+        else if ( mOperatorInputCodex.isSet ( DriveTeamInputMap.OPERATOR_CLEAN_FLYWHEEL ) ) {
+            mShooter.setShooterState( Shooter.EShooterState.CLEAN );
         }
         else {
-            Shooter.setShooterState(( Shooter.EShooterState.STOP ) );
+            mShooter.setShooterState(( Shooter.EShooterState.STOP ) );
         }
 
     }
