@@ -1,15 +1,12 @@
 package us.ilite.robot.driverinput;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class InputHandler {
     private Supplier[] mMethods;
 
     public InputHandler() {
-        mMethods = new Supplier[]{}; //Add method names to this list
+        mMethods = new Supplier[]{/*() -> test()*/}; //Add methods to list like this
     }
 
     public void handleInputs() {
@@ -18,6 +15,6 @@ public class InputHandler {
         }
     }
 
-    // Write input handling module update methods below here
+    // Write input handling module update methods below here. They must return object Void
 
 }
