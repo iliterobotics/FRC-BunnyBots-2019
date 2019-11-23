@@ -7,7 +7,7 @@ import us.ilite.common.config.SystemSettings;
 
 
 public class Intake extends Module {
-    private TalonSRX mIntakeRoller = TalonSRXFactory.createDefaultTalon(SystemSettings.kIntakeId);
+    private TalonSRX mIntakeRoller;
     private EIntakeState mDesiredState;
     
     public enum EIntakeState {
@@ -18,6 +18,7 @@ public class Intake extends Module {
 
     public Intake() {
         mDesiredState = EIntakeState.STOP;
+        mIntakeRoller = TalonSRXFactory.createDefaultTalon(4/*SystemSettings.kIntakeId*/);
     }
 
     @Override
