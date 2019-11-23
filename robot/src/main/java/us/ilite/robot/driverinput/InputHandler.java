@@ -15,6 +15,17 @@ public class InputHandler {
         }
     }
 
-    // Write input handling module update methods below here. They must return object Void
+    // Write input handling module update methods below the example.
+    // Note: they must return the object Void not the primitive datatype void
+
+    /* Ex. (Still no need for a return statement)
+    public Void updateDriveTrain() {
+        if (button pressed) {
+            do this;
+        else {
+            do this;
+        }
+    }
+     */
 
 }
