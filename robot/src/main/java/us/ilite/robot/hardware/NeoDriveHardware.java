@@ -69,6 +69,8 @@ public class NeoDriveHardware implements IDriveHardware {
         mRightMaster.getEncoder().setPositionConversionFactor(1.0 * kGearRatio);
         mRightMaster.getEncoder().setVelocityConversionFactor(1.0 * kGearRatio);
 
+        configSparkForVelocity(mLeftMaster);
+        configSparkForVelocity(mRightMaster);
 
         reloadVelocityGains(mLeftMaster);
         reloadVelocityGains(mRightMaster);
@@ -79,7 +81,8 @@ public class NeoDriveHardware implements IDriveHardware {
     public void init() {
         zero();
         mLeftControlMode = mRightControlMode = ControlType.kDutyCycle;
-        mLeftNeutralMode = mRightNeutralMode = CANSparkMax.IdleMode.kBrake;
+//        mLeftNeutralMode = mRightNeutralMode = CANSparkMax.IdleMode.kBrake;
+        mLeftNeutralMode = mRightNeutralMode = CANSparkMax.IdleMode.kCoast;
 
         set(DriveMessage.kNeutral);
     }
@@ -112,6 +115,12 @@ public class NeoDriveHardware implements IDriveHardware {
         mLeftMaster.getPIDController().setReference(pDriveMessage.leftOutput, mLeftControlMode, mPidSlot, pDriveMessage.leftDemand);
         mRightMaster.getPIDController().setReference(pDriveMessage.rightOutput, mRightControlMode, mPidSlot, pDriveMessage.rightDemand);
 
+    }
+
+    public void setTarget(DriveMessage pDriveMessage) {
+        mLeftMaster.getPIDController().setReference(pDriveMessage.leftDemand, ControlType.kVelocity);
+        mLeftMaster.getPIDController().setReference(pDriveMessage.rightDemand, ControlType.kVelocity);
+        mLogger.error("Setting referencesssssssssssssssssssssssssssssssssssssssssssssssssss");
     }
 
     /**
@@ -320,6 +329,10 @@ public class NeoDriveHardware implements IDriveHardware {
         //         checkerConfigBuilder.build());
         // return leftSide && rightSide;
         return true;
+    }
+
+    public void setMotorReference(CANPIDController pCanpidController, double pReference) {
+        pCanpidController.setReference(pReference, ControlType.kVelocity);
     }
 
 }

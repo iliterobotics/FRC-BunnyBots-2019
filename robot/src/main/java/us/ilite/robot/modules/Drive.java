@@ -59,6 +59,8 @@ public class Drive extends Loop {
 	private Clock mSimClock = null;
 	private double mPreviousTime = 0;
 
+	private DriveControlMode mDriveControlMode = DriveControlMode.PERCENT_OUTPUT;
+
 	ReflectingCSVWriter<DebugOutput> mDebugLogger = null;
 	DebugOutput debugOutput = new DebugOutput();
 
@@ -176,7 +178,14 @@ public class Drive extends Loop {
 			mLogger.error("Invalid drive state - maybe you meant to run this a high frequency?");
 			mDriveState = EDriveState.NORMAL;
 		} else {
-			mDriveHardware.set(mDriveMessage);
+			switch (this.mDriveControlMode) {
+                case VELOCITY:
+					((NeoDriveHardware)mDriveHardware).setTarget(mDriveMessage);
+                    break;
+                case PERCENT_OUTPUT:
+					mDriveHardware.set(mDriveMessage);
+			    }
+
 		}
 
 		mPreviousTime = pNow;
@@ -187,6 +196,10 @@ public class Drive extends Loop {
 		stopCsvLogging();
 		mDriveHardware.zero();
 	}
+
+	public void setDriveControlMode(DriveControlMode pDriveControlMode) {
+	    this.mDriveControlMode = pDriveControlMode;
+    }
 
 	@Override
 	public void loop(double pNow) {
@@ -385,10 +398,10 @@ public class Drive extends Loop {
 
 	}
 
-	public void setRampRate(double pOpenLoopRampRate) {
-		mDriveHardware.setOpenLoopRampRate(pOpenLoopRampRate);
-	}
-
+	public enum DriveControlMode {
+	    VELOCITY,
+        PERCENT_OUTPUT;
+    }
 }
 	
 	
