@@ -224,8 +224,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kDriveRightMiddleTalonId = 4;
     public static  int kDriveRightRearTalonId = 6;
     public static int kCatapultServoChannel = -1;
-    public static int kHopperCANMotor = 1;
-    public static int kHopperMotorId = 0;
+    public static int kHopperTalonId = -1;
+    public static int kHopperVictorId = -1;
 
 
 
