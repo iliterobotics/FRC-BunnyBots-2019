@@ -47,10 +47,13 @@ public class Shooter extends Module {
         switch (mShooterState) {
             case SHOOTING:
                 mDesiredOutput = kShooterPidController.calculate(mTalonShooter.getSelectedSensorVelocity(), pNow);
+                break;
             case CLEAN:
                 mDesiredOutput = -1.0;
+                break;
             case STOP:
                 mDesiredOutput = 0.0;
+                break;
         }
 
         mTalonShooter.set(ControlMode.PercentOutput, mDesiredOutput);

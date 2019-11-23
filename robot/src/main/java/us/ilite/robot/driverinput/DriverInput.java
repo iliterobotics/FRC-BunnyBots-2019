@@ -79,17 +79,16 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     private void updateWholeIntakeSystem() {
-//        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
-////            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
-////            mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
-//        }
-//        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
-////            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
-////            mShooter.setShooterState(Shooter.EShooterState.CLEAN);
-//        } else {
-////            mHopper.setHopperState(Hopper.EHopperState.STOP);
-////            mShooter.setShooterState(Shooter.EShooterState.STOP);
-//        }
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
+            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+            mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
+        } else if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
+            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+            mShooter.setShooterState(Shooter.EShooterState.CLEAN);
+        } else {
+            mHopper.setHopperState(Hopper.EHopperState.STOP);
+            mShooter.setShooterState(Shooter.EShooterState.STOP);
+        }
     }
 
     private void updateIntake() {
