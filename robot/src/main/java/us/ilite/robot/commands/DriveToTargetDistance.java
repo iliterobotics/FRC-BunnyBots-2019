@@ -18,29 +18,25 @@ public class DriveToTargetDistance implements ICommand, IThrottleProvider {
     private double mOutput;
     private final double kMaxDistance= 0.0; //find value later
     private final double kMinDistance = 0.0; // find value later
-    private final double[] kOutputRange = {0.0, 0.0};
 
     public DriveToTargetDistance(Limelight pLimelight, SystemSettings.VisionTarget pVisionTarget) {
         mLimelight = pLimelight;
         mTarget = pVisionTarget;
-        mDistanceGains = new PIDGains(0.0, 0.0, 0.0); //find values
+        mDistanceGains = new PIDGains(0.0, 0.0, 0.0); //tune when we have robot
         mPIDController = new PIDController(mDistanceGains, kMinDistance, kMaxDistance, SystemSettings.kControlLoopPeriod);
+        mPIDController.setSetpoint(mTarget.getDistanceNeeded());
+        mPIDController.setOutputRange(-1, 1);
+        mPIDController.setDeadband(SystemSettings.kDistanceToTargetDeadband);
     }
 
     @Override
     public void init(double pNow) {
-        mPIDController.setOutputRange(kOutputRange[0], kOutputRange[1]);
     }
 
     @Override
     public boolean update(double pNow) {
         mError = mLimelight.calcTargetDistance(mTarget.getHeight()) - mTarget.getDistanceNeeded();
-        mOutput = mPIDController.calculate(mError, pNow);
-        if (mError <= SystemSettings.kDistanceToTargetThreshold) {
-            mOutput = 0.0;
-            return true;
-        }
-        return false;
+        return (mOutput = mPIDController.calculate(mError, pNow)) == 0.0;
     }
 
 

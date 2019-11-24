@@ -198,7 +198,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
         }
     }
 
-    public static double kDistanceToTargetThreshold = 0.0;
+    public static double kDistanceToTargetDeadband = 0.0;
 
     // =============================================================================
     // 2019 Module Addresses
