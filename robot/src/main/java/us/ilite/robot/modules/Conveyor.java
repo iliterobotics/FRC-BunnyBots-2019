@@ -2,20 +2,16 @@ package us.ilite.robot.modules;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
-import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
-import com.revrobotics.CANSparkMax;
-import us.ilite.lib.drivers.SparkMaxFactory;
 
 
-public class Hopper extends Module {
-    private EHopperState mHopperState;
+public class Conveyor extends Module {
+    private EConveyorState mConveyorState;
     private TalonSRX mTalon;
     private VictorSPX mVictor;
 
-    public enum EHopperState
+    public enum EConveyorState
     {
         GIVE_TO_SHOOTER(1.0),
         REVERSE(-1.0 ),
@@ -24,15 +20,15 @@ public class Hopper extends Module {
 
         private double power;
 
-        EHopperState(double pow) {
+        EConveyorState(double pow) {
             power = pow;
         }
     }
     
-    public Hopper() {
-        mHopperState = EHopperState.STOP;
-        mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperTalonId);
-        mVictor = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kHopperVictorId, mTalon);
+    public Conveyor() {
+        mConveyorState = EConveyorState.STOP;
+        mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kConveyorTalonId);
+        mVictor = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kConveyorVictorId, mTalon);
     }
     @Override
     public void modeInit(double pNow) {
@@ -44,17 +40,17 @@ public class Hopper extends Module {
     }
     @Override
     public void update(double pNow) {
-        mTalon.set(ControlMode.PercentOutput, mHopperState.power);
+        mTalon.set(ControlMode.PercentOutput, mConveyorState.power);
     }
 
     @Override
     public void shutdown(double pNow) {
-        mHopperState = EHopperState.STOP;
+        mConveyorState = EConveyorState.STOP;
     }
 
-    public void setHopperState ( EHopperState pHopperState )
+    public void setConveyorState ( EConveyorState pConveyorState )
     {
-        mHopperState = pHopperState;
+        mConveyorState = pConveyorState;
     }
 
 

@@ -27,7 +27,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final Limelight mLimelight;
 //    private final Data mData;
     private Shooter mShooter;
-    private Hopper mHopper;
+    private Conveyor mConveyor;
     private Intake mIntake;
 
     private Timer mGroundCargoTimer = new Timer();
@@ -41,9 +41,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Shooter pShooter, Hopper pHopper, Intake pIntake, Data pData ) {
+    public DriverInput(Shooter pShooter, Conveyor pConveyor, Intake pIntake, Data pData ) {
         mShooter = pShooter;
-        mHopper = pHopper;
+        mConveyor = pConveyor;
         mIntake = pIntake;
         mData = pData;
         mOperatorJoystick = new Joystick(1);
@@ -80,13 +80,13 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private void updateWholeIntakeSystem() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
-            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+            mConveyor.setHopperState(Conveyor.EConveyorState.GIVE_TO_SHOOTER);
             mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
         } else if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
-            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+            mConveyor.setHopperState(Conveyor.EConveyorState.REVERSE);
             mShooter.setShooterState(Shooter.EShooterState.CLEAN);
         } else {
-            mHopper.setHopperState(Hopper.EHopperState.STOP);
+            mConveyor.setHopperState(Conveyor.EConveyorState.STOP);
             mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
     }
