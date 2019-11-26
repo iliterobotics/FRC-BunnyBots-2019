@@ -226,7 +226,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kCatapultServoChannel = -1;
     public static int kConveyorTalonId = -1;
     public static int kConveyorVictorId = -1;
-
+    public static int kHopperTalonId = -1;
 
 
     // =============================================================================

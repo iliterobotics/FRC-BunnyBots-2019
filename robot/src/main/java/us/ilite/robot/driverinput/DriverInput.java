@@ -29,6 +29,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private Shooter mShooter;
     private Conveyor mConveyor;
     private Intake mIntake;
+    private Hopper mHopper;
 
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
@@ -41,10 +42,11 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Shooter pShooter, Conveyor pConveyor, Intake pIntake, Data pData ) {
+    public DriverInput(Shooter pShooter, Conveyor pConveyor, Intake pIntake, Hopper pHopper, Data pData) {
         mShooter = pShooter;
         mConveyor = pConveyor;
         mIntake = pIntake;
+        mHopper = pHopper;
         mData = pData;
         mOperatorJoystick = new Joystick(1);
         mDriverInputCodex = mData.driverinput;
@@ -80,13 +82,16 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private void updateWholeIntakeSystem() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
-            mConveyor.setHopperState(Conveyor.EConveyorState.GIVE_TO_SHOOTER);
+            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+            mConveyor.setConveyorState(Conveyor.EConveyorState.GIVE_TO_SHOOTER);
             mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
         } else if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
-            mConveyor.setHopperState(Conveyor.EConveyorState.REVERSE);
+            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+            mConveyor.setConveyorState(Conveyor.EConveyorState.REVERSE);
             mShooter.setShooterState(Shooter.EShooterState.CLEAN);
         } else {
-            mConveyor.setHopperState(Conveyor.EConveyorState.STOP);
+            mHopper.setHopperState(Hopper.EHopperState.STOP);
+            mConveyor.setConveyorState(Conveyor.EConveyorState.STOP);
             mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
     }
