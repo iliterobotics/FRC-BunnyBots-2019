@@ -1,7 +1,6 @@
 package us.ilite.robot.modules;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
 import us.ilite.common.config.SystemSettings;
 
@@ -28,7 +27,7 @@ public class Hopper extends Module {
     public Hopper() {
         mHopperState = EHopperState.STOP;
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperTalonId);
-        
+
     }
     @Override
     public void modeInit(double pNow) {
