@@ -1,9 +1,13 @@
 package us.ilite.robot.modules;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.LogOutput;
 import com.flybotix.hfr.util.log.Logger;
+import com.team254.lib.drivers.talon.TalonSRXChecker;
+import com.team254.lib.drivers.talon.TalonSRXFactory;
 import com.team254.lib.geometry.Pose2dWithCurvature;
 import com.team254.lib.geometry.Rotation2d;
 import com.team254.lib.trajectory.Trajectory;
@@ -57,6 +61,8 @@ public class Drive extends Loop {
 
 	private Clock mSimClock = null;
 	private double mPreviousTime = 0;
+	private TalonSRX mLeftDriveTalon;
+	private TalonSRX mRightDriveTalon;
 
 	ReflectingCSVWriter<DebugOutput> mDebugLogger = null;
 	DebugOutput debugOutput = new DebugOutput();
@@ -79,6 +85,9 @@ public class Drive extends Loop {
 				this.mDriveHardware = new NeoDriveHardware(SystemSettings.kDriveGearboxRatio);
 			}
 		}
+
+		mLeftDriveTalon = TalonSRXFactory.createDefaultTalon(4);
+		mRightDriveTalon = TalonSRXFactory.createDefaultTalon(5);
 
 		this.mDriveHardware.init();
 	}
@@ -252,7 +261,9 @@ public class Drive extends Loop {
 				mLogger.warn("Got drive state: " + mDriveState+" which is unhandled");
 				break;
 		}
-		mDriveHardware.set(mDriveMessage);
+//		mDriveHardware.set(mDriveMessage);
+        mLeftDriveTalon.set(ControlMode.PercentOutput, mDriveMessage.leftOutput);
+		mRightDriveTalon.set(ControlMode.PercentOutput, mDriveMessage.rightOutput);
 		mPreviousTime = pNow;
 //		mUpdateTimer.stop();
 	}
