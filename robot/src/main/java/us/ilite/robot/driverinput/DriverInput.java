@@ -70,11 +70,17 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     public void updateYeets() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
+        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
+                mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            mYeets.turn(YeetLeftRight.EYeetSide.BOTH);
+        }
+        else if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
             mYeets.turn(YeetLeftRight.EYeetSide.LEFT);
-        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+        }
+        else if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
             mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
-        } else {
+        }
+        else {
             mYeets.slowToStop();
         }
     }
