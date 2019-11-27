@@ -15,7 +15,6 @@ public class YeetLeftRight implements ICommand {
 
     public enum EYeetSide {
         LEFT,
-        BOTH,
         RIGHT
     }
 
@@ -46,12 +45,6 @@ public class YeetLeftRight implements ICommand {
         ramp();
         if (mSideToTurn == EYeetSide.LEFT) {
             output *= -1;
-        }
-        else if ( mSideToTurn == EYeetSide.BOTH ) {
-            output = 0;
-            mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, output));
-            mCurrentTurn = mDesiredTurn;
-            return true;
         }
 
         mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, output));
