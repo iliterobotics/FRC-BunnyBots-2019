@@ -7,8 +7,9 @@ import us.ilite.common.config.SystemSettings;
 
 
 public class Intake extends Module {
-    private TalonSRX mIntakeRoller;
-    private EIntakeState mDesiredState;
+
+    private TalonSRX mTalon;
+    private EIntakeState mIntakeState;
     
     public enum EIntakeState {
         INTAKE,
@@ -17,8 +18,8 @@ public class Intake extends Module {
     }
 
     public Intake() {
-        mDesiredState = EIntakeState.STOP;
-        mIntakeRoller = TalonSRXFactory.createDefaultTalon(SystemSettings.kIntakeTalonId);
+        mIntakeState = EIntakeState.STOP;
+        mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kIntakeTalonId);
     }
 
     @Override
@@ -32,25 +33,25 @@ public class Intake extends Module {
 
     @Override
     public void update(double pNow) {
-        switch (mDesiredState) {
+        switch (mIntakeState) {
             case INTAKE:
-                mIntakeRoller.set(ControlMode.PercentOutput, SystemSettings.kIntakeTalonPower);
+                mTalon.set(ControlMode.PercentOutput, SystemSettings.kIntakeTalonPower);
                 break;
             case OUTTAKE:
-                mIntakeRoller.set(ControlMode.PercentOutput, -SystemSettings.kIntakeTalonPower);
+                mTalon.set(ControlMode.PercentOutput, -SystemSettings.kIntakeTalonPower);
                 break;
             case STOP:
-                mIntakeRoller.set(ControlMode.PercentOutput, 0d);
+                mTalon.set(ControlMode.PercentOutput, 0d);
                 break;
         }
     }
 
     @Override
     public void shutdown(double pNow) {
-        mIntakeRoller.set(ControlMode.PercentOutput, 0d);
+        mTalon.set(ControlMode.PercentOutput, 0d);
     }
 
     public void setIntakeState(EIntakeState pIntakeState) {
-        mDesiredState = pIntakeState;
+        mIntakeState = pIntakeState;
     }
 }

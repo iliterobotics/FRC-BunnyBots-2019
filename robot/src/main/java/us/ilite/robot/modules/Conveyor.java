@@ -24,7 +24,7 @@ public class Conveyor extends Module {
     public Conveyor(Shooter pShooter) {
         mConveyorState = EConveyorState.STOP;
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kConveyorTalonId);
-        mVictor = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kConveyorVictorID, mTalon);
+        mVictor = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kConveyorVictorId, mTalon);
         mShooter = pShooter;
     }
     @Override
@@ -54,11 +54,10 @@ public class Conveyor extends Module {
 
     @Override
     public void shutdown(double pNow) {
-        mConveyorState = EConveyorState.STOP;
+        mTalon.set(ControlMode.PercentOutput, 0d);
     }
 
-    public void setConveyorState ( EConveyorState pConveyorState )
-    {
+    public void setConveyorState ( EConveyorState pConveyorState ) {
         mConveyorState = pConveyorState;
     }
 

@@ -128,7 +128,7 @@ public class Robot extends TimedRobot {
         mSettings.loadFromNetworkTables();
 
         // Init modules after commands are set
-        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mConveyor, mShooter, mIntake);
+        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mConveyor, mShooter, mIntake, mHopper);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
@@ -152,7 +152,7 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mShooter, mConveyor, mIntake);
+        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mShooter, mConveyor, mIntake, mHopper);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 

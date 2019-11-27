@@ -22,8 +22,8 @@ public class Shooter extends Module {
     }
 
     public Shooter() {
-        mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kShooterTalonID);
-        mVictor = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kShooterVictorID, mTalon);
+        mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kShooterTalonId);
+        mVictor = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kShooterVictorId, mTalon);
         mVictor.setInverted(true);
 
         kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooterVelocity, SystemSettings.kControlLoopPeriod );
@@ -49,7 +49,7 @@ public class Shooter extends Module {
                 mDesiredOutput = kShooterPidController.calculate(mTalon.getSelectedSensorVelocity(), pNow);
                 break;
             case CLEAN:
-                mDesiredOutput = -1d;
+                mDesiredOutput = -SystemSettings.kShooterTalonPower;
                 break;
             case STOP:
                 mDesiredOutput = 0d;
@@ -65,7 +65,7 @@ public class Shooter extends Module {
 
     @Override
     public void shutdown(double pNow) {
-
+        mTalon.set(ControlMode.PercentOutput, 0d);
     }
 
     public boolean isMaxVelocity() {

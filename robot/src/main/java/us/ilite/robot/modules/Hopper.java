@@ -4,14 +4,14 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
 import us.ilite.common.config.SystemSettings;
-
+import us.ilite.robot.modules.Shooter;
 
 
 public class Hopper extends Module {
     private EHopperState mHopperState;
-
     private TalonSRX mTalon;
     private Shooter mShooter;
+    private double mDesiredOutput;
 
     public enum EHopperState
     {
@@ -24,7 +24,6 @@ public class Hopper extends Module {
         mHopperState = EHopperState.STOP;
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperTalonId);
         mShooter = pShooter;
-        
     }
     @Override
     public void modeInit(double pNow) {
@@ -53,11 +52,15 @@ public class Hopper extends Module {
 
     @Override
     public void shutdown(double pNow) {
-        mHopperState = EHopperState.STOP;
+        mTalon.set(ControlMode.PercentOutput, 0d);
     }
 
-    public void setHopperState ( EHopperState pHopperState )
-    {
+    public void setHopperState ( EHopperState pHopperState ) {
         mHopperState = pHopperState;
     }
+
+
+
+
+
 }
