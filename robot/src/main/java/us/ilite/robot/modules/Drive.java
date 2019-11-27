@@ -169,6 +169,9 @@ public class Drive extends Loop {
 		mData.imu.set(EGyro.YAW_DEGREES, getHeading().getDegrees());
 		mData.drive.meta().next(true);
 		mData.imu.meta().next(true);
+
+		SmartDashboard.putNumber("Drive Right Velocity", mDriveHardware.getRightVelTicks());
+		SmartDashboard.putNumber("Drive Left Velocity", mDriveHardware.getLeftVelTicks());
 //		SimpleNetworkTable.writeCodexToSmartDashboard(EDriveData.class, mData.drive, mClock.getCurrentTime());
 	}
 

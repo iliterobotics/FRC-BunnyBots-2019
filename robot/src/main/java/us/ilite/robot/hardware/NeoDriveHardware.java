@@ -119,8 +119,7 @@ public class NeoDriveHardware implements IDriveHardware {
 
     public void setTarget(DriveMessage pDriveMessage) {
         mLeftMaster.getPIDController().setReference(pDriveMessage.leftDemand, ControlType.kVelocity);
-        mLeftMaster.getPIDController().setReference(pDriveMessage.rightDemand, ControlType.kVelocity);
-        mLogger.error("Setting referencesssssssssssssssssssssssssssssssssssssssssssssssssss");
+        mRightMaster.getPIDController().setReference(pDriveMessage.rightDemand, ControlType.kVelocity);
     }
 
     /**

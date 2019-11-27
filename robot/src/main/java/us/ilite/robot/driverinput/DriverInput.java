@@ -3,6 +3,7 @@ package us.ilite.robot.driverinput;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.lib.control.PIDController;
 import us.ilite.common.Data;
 import us.ilite.common.config.DriveTeamInputMap;
@@ -110,6 +111,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
         leftDemand = Math.abs(leftDemand) > 0.01 ? leftDemand : 0.0; //Handling Deadband
         rightDemand = Math.abs(rightDemand) > 0.01 ? rightDemand : 0.0; //Handling Deadband
+
+        SmartDashboard.putNumber("Left Drive Demand", leftDemand);
+        SmartDashboard.putNumber("Right Drive Demand", rightDemand);
 
         double leftSetpoint = leftDemand * SystemSettings.kDriveTrainMaxVelocity;
         double rightSetpoint = rightDemand * SystemSettings.kDriveTrainMaxVelocity;
