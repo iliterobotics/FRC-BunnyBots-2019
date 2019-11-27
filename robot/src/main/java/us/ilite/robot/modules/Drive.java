@@ -14,8 +14,10 @@ import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.timing.TimedState;
 import com.team254.lib.util.ReflectingCSVWriter;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.Data;
 import us.ilite.common.config.AbstractSystemSettingsUtils;
+import us.ilite.common.config.DriveTeamInputMap;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.control.DriveController;
 import com.team254.frc2018.planners.DriveMotionPlanner;
@@ -57,6 +59,12 @@ public class Drive extends Loop {
 	private double mTargetTrackingThrottle = 0;
 
 	private PIDController mTargetAngleLockPid;
+    private PIDController mHeadingChangePIDController;
+    private double mCurrentHeadingChange = 0.0;
+    private double mPreviousHeading = 0.0;
+    private double mRotatePercentOutput = 0.0;
+    private double mThrottle;
+    private double mTurn;
 	private DriveController mDriveController;
 
 	private Clock mSimClock = null;
@@ -86,6 +94,7 @@ public class Drive extends Loop {
 			}
 		}
 
+		mHeadingChangePIDController = new PIDController(SystemSettings.kHeadingChangeGains, -SystemSettings.kMaxHeadingChange, SystemSettings.kMaxHeadingChange, SystemSettings.kControlLoopPeriod);
 		mLeftDriveTalon = TalonSRXFactory.createDefaultTalon(4);
 		mRightDriveTalon = TalonSRXFactory.createDefaultTalon(5);
 
@@ -125,18 +134,20 @@ public class Drive extends Loop {
 	  	setDriveMessage(DriveMessage.kNeutral);
 	  	setDriveState(EDriveState.NORMAL);
 
+	  	mHeadingChangePIDController.setOutputRange(-1, 1);
+
 //	  	startCsvLogging();
 	}
 
 	@Override
 	public void periodicInput(double pNow) {
 
-		mData.drive.set(EDriveData.LEFT_POS_INCHES, mDriveHardware.getLeftInches());
-		mData.drive.set(EDriveData.RIGHT_POS_INCHES, mDriveHardware.getRightInches());
+//		mData.drive.set(EDriveData.LEFT_POS_INCHES, mDriveHardware.getLeftInches());
+//		mData.drive.set(EDriveData.RIGHT_POS_INCHES, mDriveHardware.getRightInches());
 //		mData.drive.set(EDriveData.LEFT_VEL_IPS, mDriveHardware.getLeftVelInches());
 //		mData.drive.set(EDriveData.RIGHT_VEL_IPS, mDriveHardware.getRightVelInches());
-		mData.drive.set(EDriveData.LEFT_VEL_TICKS, (double)mDriveHardware.getLeftVelTicks());
-		mData.drive.set(EDriveData.RIGHT_VEL_TICKS, (double)mDriveHardware.getRightVelTicks());
+//		mData.drive.set(EDriveData.LEFT_VEL_TICKS, (double)mDriveHardware.getLeftVelTicks());
+//		mData.drive.set(EDriveData.RIGHT_VEL_TICKS, (double)mDriveHardware.getRightVelTicks());
 
 //		mData.drive.set(EDriveData.LEFT_CURRENT, mDriveHardware.getLeftCurrent());
 //		mData.drive.set(EDriveData.RIGHT_CURRENT, mDriveHardware.getRightCurrent());
@@ -173,6 +184,9 @@ public class Drive extends Loop {
 		mData.drive.meta().next(true);
 		mData.imu.meta().next(true);
 //		SimpleNetworkTable.writeCodexToSmartDashboard(EDriveData.class, mData.drive, mClock.getCurrentTime());
+        mHeadingChangePIDController.setSetpoint(.1* SystemSettings.kMaxHeadingChange);
+
+
 	}
 
 	@Override
@@ -181,10 +195,18 @@ public class Drive extends Loop {
 			mLogger.error("Invalid drive state - maybe you meant to run this a high frequency?");
 			mDriveState = EDriveState.NORMAL;
 		} else {
-			mDriveHardware.set(mDriveMessage);
+            double mCurrentHeading = mDriveHardware.getImu().getHeading().getRadians();
+            mCurrentHeadingChange = mCurrentHeading - mPreviousHeading;
+            double newOutput = mHeadingChangePIDController.calculate(mCurrentHeading - mPreviousHeading, pNow);
+            mDriveMessage = DriveMessage.fromThrottleAndTurn(mTurn, mThrottle);
+            SmartDashboard.putNumber("Desired heading change", .1 * SystemSettings.kMaxHeadingChange);
+            SmartDashboard.putNumber("Turn output", mTurn);
+            SmartDashboard.putNumber("Actual heading change", mCurrentHeadingChange);
+            mDriveHardware.set(mDriveMessage);
 		}
 
-		mPreviousTime = pNow;
+        mPreviousTime = pNow;
+        mPreviousHeading = mDriveHardware.getImu().getHeading().getRadians();
 	}
 	
 	@Override
@@ -253,7 +275,6 @@ public class Drive extends Loop {
 					mDriveMessage = DriveMessage.getClampedTurnDrive(mTargetTrackingThrottle, pidOutput);
 					// If we've already seen the target and lose tracking, exit.
 				}
-
 				break;
 			case NORMAL:
 				break;
@@ -261,9 +282,7 @@ public class Drive extends Loop {
 				mLogger.warn("Got drive state: " + mDriveState+" which is unhandled");
 				break;
 		}
-//		mDriveHardware.set(mDriveMessage);
-        mLeftDriveTalon.set(ControlMode.PercentOutput, mDriveMessage.leftOutput);
-		mRightDriveTalon.set(ControlMode.PercentOutput, mDriveMessage.rightOutput);
+		mDriveHardware.set(mDriveMessage);
 		mPreviousTime = pNow;
 //		mUpdateTimer.stop();
 	}
@@ -315,9 +334,14 @@ public class Drive extends Loop {
 		this.mDriveState = pDriveState;
 	}
 
-	public synchronized void setDriveMessage(DriveMessage pDriveMessage) {
-		this.mDriveMessage = pDriveMessage;
-	}
+    public synchronized void setDriveMessage(DriveMessage pDriveMessage, double pRotatePercentOutput) {
+        mRotatePercentOutput = pRotatePercentOutput;
+        this.mDriveMessage = pDriveMessage;
+    }
+
+    public synchronized void setDriveMessage(DriveMessage pDriveMessage) {
+        this.mDriveMessage = pDriveMessage;
+    }
 
 	public synchronized DriveController getDriveController() {
 		return mDriveController;
@@ -395,6 +419,11 @@ public class Drive extends Loop {
 	public void setRampRate(double pOpenLoopRampRate) {
 		mDriveHardware.setOpenLoopRampRate(pOpenLoopRampRate);
 	}
+
+	public void setThrottleAndTurn(double pThrottle, double pTurn) {
+        mThrottle = pThrottle;
+        mTurn = pTurn;
+    }
 
 }
 	

@@ -41,6 +41,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kDriveTicksPerRotation = 1.0;
     public static double kDriveVelTimeScale = 1.0;
     public static double kDriveEffectiveWheelbase = 23.25;
+    public static double kMaxHeadingChange = 6; //Radians per cycle
+    public static PIDGains kHeadingChangeGains = new PIDGains(0, 0, 0, .15);
 
     public static double kDriveClosedLoopVoltageRampRate = 0.0;
     public static double kDriveMinOpenLoopVoltageRampRate = 0.1;
@@ -205,10 +207,10 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kPigeonId = 30;
     public static int kCanifierAddress = 40;
 
-    public static  int kDriveLeftMasterTalonId = 1;
+    public static  int kDriveLeftMasterTalonId = 4;
     public static int kDriveLeftMiddleTalonId = 3;
     public static  int kDriveLeftRearTalonId = 5;
-    public static  int kDriveRightMasterTalonId = 2;
+    public static  int kDriveRightMasterTalonId = 5;
     public static int kDriveRightMiddleTalonId = 4;
     public static  int kDriveRightRearTalonId = 6;
 
