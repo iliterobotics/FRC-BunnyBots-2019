@@ -83,7 +83,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
         mDrive.setRampRate(SystemSettings.kDriveMinOpenLoopVoltageRampRate);
 
-        //		    throttle = EInputScale.EXPONENTIAL.map(throttle, 2);
+//        throttle = EInputScale.EXPONENTIAL.map(throttle, 2);
         rotate = EInputScale.EXPONENTIAL.map(rotate, 2);
         rotate *= SystemSettings.kNormalPercentThrottleReduction;
 
@@ -91,6 +91,15 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             throttle *= SystemSettings.kSnailModePercentThrottleReduction;
             rotate *= SystemSettings.kSnailModePercentRotateReduction;
         }
+
+        double lowestOutput = Math.min(Math.abs(rotate), Math.abs(throttle));
+        double highestOutput = Math.max(Math.abs(rotate), Math.abs(throttle));
+        double saturatedOutput = 1.0;
+        if (highestOutput > 0.0) {
+            saturatedOutput = lowestOutput / highestOutput + 1.0;
+        }
+        throttle /= saturatedOutput;
+        rotate /= saturatedOutput;
 
         // Handled AFTER any scaling - we don't want the output of this to be scaled
         if(Math.abs(throttle) < Util.kEpsilon) {
