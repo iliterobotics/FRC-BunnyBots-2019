@@ -51,10 +51,11 @@ public class Robot extends TimedRobot {
     private final Drive mDrive = new Drive(mData, mDriveController);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
-    private final Conveyor mConveyor = new Conveyor();
-    private final Shooter mShooter = new Shooter();
     private final Intake mIntake = new Intake();
-    private final DriverInput mDriverInput = new DriverInput(mShooter, mConveyor, mIntake, mData);
+    private final Shooter mShooter = new Shooter();
+    private final Hopper mHopper = new Hopper(mShooter);
+    private final Conveyor mConveyor = new Conveyor(mShooter);
+    private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData);
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);

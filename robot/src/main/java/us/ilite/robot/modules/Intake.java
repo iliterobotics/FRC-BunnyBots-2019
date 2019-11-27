@@ -18,7 +18,7 @@ public class Intake extends Module {
 
     public Intake() {
         mDesiredState = EIntakeState.STOP;
-        mIntakeRoller = TalonSRXFactory.createDefaultTalon(4/*SystemSettings.kIntakeId*/);
+        mIntakeRoller = TalonSRXFactory.createDefaultTalon(SystemSettings.kIntakeTalonId);
     }
 
     @Override
@@ -34,20 +34,20 @@ public class Intake extends Module {
     public void update(double pNow) {
         switch (mDesiredState) {
             case INTAKE:
-                mIntakeRoller.set(ControlMode.PercentOutput, SystemSettings.kIntakeOutput);
+                mIntakeRoller.set(ControlMode.PercentOutput, SystemSettings.kIntakeTalonPower);
                 break;
             case OUTTAKE:
-                mIntakeRoller.set(ControlMode.PercentOutput, -SystemSettings.kIntakeOutput);
+                mIntakeRoller.set(ControlMode.PercentOutput, -SystemSettings.kIntakeTalonPower);
                 break;
             case STOP:
-                mIntakeRoller.set(ControlMode.PercentOutput, 0.0 );
+                mIntakeRoller.set(ControlMode.PercentOutput, 0d);
                 break;
         }
     }
 
     @Override
     public void shutdown(double pNow) {
-        mIntakeRoller.set(ControlMode.PercentOutput, 0.0);
+        mIntakeRoller.set(ControlMode.PercentOutput, 0d);
     }
 
     public void setIntakeState(EIntakeState pIntakeState) {

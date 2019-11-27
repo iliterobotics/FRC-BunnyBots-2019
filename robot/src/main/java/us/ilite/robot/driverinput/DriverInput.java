@@ -42,11 +42,11 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Shooter pShooter, Conveyor pConveyor, Intake pIntake, Hopper pHopper, Data pData) {
-        mShooter = pShooter;
-        mConveyor = pConveyor;
+    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData) {
         mIntake = pIntake;
         mHopper = pHopper;
+        mConveyor = pConveyor;
+        mShooter = pShooter;
         mData = pData;
         mOperatorJoystick = new Joystick(1);
         mDriverInputCodex = mData.driverinput;

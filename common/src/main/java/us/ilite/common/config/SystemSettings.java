@@ -15,7 +15,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
 
     public static double kControlLoopPeriod = 0.01; // seconds
     public static double kCSVLoggingPeriod = 0.02;  // seconds
-    public static double kMaxShooter = 1.0;
+    public static double kMaxShooterVelocity = 1.0;
     public static double kNetworkTableUpdateRate = 0.01;
 
     public static int sCODEX_COMMS_PORT = 5805;
@@ -93,13 +93,20 @@ public class SystemSettings extends NetworkTablesConstantsBase {
 //                                                                            DriveTeamInputMap.DRIVER_TURN_AXIS);
     public static double kAutonOverrideAxisThreshold = 0.3;
 
+    // =============================================================================
+    // Whole-Intake-System Power
+    // =============================================================================
+
+    public static double kIntakeTalonPower = 1d;
+    public static double kHopperTalonPower = 1d;
+    public static double kConveyorTalonPower = 1d;
+    public static double kShooterTalonPower = 1d;
+
     // ============================================================================
     // Shooter
     // ============================================================================
 
-    public static PIDGains kShooterGains = new PIDGains( 0 ,0,0,0);
-    public static int kShooterTalonID = -1;
-    public static int kShooterVictorID = -1;
+    public static PIDGains kShooterGains = new PIDGains(0 ,0,0,0);
 
     // =============================================================================
     // Motion Magic Constants
@@ -217,23 +224,21 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kPigeonId = 30;
     public static int kCanifierAddress = 40;
 
-    public static  int kDriveLeftMasterTalonId = 1;
+    public static int kDriveLeftMasterTalonId = 1;
     public static int kDriveLeftMiddleTalonId = 3;
-    public static  int kDriveLeftRearTalonId = 5;
-    public static  int kDriveRightMasterTalonId = 2;
+    public static int kDriveLeftRearTalonId = 5;
+    public static int kDriveRightMasterTalonId = 2;
     public static int kDriveRightMiddleTalonId = 4;
-    public static  int kDriveRightRearTalonId = 6;
+    public static int kDriveRightRearTalonId = 6;
     public static int kCatapultServoChannel = -1;
-    public static int kConveyorTalonId = -1;
-    public static int kConveyorVictorId = -1;
+    public static int kIntakeTalonId = -1;
     public static int kHopperTalonId = -1;
+    public static int kConveyorTalonId = -1;
+    public static int kConveyorVictorID = -1;
+    public static int kShooterTalonID = -1;
+    public static int kShooterVictorID = -1;
 
 
-    // =============================================================================
-    // Intake Constants
-    // =============================================================================
-    public static final int kIntakeId = -1; //TODO
-    public static final double kIntakeOutput = 1;
 
     public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{
             /* Left */

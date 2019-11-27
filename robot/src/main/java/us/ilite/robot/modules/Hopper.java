@@ -11,23 +11,19 @@ public class Hopper extends Module {
     private EHopperState mHopperState;
 
     private TalonSRX mTalon;
+    private Shooter mShooter;
+
     public enum EHopperState
     {
-        GIVE_TO_SHOOTER(1.0),
-        REVERSE(-1.0 ),
-        STOP(0.0 );
-
-
-        private double power;
-
-        EHopperState(double pow) {
-            power = pow;
-        }
+        GIVE_TO_SHOOTER,
+        REVERSE,
+        STOP;
     }
 
-    public Hopper() {
+    public Hopper(Shooter pShooter) {
         mHopperState = EHopperState.STOP;
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperTalonId);
+        mShooter = pShooter;
         
     }
     @Override
@@ -40,7 +36,19 @@ public class Hopper extends Module {
     }
     @Override
     public void update(double pNow) {
-        mTalon.set(ControlMode.PercentOutput, mHopperState.power);
+        switch (mHopperState) {
+            case GIVE_TO_SHOOTER:
+                if(mShooter.isMaxVelocity()) {
+                    mTalon.set(ControlMode.PercentOutput, SystemSettings.kHopperTalonPower);
+                }
+                break;
+            case REVERSE:
+                mTalon.set(ControlMode.PercentOutput, -SystemSettings.kHopperTalonPower);
+                break;
+            case STOP:
+                mTalon.set(ControlMode.PercentOutput, 0d);
+                break;
+        }
     }
 
     @Override
