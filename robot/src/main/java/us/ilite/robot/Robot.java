@@ -55,6 +55,7 @@ public class Robot extends TimedRobot {
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
     private final DriverInput mDriverInput = new DriverInput( );
+    private final HardwareTest mHardwareTest = new HardwareTest();
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
@@ -151,7 +152,7 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mRunningModules.setModules(mDriverInput, mTeleopCommandManager);
+        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mHardwareTest);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
