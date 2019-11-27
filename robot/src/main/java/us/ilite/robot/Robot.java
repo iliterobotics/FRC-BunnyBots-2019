@@ -2,6 +2,8 @@ package us.ilite.robot;
 
 import java.util.List;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.codex.CodexMetadata;
 import com.flybotix.hfr.codex.ICodexTimeProvider;
@@ -9,6 +11,7 @@ import com.flybotix.hfr.util.log.ELevel;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
 
+import com.team254.lib.drivers.talon.TalonSRXFactory;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -54,7 +57,7 @@ public class Robot extends TimedRobot {
     private final Drive mDrive = new Drive(mData, mDriveController);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
-    private final DriverInput mDriverInput = new DriverInput( );
+    private final DriverInput mDriverInput = new DriverInput(mData, mDrive);
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
@@ -151,7 +154,7 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mRunningModules.setModules(mDriverInput, mTeleopCommandManager);
+        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mDrive);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
