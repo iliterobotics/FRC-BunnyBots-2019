@@ -200,14 +200,10 @@ public class SystemSettings extends NetworkTablesConstantsBase {
             return distanceNeeded;
         }
     }
-
-<<<<<<< HEAD
+    
     public final double kDistanceFromHighTarget = 0.0; // Required distance from high target in feet
     public final double kDistanceFromLowTarget = 0.0; // Required distance from low target in feet
-
-=======
     public static double kDistanceToTargetDeadband = 0.0;
->>>>>>> move-to-target-distance
 
     // =============================================================================
     // 2019 Module Addresses
