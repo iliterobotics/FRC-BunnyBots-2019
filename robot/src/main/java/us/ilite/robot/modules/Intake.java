@@ -1,14 +1,14 @@
 package us.ilite.robot.modules;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
 import us.ilite.common.config.SystemSettings;
 
 
 public class Intake extends Module {
 
-    private TalonSRX mTalon;
+    private VictorSPX mVictor;
     private EIntakeState mIntakeState;
     
     public enum EIntakeState {
@@ -19,7 +19,7 @@ public class Intake extends Module {
 
     public Intake() {
         mIntakeState = EIntakeState.STOP;
-        mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kIntakeTalonId);
+        mVictor = TalonSRXFactory.createDefaultVictor(SystemSettings.kIntakeVictorId);
     }
 
     @Override
@@ -35,20 +35,20 @@ public class Intake extends Module {
     public void update(double pNow) {
         switch (mIntakeState) {
             case INTAKE:
-                mTalon.set(ControlMode.PercentOutput, SystemSettings.kIntakeTalonPower);
+                mVictor.set(ControlMode.PercentOutput, SystemSettings.kIntakeVictorPower);
                 break;
             case OUTTAKE:
-                mTalon.set(ControlMode.PercentOutput, -SystemSettings.kIntakeTalonPower);
+                mVictor.set(ControlMode.PercentOutput, -SystemSettings.kIntakeVictorPower);
                 break;
             case STOP:
-                mTalon.set(ControlMode.PercentOutput, 0d);
+                mVictor.set(ControlMode.PercentOutput, 0d);
                 break;
         }
     }
 
     @Override
     public void shutdown(double pNow) {
-        mTalon.set(ControlMode.PercentOutput, 0d);
+        mVictor.set(ControlMode.PercentOutput, 0d);
     }
 
     public void setIntakeState(EIntakeState pIntakeState) {

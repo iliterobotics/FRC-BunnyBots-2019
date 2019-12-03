@@ -97,7 +97,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // Whole-Intake-System Power
     // =============================================================================
 
-    public static double kIntakeTalonPower = 1d;
+    public static double kIntakeVictorPower = 1d;
     public static double kHopperTalonPower = 1d;
     public static double kConveyorTalonPower = 1d;
     public static double kShooterTalonPower = 1d;
@@ -233,7 +233,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kCatapultServoChannel = -1;
 
     //INTAKE
-    public static int kIntakeTalonId = -1;
+    public static int kIntakeVictorId = -1;
     public static int kHopperTalonId = -1;
     public static int kConveyorTalonId = 5;
     public static int kConveyorVictorId = -1;
