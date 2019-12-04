@@ -1,11 +1,12 @@
 package us.ilite.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.robot.modules.Drive;
 import us.ilite.robot.modules.DriveMessage;
 
-public class YeetLeftRight implements ICommand {
+public class  YeetLeftRight implements ICommand {
 
     private Drive mDrive;
     private EYeetSide mSideToTurn;
@@ -46,7 +47,7 @@ public class YeetLeftRight implements ICommand {
         if (mSideToTurn == EYeetSide.LEFT) {
             output *= -1;
         }
-
+        SmartDashboard.putNumber("Output for Yeets" , output);
         mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, output));
         mCurrentTurn = mDesiredTurn;
 
