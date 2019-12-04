@@ -206,17 +206,16 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kDistanceToTargetDeadband = 0.0;
 
     // =============================================================================
-    // 2019 Module Addresses
+    // Bunnybots Module Addresses
     // =============================================================================
     public static int kPigeonId = 30;
     public static int kCanifierAddress = 40;
 
-    public static  int kDriveLeftMasterTalonId = 1;
-    public static int kDriveLeftMiddleTalonId = 3;
-    public static  int kDriveLeftRearTalonId = 5;
-    public static  int kDriveRightMasterTalonId = 2;
-    public static int kDriveRightMiddleTalonId = 4;
-    public static  int kDriveRightRearTalonId = 6;
+    // TODO set neo drive ids
+    public static int kDriveLeftMasterNeoID = 0;
+    public static int kDriveLeftRearNeoID = 0;
+    public static int kDriveRightMasterNeoID = 0;
+    public static int kDriveRightRearNeoID = 0;
 
     public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{
             /* Left */
