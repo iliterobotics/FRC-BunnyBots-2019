@@ -9,9 +9,7 @@ import com.flybotix.hfr.util.log.ELevel;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
 
-import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -29,7 +27,6 @@ import us.ilite.lib.drivers.Clock;
 import us.ilite.lib.drivers.GetLocalIP;
 import us.ilite.lib.drivers.VisionGyro;
 import us.ilite.robot.auto.AutonomousRoutines;
-import us.ilite.robot.commands.CharacterizeDrive;
 import us.ilite.robot.driverinput.DriverInput;
 import us.ilite.robot.loops.LoopManager;
 import us.ilite.robot.modules.*;
@@ -54,10 +51,11 @@ public class Robot extends TimedRobot {
     private final Drive mDrive = new Drive(mData, mDriveController);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
-    private final Hopper mHopper = new Hopper();
-    private final Shooter mShooter = new Shooter();
     private final Intake mIntake = new Intake();
-    private final DriverInput mDriverInput = new DriverInput(mShooter, mHopper, mIntake);
+    private final Shooter mShooter = new Shooter();
+    private final Hopper mHopper = new Hopper(mShooter);
+    private final Conveyor mConveyor = new Conveyor(mShooter);
+    private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData);
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
@@ -130,7 +128,7 @@ public class Robot extends TimedRobot {
         mSettings.loadFromNetworkTables();
 
         // Init modules after commands are set
-        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mHopper, mShooter, mIntake);
+        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mConveyor, mShooter, mIntake, mHopper);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
@@ -154,7 +152,7 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mShooter, mHopper, mIntake);
+        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mShooter, mConveyor, mIntake, mHopper);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 

@@ -3,6 +3,7 @@ package us.ilite.robot.driverinput;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
+import us.ilite.common.Data;
 import us.ilite.common.config.DriveTeamInputMap;
 import us.ilite.common.lib.util.CheesyDriveHelper;
 import edu.wpi.first.wpilibj.Joystick;
@@ -26,23 +27,31 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final Limelight mLimelight;
 //    private final Data mData;
     private Shooter mShooter;
-    private Hopper mHopper;
+    private Conveyor mConveyor;
     private Intake mIntake;
+    private Hopper mHopper;
 
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
+    private Data mData;
 
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Shooter pShooter, Hopper pHopper, Intake pIntake) {
-        mShooter = pShooter;
-        mHopper = pHopper;
+    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData) {
         mIntake = pIntake;
+        mHopper = pHopper;
+        mConveyor = pConveyor;
+        mShooter = pShooter;
+        mData = pData;
+        mOperatorJoystick = new Joystick(1);
+        mDriverInputCodex = mData.driverinput;
+        mOperatorInputCodex = mData.operatorinput;
+
     }
 
     @Override
@@ -62,7 +71,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void periodicInput(double pNow) {
-
+        ELogitech310.map(mOperatorInputCodex, mOperatorJoystick);
     }
 
     @Override
@@ -71,24 +80,29 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         updateWholeIntakeSystem();
     }
 
-    public void updateWholeIntakeSystem() {
+    private void updateWholeIntakeSystem() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
             mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+            mConveyor.setConveyorState(Conveyor.EConveyorState.GIVE_TO_SHOOTER);
             mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
         } else if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
             mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+            mConveyor.setConveyorState(Conveyor.EConveyorState.REVERSE);
             mShooter.setShooterState(Shooter.EShooterState.CLEAN);
-            mIntake.setIntakeState(Intake.EIntakeState.OUTTAKE);
         } else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
+            mConveyor.setConveyorState(Conveyor.EConveyorState.STOP);
             mShooter.setShooterState(Shooter.EShooterState.STOP);
-            mIntake.setIntakeState(Intake.EIntakeState.STOP);
         }
     }
 
-    public void updateIntake() {
+    private void updateIntake() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE)) {
             mIntake.setIntakeState(Intake.EIntakeState.INTAKE);
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
+            mIntake.setIntakeState(Intake.EIntakeState.OUTTAKE);
+        } else {
+            mIntake.setIntakeState(Intake.EIntakeState.STOP);
         }
     }
 
