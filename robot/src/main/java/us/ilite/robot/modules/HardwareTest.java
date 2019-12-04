@@ -7,6 +7,8 @@ import us.ilite.lib.drivers.SparkMaxFactory;
 public class HardwareTest extends Module {
     private CANSparkMax mCANSparkMax1;
     private CANSparkMax mCANSparkMax2;
+    private CANSparkMax mCANSparkMax3;
+    private CANSparkMax mCANSparkMax4;
     private EHardwareState mHardwareState;
 
     public enum EHardwareState {
@@ -14,16 +16,20 @@ public class HardwareTest extends Module {
         INVERSE(-1.0),
         STOP(0.0);
         private double power;
-        EHardwareState(double pow){
+        EHardwareState(double pow) {
             power = pow;
         }
     }
 
 
     public HardwareTest() {
-        mCANSparkMax1 = SparkMaxFactory.createDefaultSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mCANSparkMax2 = SparkMaxFactory.createDefaultSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mCANSparkMax1 = SparkMaxFactory.createDefaultSparkMax(6, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mCANSparkMax2 = SparkMaxFactory.createDefaultSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mCANSparkMax3 = SparkMaxFactory.createDefaultSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mCANSparkMax4 = SparkMaxFactory.createDefaultSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless);
+
         mCANSparkMax1.setInverted(true);
+        mCANSparkMax3.setInverted(true);
     }
 
     @Override
@@ -40,6 +46,8 @@ public class HardwareTest extends Module {
     public void update(double pNow) {
         mCANSparkMax1.set(1.0);
         mCANSparkMax2.set(1.0);
+        mCANSparkMax3.set(1.0);
+        mCANSparkMax4.set(1.0);
     }
 
     @Override
