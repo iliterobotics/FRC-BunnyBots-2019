@@ -34,7 +34,7 @@ public class CargoSpitTest {
         mModuleList = new ModuleList();
         mLimelight = new Limelight( mData );
         mAutonomousCommandManager = new CommandManager();
-        mDriverInput = spy(new DriverInput() );
+        mDriverInput = spy(new DriverInput( mDrive, mData ) );
         mModuleList.setModules( mDriverInput, mDrive );
         mModuleList.modeInit( mClock.getCurrentTime() );
     }
@@ -45,7 +45,7 @@ public class CargoSpitTest {
         mClock = new Clock().simulated();
         mModuleList = new ModuleList();
 
-        mDriverInput = spy(new DriverInput( ));
+        mDriverInput = spy(new DriverInput( mDrive, mData ));
         mModuleList.setModules( mDriverInput, mDrive );
         mModuleList.modeInit( mClock.getCurrentTime() );
     }

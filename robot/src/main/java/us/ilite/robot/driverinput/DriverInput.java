@@ -3,6 +3,7 @@ package us.ilite.robot.driverinput;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
+import us.ilite.common.Data;
 import us.ilite.common.config.DriveTeamInputMap;
 import us.ilite.common.lib.util.CheesyDriveHelper;
 import edu.wpi.first.wpilibj.Joystick;
@@ -30,6 +31,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private YeetLeftRight mYeets;
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
+    private Data mData;
 
     private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
@@ -39,9 +41,17 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Drive pDrive) {
+    public DriverInput(Drive pDrive, Data pData) {
         mDrive = pDrive;
         mYeets = new YeetLeftRight(mDrive);
+
+        this.mData = pData;
+
+        mOperatorInputCodex = mData.operatorinput;
+        mDriverInputCodex = mData.driverinput;
+
+        mOperatorJoystick = new Joystick( 1 );
+        mDriverJoystick = new Joystick( 0 );
     }
 
     @Override
@@ -61,28 +71,31 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void periodicInput(double pNow) {
-
+        ELogitech310.map(mDriverInputCodex, mDriverJoystick);
+        ELogitech310.map(mOperatorInputCodex, mOperatorJoystick);
     }
 
     @Override
     public void update(double pNow) {
-        updateYeets();
+        updateYeets(pNow);
     }
 
-    public void updateYeets() {
-        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
-                mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+    public void updateYeets(double pNow) {
+
+        if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
+                mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
             mYeets.slowToStop();
         }
-        else if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
             mYeets.turn(YeetLeftRight.EYeetSide.LEFT);
         }
-        else if (mOperatorInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
             mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
         }
         else {
             mYeets.slowToStop();
         }
+        mYeets.update(pNow);
     }
 
     @Override

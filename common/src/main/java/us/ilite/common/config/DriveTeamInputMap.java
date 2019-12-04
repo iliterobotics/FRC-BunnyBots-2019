@@ -25,7 +25,7 @@ public class    DriveTeamInputMap {
     OPERATOR_LOW_POSITION_ELEVATOR = ELogitech310.B_BTN,
     OPERATOR_MIDDLE_POSITION_ELEVATOR = ELogitech310.Y_BTN,
     OPERATOR_TOP_POSITION_ELEVATOR = ELogitech310.R_BTN,
-    OPERATOR_CONTROL_ELEVATOR = ELogitech310.RIGHT_Y_AXIS,
+    //OPERATOR_CONTROL_ELEVATOR = ELogitech310.RIGHT_Y_AXIS,
 
     //TODO Refactor to OPERATOR
     // Cargo vs Hatch are toggle buttons
@@ -47,7 +47,7 @@ public class    DriveTeamInputMap {
     OPERATOR_CLIMBER_AXIS = ELogitech310.LEFT_Y_AXIS,
     OPERATOR_PUSHER_BUTTON = ELogitech310.START,
 
-    DRIVER_YEET_LEFT = null,
-    DRIVER_YEET_RIGHT = null;
+    DRIVER_YEET_LEFT = ELogitech310.L_BTN,
+    DRIVER_YEET_RIGHT = ELogitech310.R_BTN;
 
 }

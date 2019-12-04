@@ -1,11 +1,17 @@
 package us.ilite.robot.commands;
 
+import com.flybotix.hfr.util.log.ILog;
+import com.flybotix.hfr.util.log.Logger;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
+import us.ilite.robot.driverinput.DriverInput;
 import us.ilite.robot.modules.Drive;
 import us.ilite.robot.modules.DriveMessage;
 
 public class YeetLeftRight implements ICommand {
+    private ILog mLog = Logger.createLog(YeetLeftRight.class);
 
     private Drive mDrive;
     private EYeetSide mSideToTurn;
@@ -15,7 +21,7 @@ public class YeetLeftRight implements ICommand {
 
     public enum EYeetSide {
         LEFT,
-        RIGHT
+        RIGHT;
     }
 
     public enum EYeetceleration {
@@ -41,13 +47,16 @@ public class YeetLeftRight implements ICommand {
 
     @Override
     public boolean update(double pNow) {
+
         double output = mDesiredTurn;
         ramp();
+
         if (mSideToTurn == EYeetSide.LEFT) {
             output *= -1;
         }
 
-        mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, output));
+        SmartDashboard.putNumber("Output value of Yeet", output);
+        mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn( 0.0, output ));
         mCurrentTurn = mDesiredTurn;
 
         if (mYeetceleration.mDesiredOutput == 0 && mCurrentTurn == 0) {
