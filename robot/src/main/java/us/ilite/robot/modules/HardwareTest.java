@@ -24,10 +24,10 @@ public class HardwareTest extends Module {
 
     public HardwareTest() {
         mCANSparkMax1 = SparkMaxFactory.createDefaultSparkMax(6, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mCANSparkMax2 = SparkMaxFactory.createPermanentSlaveSparkMax(7, mCANSparkMax1, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mCANSparkMax2 = SparkMaxFactory.createDefaultSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         mCANSparkMax3 = SparkMaxFactory.createDefaultSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mCANSparkMax4 = SparkMaxFactory.createPermanentSlaveSparkMax(5, mCANSparkMax3, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mCANSparkMax4 = SparkMaxFactory.createDefaultSparkMax(5,  CANSparkMaxLowLevel.MotorType.kBrushless);
 
         mCANSparkMax1.setInverted(true);
 //        mCANSparkMax3.setInverted(true);
@@ -47,7 +47,9 @@ public class HardwareTest extends Module {
     @Override
     public void update(double pNow) {
         mCANSparkMax1.set(1.0);
+        mCANSparkMax2.set(1.0);
         mCANSparkMax3.set(1.0);
+        mCANSparkMax4.set(1.0);
 
     }
 
