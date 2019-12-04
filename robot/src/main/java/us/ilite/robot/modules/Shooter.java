@@ -62,6 +62,6 @@ public class Shooter extends Module {
 
     @Override
     public void shutdown(double pNow) {
-
+        setShooterState( EShooterState.STOP );
     }
 }
