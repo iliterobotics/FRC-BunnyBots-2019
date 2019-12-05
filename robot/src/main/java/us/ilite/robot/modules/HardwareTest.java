@@ -47,13 +47,10 @@ public class HardwareTest extends Module {
 
     @Override
     public void update(double pNow) {
-
         mCANSparkMax1.set(1.0);
         mCANSparkMax2.set(1.0);
         mCANSparkMax3.set(1.0);
         mCANSparkMax4.set(1.0);
-
-
     }
 
     @Override
