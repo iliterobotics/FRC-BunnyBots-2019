@@ -152,7 +152,7 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mHardwareTest);
+        mRunningModules.setModules(/*mDriverInput, mTeleopCommandManager, */mHardwareTest);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
