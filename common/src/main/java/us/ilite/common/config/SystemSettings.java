@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.team254.lib.util.CheesyDriveGains;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.lib.control.PIDGains;
 import us.ilite.common.lib.util.NetworkTablesConstantsBase;
 import us.ilite.common.types.ETrackingType;
@@ -19,6 +20,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kNetworkTableUpdateRate = 0.01;
 
     public static int sCODEX_COMMS_PORT = 5805;
+
+    public static SmartDashboard kSmartDashboard;
 
     // ===========================
     // System ID's
@@ -41,14 +44,16 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kDriveTicksPerRotation = 1.0;
     public static double kDriveVelTimeScale = 1.0;
     public static double kDriveEffectiveWheelbase = 23.25;
+    public static double kDriveTrainMaxVelocity = (42*5676/60) * 3;
 
-    public static double kDriveClosedLoopVoltageRampRate = 0.0;
+    public static double kDriveClosedLoopVoltageRampRate = 0.7;
     public static double kDriveMinOpenLoopVoltageRampRate = 0.1;
     public static double kDriveMaxOpenLoopVoltageRampRate = 0.9;
     public static int kDriveCurrentLimitAmps = 40;//50;
     public static int kDriveCurrentLimitTriggerDurationMs = 100;
 
     public static CheesyDriveGains kCheesyDriveGains = new CheesyDriveGains();
+    public static PIDGains kDriveClosedLoopPIDGains = new PIDGains(0.5, 0.0, 0.2);
 
     // =============================================================================
     // IMU Constants
@@ -115,9 +120,9 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // =============================================================================
     public static int kDriveVelocityTolerance = 0;
     public static int kDriveVelocityLoopSlot = 0;
-    public static double kDriveVelocity_kP = 1.0;
+    public static double kDriveVelocity_kP = 1.5234375e-4;
     public static double kDriveVelocity_kI = 0.0;
-    public static double kDriveVelocity_kD = 0.0;
+    public static double kDriveVelocity_kD = 0.001174257 * 4;
 //    public static double kDriveVelocity_kF = (1023.0 / 1155.0);
     public static double kDriveVelocity_kF = 0.0; // We don't care about this feedforward because we inject our own with ArbitraryFeedforward
 

@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
         mSettings.loadFromNetworkTables();
 
         // Init modules after commands are set
-        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager);
+        mRunningModules.setModules(mDrive, mDriverInput, mAutonomousCommandManager, mTeleopCommandManager);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
