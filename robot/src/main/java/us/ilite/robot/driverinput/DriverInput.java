@@ -95,41 +95,34 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         updateDriveTrain();
     }
 
-    private void updateDriveTrain() {
-        double rotate = getTurn();
-        double throttle = getThrottle();
-
-        mDrive.setRampRate(SystemSettings.kDriveMinOpenLoopVoltageRampRate);
-
-//        throttle = EInputScale.EXPONENTIAL.map(throttle, 2);
-        rotate = EInputScale.EXPONENTIAL.map(rotate, 2);
-        rotate *= SystemSettings.kNormalPercentThrottleReduction;
-
-        if (mData.driverinput.isSet(DriveTeamInputMap.DRIVER_SUB_WARP_AXIS) && mData.driverinput.get(DriveTeamInputMap.DRIVER_SUB_WARP_AXIS) > DRIVER_SUB_WARP_AXIS_THRESHOLD || mData.driverinput.get(DriveTeamInputMap.DRIVER_ACCEL_LIMIT_BYPASS) > 0.5) {
-            throttle *= SystemSettings.kSnailModePercentThrottleReduction;
-            rotate *= SystemSettings.kSnailModePercentRotateReduction;
-        }
-
-        double lowestOutput = Math.min(Math.abs(rotate), Math.abs(throttle));
-        double highestOutput = Math.max(Math.abs(rotate), Math.abs(throttle));
-        double saturatedOutput = 1.0;
-        if (highestOutput > 0.0) {
-            saturatedOutput = lowestOutput / highestOutput + 1.0;
-        }
-        throttle /= saturatedOutput;
-        rotate /= saturatedOutput;
-
-        // Handled AFTER any scaling - we don't want the output of this to be scaled
-        if(Math.abs(throttle) < Util.kEpsilon) {
-            throttle = SystemSettings.kTurnInPlaceThrottleBump;
-        }
-
-        DriveMessage driveMessage = DriveMessage.fromThrottleAndTurn(throttle, rotate);
-        driveMessage.setNeutralMode(ECommonNeutralMode.BRAKE);
-        driveMessage.setControlMode(ECommonControlMode.PERCENT_OUTPUT);
-
-        mDrive.setDriveMessage(driveMessage);
-    }
+//    private void updateDriveTrain() {
+//        double rotate = getTurn();
+//        double throttle = getThrottle();
+//
+//        mDrive.setRampRate(SystemSettings.kDriveMinOpenLoopVoltageRampRate);
+//
+////        throttle = EInputScale.EXPONENTIAL.map(throttle, 2);
+//        rotate = EInputScale.EXPONENTIAL.map(rotate, 2);
+//        rotate *= SystemSettings.kNormalPercentThrottleReduction;
+//
+//        if (mData.driverinput.isSet(DriveTeamInputMap.DRIVER_SUB_WARP_AXIS) && mData.driverinput.get(DriveTeamInputMap.DRIVER_SUB_WARP_AXIS) > DRIVER_SUB_WARP_AXIS_THRESHOLD || mData.driverinput.get(DriveTeamInputMap.DRIVER_ACCEL_LIMIT_BYPASS) > 0.5) {
+//            throttle *= SystemSettings.kSnailModePercentThrottleReduction;
+//            rotate *= SystemSettings.kSnailModePercentRotateReduction;
+//        }
+//
+//
+//
+//        // Handled AFTER any scaling - we don't want the output of this to be scaled
+//        if(Math.abs(throttle) < Util.kEpsilon) {
+//            throttle = SystemSettings.kTurnInPlaceThrottleBump;
+//        }
+//
+//        DriveMessage driveMessage = DriveMessage.fromThrottleAndTurn(throttle, rotate);
+//        driveMessage.setNeutralMode(ECommonNeutralMode.BRAKE);
+//        driveMessage.setControlMode(ECommonControlMode.PERCENT_OUTPUT);
+//
+//        mDrive.setDriveMessage(driveMessage);
+//    }
 
     @Override
     public void shutdown(double pNow) {
@@ -144,11 +137,11 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         double rotate = getTurn();
 
 
+        throttle = Math.abs(throttle) > 0.01 ? throttle : 0.0; //Handling Deadband
+        rotate = Math.abs(rotate) > 0.01 ? rotate : 0.0; //Handling Deadband
+
         double leftDemand = ( throttle + rotate ) /* SystemSettings.kDriveTrainMaxVelocity */;
         double rightDemand = ( throttle - rotate )/* * SystemSettings.kDriveTrainMaxVelocity*/;
-
-        leftDemand = Math.abs(leftDemand) > 0.01 ? leftDemand : 0.0; //Handling Deadband
-        rightDemand = Math.abs(rightDemand) > 0.01 ? rightDemand : 0.0; //Handling Deadband
 
         SmartDashboard.putNumber("Left Drive Demand", leftDemand);
         SmartDashboard.putNumber("Right Drive Demand", rightDemand);

@@ -45,6 +45,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kDriveVelTimeScale = 1.0;
     public static double kDriveEffectiveWheelbase = 23.25;
     public static double kDriveTrainMaxVelocity = (42*5676/60) * 3;
+    public static double kDriveTrainMaxTurnRate = 6;
 
     public static double kDriveClosedLoopVoltageRampRate = 0.7;
     public static double kDriveMinOpenLoopVoltageRampRate = 0.1;

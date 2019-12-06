@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.flybotix.hfr.codex.Codex;
+import com.google.gson.internal.$Gson$Preconditions;
 import com.team254.lib.util.DriveSignal;
 import com.team254.lib.util.Util;
 import us.ilite.common.config.SystemSettings;
@@ -16,6 +17,8 @@ import us.ilite.lib.drivers.ECommonNeutralMode;
 import java.util.Objects;
 
 public class DriveMessage {
+  private static double mThrottle;
+  private static double mTurn;
 
   public static final DriveMessage kNeutral = new DriveMessage(0.0, 0.0,
           ECommonControlMode.PERCENT_OUTPUT)
@@ -48,7 +51,10 @@ public class DriveMessage {
    * @return an open loop drivetrain message
    */
   public static DriveMessage fromThrottleAndTurn(double pThrottle, double pTurn) {
-    return new DriveMessage(pThrottle + pTurn, pThrottle - pTurn, ECommonControlMode.PERCENT_OUTPUT);
+    mThrottle = pThrottle;
+    mTurn = pTurn;
+    normalize(mThrottle, mTurn);
+    return new DriveMessage(mThrottle + mTurn, mThrottle - mTurn, ECommonControlMode.PERCENT_OUTPUT);
   }
 
 
@@ -106,6 +112,17 @@ public class DriveMessage {
   private DriveMessage getArcadeDrive(double throttle, double turn, Codex<Double, ETargetingData> targetData) {
 //        mOutput *= targetData.get(ETargetingData.ta) * kTargetAreaScalar;
     return DriveMessage.fromThrottleAndTurn(throttle, turn).setNeutralMode(ECommonNeutralMode.BRAKE);
+  }
+
+  public static void normalize(double throttle, double turn) {
+    double lowestOutput = Math.min(Math.abs(turn), Math.abs(throttle));
+    double highestOutput = Math.max(Math.abs(turn), Math.abs(throttle));
+    double saturatedOutput = 1.0;
+    if (highestOutput > 0.0) {
+      saturatedOutput = lowestOutput / highestOutput + 1.0;
+    }
+    throttle /= saturatedOutput;
+    turn /= saturatedOutput;
   }
 
   public DriveMessage setDemand(double pLeftDemand, double pRightDemand) {
