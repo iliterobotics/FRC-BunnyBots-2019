@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
     private final Drive mDrive = new Drive(mData, mDriveController);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
-    private final DriverInput mDriverInput = new DriverInput( );
+    private final DriverInput mDriverInput = new DriverInput(mDrive);
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);

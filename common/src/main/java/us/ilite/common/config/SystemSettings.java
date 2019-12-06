@@ -209,12 +209,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kPigeonId = 30;
     public static int kCanifierAddress = 40;
 
-    public static  int kDriveLeftMasterTalonId = 1;
-    public static int kDriveLeftMiddleTalonId = 3;
-    public static  int kDriveLeftRearTalonId = 5;
-    public static  int kDriveRightMasterTalonId = 2;
-    public static int kDriveRightMiddleTalonId = 4;
-    public static  int kDriveRightRearTalonId = 6;
+    public static  int kDriveLeftMasterTalonId = 4;
+    public static  int kDriveRightMasterTalonId = 5;
 
     public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{
             /* Left */
