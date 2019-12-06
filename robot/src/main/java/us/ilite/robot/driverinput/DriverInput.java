@@ -95,7 +95,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         else {
             mYeets.slowToStop();
         }
-        mYeets.update(pNow);
     }
 
     @Override
