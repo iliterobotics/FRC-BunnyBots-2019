@@ -12,7 +12,7 @@ import us.ilite.robot.modules.DriveMessage;
 
 public class YeetLeftRight implements ICommand {
     private ILog mLog = Logger.createLog(YeetLeftRight.class);
-    
+
     private Drive mDrive;
     private EYeetSide mSideToTurn;
     private EYeetceleration mYeetceleration;
