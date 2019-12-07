@@ -94,6 +94,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
         }
         else {
+            mLog.error("SLOWING TO STOP----------------------------------------------------------------------------");
             mYeets.slowToStop();
         }
         mYeets.update( pNow );
