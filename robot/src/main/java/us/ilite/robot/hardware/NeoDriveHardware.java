@@ -38,11 +38,11 @@ public class NeoDriveHardware implements IDriveHardware {
 
         mLeftMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveLeftMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
         mLeftRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftRearNeoID, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftMiddleTalonId , mLeftMaster , CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftMiddleNeoId , mLeftMaster , CANSparkMaxLowLevel.MotorType.kBrushless);
 
         mRightMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveRightMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
         mRightRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightRearNeoID, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightMasterNeoID , mRightMaster , CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightMiddleNeoId , mRightMaster , CANSparkMaxLowLevel.MotorType.kBrushless);
         configureMaster(mLeftMaster, true);
         configureMotor(mLeftMaster);
         configureMotor(mLeftRear);

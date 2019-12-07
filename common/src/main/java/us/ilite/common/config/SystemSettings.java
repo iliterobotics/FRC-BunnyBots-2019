@@ -212,15 +212,16 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kCanifierAddress = 40;
 
     // TODO set neo drive ids
-    public static int kDriveLeftMasterNeoID = 0;
-    public static int kDriveLeftRearNeoID = 0;
-    public static int kDriveRightMasterNeoID = 0;
-    public static int kDriveRightRearNeoID = 0;
-    public static int kDriveRightMiddleTalonId = 4;
-    public static int kDriveLeftMiddleTalonId = 3;
+    public static int kDriveLeftMasterNeoID = 1;
+    public static int kDriveLeftMiddleNeoId = 3;
+    public static int kDriveLeftRearNeoID = 5;
+    public static int kDriveRightMasterNeoID = 2;
+    public static int kDriveRightMiddleNeoId = 4;
+    public static int kDriveRightRearNeoID = 6;
 
 
-    public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{
+
+    public static EPowerDistPanel [] kDrivePdpSlots = new EPowerDistPanel[]{
             /* Left */
             EPowerDistPanel.CURRENT1,
             EPowerDistPanel.CURRENT2,
