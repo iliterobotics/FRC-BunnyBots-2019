@@ -34,6 +34,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private Data mData;
 
     private boolean mIsCargo = true; //false;
+    private boolean mIsYeet;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
 
@@ -44,6 +45,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public DriverInput(Drive pDrive, Data pData) {
         mDrive = pDrive;
         mYeets = new YeetLeftRight(mDrive);
+        mIsYeet = false;
 
         this.mData = pData;
 
@@ -77,14 +79,18 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
-        updateYeets(pNow);
+        if ( mIsYeet ) {
+            updateYeets(pNow);
+        }
+        else if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) ||
+                mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT) ) {
+            mIsYeet = true;
+        }
     }
 
     public void updateYeets(double pNow) {
-
-
         if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
-                mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+                mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT) ) {
             mYeets.slowToStop();
         }
         else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
@@ -94,10 +100,8 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
         }
         else {
-            mLog.error("SLOWING TO STOP----------------------------------------------------------------------------");
-            mYeets.slowToStop();
+            mIsYeet = false;
         }
-        mYeets.update( pNow );
     }
 
     @Override
