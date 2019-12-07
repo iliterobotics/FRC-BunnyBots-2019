@@ -18,9 +18,11 @@ public class YeetLeftRight implements ICommand {
     private EYeetceleration mYeetceleration;
     private double mCurrentTurn;
     private double mDesiredTurn;
+    private double mVector;
 
     public enum EYeetSide {
         LEFT,
+        NOTHING,
         RIGHT;
     }
 
@@ -38,6 +40,9 @@ public class YeetLeftRight implements ICommand {
     }
 
     public YeetLeftRight(Drive pDrive) {
+        mDesiredTurn = 0d;
+        mCurrentTurn = 0d;
+        mVector = 1d;
         this.mDrive = pDrive;
     }
 
@@ -46,17 +51,21 @@ public class YeetLeftRight implements ICommand {
     }
 
     @Override
-        public boolean update(double pNow) {
+    public boolean update(double pNow) {
         mLog.error("Updating Yeets--------------------------------------------------------");
 
-        double output = mDesiredTurn;
         ramp();
+        double output = mDesiredTurn;
 
-        if (mSideToTurn == EYeetSide.LEFT) {
-            output *= -1;
-        }
+//        if (mSideToTurn == EYeetSide.LEFT || ) {
+//            output *= -1;
+//        }
+        output *= mVector;
+
+
 
         SmartDashboard.putNumber("Output for Yeets" , output);
+        SmartDashboard.putString("EYeetAccel", mYeetceleration.toString());
         mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, output));
         mCurrentTurn = mDesiredTurn;
 
@@ -69,10 +78,18 @@ public class YeetLeftRight implements ICommand {
     public void turn(EYeetSide pSideToTurn) {
         mSideToTurn = pSideToTurn;
         mYeetceleration = EYeetceleration.A;
+
+        if (pSideToTurn == EYeetSide.LEFT) {
+            mVector = -1d;
+        } else {
+            mVector = 1d;
+        }
+
     }
 
     public void slowToStop() {
         mYeetceleration = EYeetceleration.DE;
+        mSideToTurn = EYeetSide.NOTHING;
     }
 
     public void ramp() {
@@ -80,6 +97,10 @@ public class YeetLeftRight implements ICommand {
             mDesiredTurn += mYeetceleration.mRampRate;
             mLog.error("mDesiredTurn: ", mDesiredTurn);
         }
+        if ((mDesiredTurn <= 0 && mSideToTurn == EYeetSide.NOTHING)) {
+            mDesiredTurn = 0;
+        }
+        SmartDashboard.putNumber("Desired Yeet Turn", mDesiredTurn);
     }
 
     @Override
