@@ -114,6 +114,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         mClock.cycleEnded();
+        mLogger.error("ROBOT PERIODIC---------------------------------------------");
     }
 
     @Override
@@ -148,6 +149,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         initMatchMetadata();
+        mLogger.error("TELEOP INITIALIZATION-----------------------------------------------------");
 
         mSettings.loadFromNetworkTables();
 

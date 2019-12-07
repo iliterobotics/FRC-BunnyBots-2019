@@ -77,10 +77,13 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
+        mLog.error("Updating The Driver Input Class--------------------------------------------------------");
         updateYeets(pNow);
     }
 
     public void updateYeets(double pNow) {
+
+        mLog.error("UpdatingDriverInput--------------------------------------------------------");
 
         if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
                 mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
@@ -95,6 +98,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         else {
             mYeets.slowToStop();
         }
+        mYeets.update( pNow );
     }
 
     @Override

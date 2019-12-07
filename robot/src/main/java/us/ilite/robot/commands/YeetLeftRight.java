@@ -46,7 +46,8 @@ public class YeetLeftRight implements ICommand {
     }
 
     @Override
-    public boolean update(double pNow) {
+        public boolean update(double pNow) {
+        mLog.error("Updating Yeets--------------------------------------------------------");
 
         double output = mDesiredTurn;
         ramp();
@@ -57,7 +58,7 @@ public class YeetLeftRight implements ICommand {
 
         SmartDashboard.putNumber("Output for Yeets" , output);
         mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, output));
-        mCurrentTurn = output;
+        mCurrentTurn = mDesiredTurn;
 
         if (mYeetceleration.mDesiredOutput == 0 && mCurrentTurn == 0) {
             return true;
