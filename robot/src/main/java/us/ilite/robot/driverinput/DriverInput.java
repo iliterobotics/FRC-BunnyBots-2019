@@ -83,7 +83,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     public void updateYeets(double pNow) {
 
-        mLog.error("UpdatingDriverInput--------------------------------------------------------");
 
         if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
                 mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
@@ -96,6 +95,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
         }
         else {
+            mLog.error("SLOWING TO STOP----------------------------------------------------------------------------");
             mYeets.slowToStop();
         }
         mYeets.update( pNow );
