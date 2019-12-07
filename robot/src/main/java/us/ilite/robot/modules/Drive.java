@@ -25,6 +25,7 @@ import us.ilite.common.types.sensor.EPowerDistPanel;
 import us.ilite.lib.drivers.Clock;
 import us.ilite.lib.drivers.ECommonControlMode;
 import us.ilite.lib.drivers.ECommonNeutralMode;
+import us.ilite.robot.CSVLogger;
 import us.ilite.robot.hardware.NeoDriveHardware;
 import us.ilite.robot.hardware.SrxDriveHardware;
 import us.ilite.robot.hardware.IDriveHardware;
@@ -57,6 +58,7 @@ public class Drive extends Loop {
 
 	private Clock mSimClock = null;
 	private double mPreviousTime = 0;
+	private CSVLogger mCSVLogger;
 
 	ReflectingCSVWriter<DebugOutput> mDebugLogger = null;
 	DebugOutput debugOutput = new DebugOutput();
@@ -91,12 +93,15 @@ public class Drive extends Loop {
 		mDebugLogger = new ReflectingCSVWriter<>("/home/lvuser/debug.csv", DebugOutput.class);
 		debugOutput = new DebugOutput();
 		mDebugLogger.add(debugOutput);
+		mCSVLogger.start();
+
 	}
 
 	public void stopCsvLogging() {
 		if(mDebugLogger != null) {
 			mDebugLogger.flush();
 			mDebugLogger = null;
+			mCSVLogger.stop();
 		}
 	}
 
