@@ -19,7 +19,7 @@ import us.ilite.lib.drivers.Pigeon;
 import us.ilite.robot.modules.DriveMessage;
 
 /**
- * Provides an interface between high-level planning and logic in Drive and
+ * Provides an interface between high-level planning and logic in Drive andn
  * Talon SRX configuration and control. We might put our motor models here too -
  * it would make a ton of sense, and we could just call setVelocity() or
  * setAcceleration in Drive
@@ -40,11 +40,11 @@ public class SrxDriveHardware implements IDriveHardware {
         // mGyro = new NavX(SerialPort.Port.kMXP);
 
         mLeftMaster = TalonSRXFactory.createDefaultTalon(SystemSettings.kDriveLeftMasterNeoID);
-        mLeftMiddle = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveLeftMiddleTalonId, mLeftMaster);
-        mLeftRear = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveLeftRearTalonId, mLeftMaster);
+        mLeftMiddle = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveLeftMiddleNeoID, mLeftMaster);
+        mLeftRear = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveLeftRearNeoID, mLeftMaster);
 
         mRightMaster = TalonSRXFactory.createDefaultTalon(SystemSettings.kDriveRightMasterNeoID);
-        mRightMiddle = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveRightMiddleTalonId, mRightMaster);
+        mRightMiddle = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveRightMiddleNeoID, mRightMaster);
         mRightRear = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveRightRearNeoID, mRightMaster);
 
         configureMaster(mLeftMaster, true);
