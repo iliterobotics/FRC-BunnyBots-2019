@@ -57,7 +57,7 @@ public class YeetLeftRight implements ICommand {
 
         SmartDashboard.putNumber("Output for Yeets" , output);
         mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(0.0, output));
-        mCurrentTurn = mDesiredTurn;
+        mCurrentTurn = output;
 
         if (mYeetceleration.mDesiredOutput == 0 && mCurrentTurn == 0) {
             return true;
