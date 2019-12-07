@@ -35,9 +35,6 @@ public class LimelightTargetLock extends TargetLock {
         super.init(pNow);
         mLimelight.setTracking(mTrackingType);
         mLog.error("STARTED LIMELIGHT TARGET LOCK");
-        mLimelight.setVisionTarget(SystemSettings.VisionTarget.High);
-
-
     }
 
     public void shutdown(double pNow) {
