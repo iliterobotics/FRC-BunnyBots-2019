@@ -42,7 +42,7 @@ public class YeetLeftRight implements ICommand {
     public YeetLeftRight(Drive pDrive) {
         mDesiredTurn = 0d;
         mCurrentTurn = 0d;
-        mVector = 1d;
+        mVector = -1d;
         this.mDrive = pDrive;
     }
 
@@ -80,9 +80,9 @@ public class YeetLeftRight implements ICommand {
         mYeetceleration = EYeetceleration.A;
 
         if (pSideToTurn == EYeetSide.LEFT) {
-            mVector = -1d;
-        } else {
             mVector = 1d;
+        } else {
+            mVector = -1d;
         }
 
     }
