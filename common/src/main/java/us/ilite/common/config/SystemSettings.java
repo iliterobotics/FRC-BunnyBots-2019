@@ -44,7 +44,6 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kDriveTicksPerRotation = 1.0;
     public static double kDriveVelTimeScale = 1.0;
     public static double kDriveEffectiveWheelbase = 23.25;
-    public static double kDriveTrainMaxVelocity = (42*5676/60) * 3;
 
     public static double kDriveClosedLoopVoltageRampRate = 0.7;
     public static double kDriveMinOpenLoopVoltageRampRate = 0.1;
@@ -123,7 +122,9 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kDriveVelocity_kP = 1.5234375e-4;
     public static double kDriveVelocity_kI = 0.0;
     public static double kDriveVelocity_kD = 0.001174257 * 4;
-//    public static double kDriveVelocity_kF = (1023.0 / 1155.0);
+    public static double kDriveTrainMaxVelocity = 5676;//(42*5676/60) * 3;
+
+    //    public static double kDriveVelocity_kF = (1023.0 / 1155.0);
     public static double kDriveVelocity_kF = 0.0; // We don't care about this feedforward because we inject our own with ArbitraryFeedforward
 
     // =============================================================================
