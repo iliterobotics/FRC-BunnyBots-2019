@@ -16,7 +16,6 @@ import us.ilite.common.types.input.EInputScale;
 import us.ilite.common.types.input.ELogitech310;
 import us.ilite.lib.drivers.ECommonControlMode;
 import us.ilite.lib.drivers.ECommonNeutralMode;
-import us.ilite.robot.commands.DriveToTargetDistance;
 import us.ilite.robot.commands.LimelightTargetLock;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
@@ -52,6 +51,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         mDrive = pDrive;
         mLimelight = pLimelight;
         mDriverJoystick = new Joystick(0);
+        mDriverInputCodex = mData.driverinput;
     }
 
     @Override
@@ -86,6 +86,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public void update(double pNow) {
         updateDriveTrain();
         updateVisionCommands(pNow);
+        mLastTrackingType = mTrackingType;
     }
 
     private void updateDriveTrain () {
@@ -103,15 +104,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             rotate *= SystemSettings.kSnailModePercentRotateReduction;
         }
 
-        double lowestOutput = Math.min(Math.abs(rotate), Math.abs(throttle));
-        double highestOutput = Math.max(Math.abs(rotate), Math.abs(throttle));
-        double saturatedOutput = 1.0;
-        if (highestOutput > 0.0) {
-            saturatedOutput = lowestOutput / highestOutput + 1.0;
-        }
-        throttle /= saturatedOutput;
-        rotate /= saturatedOutput;
-
         // Handled AFTER any scaling - we don't want the output of this to be scaled
         if (Math.abs(throttle) < Util.kEpsilon) {
             throttle = SystemSettings.kTurnInPlaceThrottleBump;
@@ -127,20 +119,21 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     public void updateVisionCommands(double pNow) {
         SystemSettings.VisionTarget visionTarget = null;
-        if(mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_TRACK_HIGH_BTN)) {
+        SmartDashboard.putBoolean("Tracking target button", mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_TRACK_TARGET_BTN));
+        if(mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_TRACK_TARGET_BTN)) {
             visionTarget = SystemSettings.VisionTarget.High;
-            if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_TRACK_LOW_BTN)) {
-                visionTarget = SystemSettings.VisionTarget.Low;
-            }
+            mTrackingType = ETrackingType.TARGET;
             if(!mTrackingType.equals(mLastTrackingType)) {
                 mLog.error("Requesting command start");
                 mLog.error("Stopping teleop command queue");
                 mTeleopCommandManager.stopRunningCommands(pNow);
-                mTeleopCommandManager.startCommands(new LimelightTargetLock(mDrive, mLimelight, 2, mTrackingType, new DriveToTargetDistance(mLimelight, visionTarget), false).setStopWhenTargetLost(false));
+                mTeleopCommandManager.startCommands(new LimelightTargetLock(mDrive, mLimelight, 2, mTrackingType, this, false).setStopWhenTargetLost(false));
             }
         } else {
             mTrackingType = null;
-            if(mTeleopCommandManager.isRunningCommands()) mTeleopCommandManager.stopRunningCommands(pNow);
+            if(mTeleopCommandManager.isRunningCommands()) {
+                mTeleopCommandManager.stopRunningCommands(pNow);
+            }
         }
     }
 
