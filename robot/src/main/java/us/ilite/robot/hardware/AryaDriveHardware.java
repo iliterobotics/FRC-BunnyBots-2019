@@ -297,27 +297,6 @@ public class AryaDriveHardware implements IDriveHardware {
 
     @Override
     public boolean checkHardware() {
-
-        // TODO Implement testing for VictorSPX
-        // CheckerConfigBuilder checkerConfigBuilder = new CheckerConfigBuilder();
-        // checkerConfigBuilder.setCurrentFloor(2);
-        // checkerConfigBuilder.setCurrentEpsilon(2.0);
-        // checkerConfigBuilder.setRPMFloor(1500);
-        // checkerConfigBuilder.setRPMEpsilon(250);
-        // checkerConfigBuilder.setRPMSupplier(()->mLeftMaster.getSelectedSensorVelocity(0));
-
-        // boolean leftSide = TalonSRXChecker.CheckTalons(Drive.class,
-        //         Arrays.asList(new TalonSRXChecker.TalonSRXConfig("left_master", mLeftMaster),
-        //             new TalonSRXChecker.TalonSRXConfig("left_slave", mLeftRear)),
-        //         checkerConfigBuilder.build());
-
-        // checkerConfigBuilder.setRPMSupplier(()->mRightMaster.getSelectedSensorVelocity(0));
-
-        // boolean rightSide = TalonSRXChecker.CheckTalons(Drive.class,
-        //         Arrays.asList(new TalonSRXChecker.TalonSRXConfig("right_master", mRightMaster),
-        //                 new TalonSRXChecker.TalonSRXConfig("right_slave", mRightRear)),
-        //         checkerConfigBuilder.build());
-        // return leftSide && rightSide;
         return true;
     }
 
