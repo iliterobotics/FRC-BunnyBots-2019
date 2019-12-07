@@ -206,10 +206,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
 
     // TODO set neo drive ids
     public static int kDriveLeftMasterNeoID = 1;
-    public static int kDriveLeftMiddleNeoId = 3;
     public static int kDriveLeftRearNeoID = 5;
     public static int kDriveRightMasterNeoID = 2;
-    public static int kDriveRightMiddleNeoId = 4;
     public static int kDriveRightRearNeoID = 6;
 
 
