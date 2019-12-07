@@ -131,8 +131,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // Robot constants (configure later)
     // TO-DO: Configure torque constant
     // =============================================================================
-    public static final double kYeetPositiveRampRate = 0.2; //percent output per cycle
-    public static final double kYeetNegativeRampRate = -0.1; //percent output per cycle
+    public static final double kYeetPositiveRampRate = 0.5; //percent output per cycle
+    public static final double kYeetNegativeRampRate = -0.5; //percent output per cycle
     public static final double kYeetCruiseOutput = 1.0;
 
 
