@@ -119,7 +119,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     public void updateVisionCommands(double pNow) {
         SystemSettings.VisionTarget visionTarget = null;
-        SmartDashboard.putBoolean("Tracking target button", mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_TRACK_TARGET_BTN));
         if(mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_TRACK_TARGET_BTN)) {
             visionTarget = SystemSettings.VisionTarget.High;
             mTrackingType = ETrackingType.TARGET;
