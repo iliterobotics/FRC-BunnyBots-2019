@@ -43,7 +43,7 @@ public class CSVLogger implements Runnable {
     }
 
     public void run() {
-        if(mIsRunning) {
+        if(!mIsRunning) {
             if(!mShouldContinue) {
                 mLog.error("USB not found! Stopping logging.");
                 stop();
