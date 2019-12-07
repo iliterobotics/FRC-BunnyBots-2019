@@ -28,10 +28,7 @@ import us.ilite.lib.drivers.Clock;
 import us.ilite.lib.drivers.ECommonControlMode;
 import us.ilite.lib.drivers.ECommonNeutralMode;
 import us.ilite.lib.drivers.IMU;
-import us.ilite.robot.hardware.NeoDriveHardware;
-import us.ilite.robot.hardware.SrxDriveHardware;
-import us.ilite.robot.hardware.IDriveHardware;
-import us.ilite.robot.hardware.SimDriveHardware;
+import us.ilite.robot.hardware.*;
 import us.ilite.robot.loops.Loop;
 
 import java.util.ArrayList;
@@ -49,6 +46,7 @@ public class Drive extends Loop {
 	private Data mData;
 
 	private IDriveHardware mDriveHardware;
+	private EDriveHardwareType mDriveHardwareType;
 	private Rotation2d mGyroOffset = new Rotation2d();
 
 	private EDriveState mDriveState;
@@ -75,27 +73,27 @@ public class Drive extends Loop {
 //	PerfTimer mCalculateTimer = new PerfTimer().alwayLog().setLogMessage("Calculate: %s");
 //	PerfTimer mMotionPlannerTimer = new PerfTimer().alwayLog().setLogMessage("Planner: %s");
 
-	public Drive(Data data, DriveController pDriveController, Clock pSimClock, boolean pSimulated)
-	{
+	public Drive(EDriveHardwareType pDriveHardwareType, Data data, DriveController pDriveController, Clock pSimClock, boolean pSimulated) {
 		this.mData = data;
 		this.mDriveController = pDriveController;
 		if(pSimulated) {
 			this.mSimClock = pSimClock;
 			this.mDriveHardware = new SimDriveHardware(mSimClock, mDriveController.getRobotProfile());
 		} else {
-			if(AbstractSystemSettingsUtils.isPracticeBot()) {
-				this.mDriveHardware = new SrxDriveHardware();
-			} else {
-				this.mDriveHardware = new NeoDriveHardware(SystemSettings.kDriveGearboxRatio);
-			}
+			this.mDriveHardware = pDriveHardwareType.getDriveHardware();
 		}
 		mPigeon = mDriveHardware.getImu();
 		mTurnRatePIDController = new PIDController(SystemSettings.kDriveTurnRateGains, -SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kControlLoopPeriod);
 		this.mDriveHardware.init();
 	}
 
-	public Drive(Data data, DriveController pDriveController) {
-		this(data, pDriveController, null, false);
+	public Drive(Data pData, DriveController pDriveController, Clock pSimClock, boolean pSimulated)
+	{
+		this(EDriveHardwareType.MASTER, pData, pDriveController, pSimClock, pSimulated);
+	}
+
+	public Drive(Data pData, DriveController pDriveController) {
+		this(pData, pDriveController, null, false);
 	}
 
 	public void startCsvLogging() {
