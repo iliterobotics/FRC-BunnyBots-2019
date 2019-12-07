@@ -1,5 +1,6 @@
 package us.ilite.robot.modules;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.LogOutput;
@@ -26,6 +27,7 @@ import us.ilite.common.types.sensor.EPowerDistPanel;
 import us.ilite.lib.drivers.Clock;
 import us.ilite.lib.drivers.ECommonControlMode;
 import us.ilite.lib.drivers.ECommonNeutralMode;
+import us.ilite.lib.drivers.IMU;
 import us.ilite.robot.hardware.NeoDriveHardware;
 import us.ilite.robot.hardware.SrxDriveHardware;
 import us.ilite.robot.hardware.IDriveHardware;
@@ -54,12 +56,17 @@ public class Drive extends Loop {
 	private double mTargetTrackingThrottle = 0;
 
 	private PIDController mTargetAngleLockPid;
+	private PIDController mTurnRatePIDController;
 	private DriveController mDriveController;
 
 	private Clock mSimClock = null;
 	private double mPreviousTime = 0;
 
 	private DriveControlMode mDriveControlMode = DriveControlMode.PERCENT_OUTPUT;
+
+	private IMU mPigeon;
+	private double mTurn = 0.0;
+	private double mThrottle = 0.0;
 
 	ReflectingCSVWriter<DebugOutput> mDebugLogger = null;
 	DebugOutput debugOutput = new DebugOutput();
@@ -82,7 +89,8 @@ public class Drive extends Loop {
 				this.mDriveHardware = new NeoDriveHardware(SystemSettings.kDriveGearboxRatio);
 			}
 		}
-
+		mPigeon = mDriveHardware.getImu();
+		mTurnRatePIDController = new PIDController(SystemSettings.kDriveTurnRateGains, -SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kControlLoopPeriod);
 		this.mDriveHardware.init();
 	}
 
@@ -183,6 +191,8 @@ public class Drive extends Loop {
 		} else {
 			switch (this.mDriveControlMode) {
                 case VELOCITY:
+					double turnOutput = mTurnRatePIDController.calculate(mPigeon.getYaw(), pNow);
+					setDriveMessage(DriveMessage.fromThrottleAndTurn(mThrottle, turnOutput));
 					((NeoDriveHardware)mDriveHardware).setTarget(mDriveMessage);
                     break;
                 case PERCENT_OUTPUT:
@@ -275,6 +285,12 @@ public class Drive extends Loop {
 		mDriveHardware.set(mDriveMessage);
 		mPreviousTime = pNow;
 //		mUpdateTimer.stop();
+	}
+
+	public void setTurnAndThrottle(double pTurn, double pThrottle) {
+		mTurn = pTurn;
+		mThrottle = pThrottle;
+		mTurnRatePIDController.setSetpoint(mTurn * SystemSettings.kDriveTrainMaxTurnRate);
 	}
 
 	public synchronized void setTargetAngleLock() {
