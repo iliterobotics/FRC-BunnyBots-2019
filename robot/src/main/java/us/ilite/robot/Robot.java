@@ -121,7 +121,6 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         initTimer.reset();
         initTimer.start();
-        mLogger.info("Starting Autonomous Initialization...");
 
         initMatchMetadata(); // TODO - move this to a DS connection thread
 
@@ -149,7 +148,6 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         initMatchMetadata();
-        mLogger.error("TELEOP INITIALIZATION-----------------------------------------------------");
 
         mSettings.loadFromNetworkTables();
 

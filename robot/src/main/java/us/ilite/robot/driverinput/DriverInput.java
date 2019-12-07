@@ -77,7 +77,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
-        mLog.error("Updating The Driver Input Class--------------------------------------------------------");
         updateYeets(pNow);
     }
 
@@ -95,7 +94,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
         }
         else {
-            mLog.error("SLOWING TO STOP----------------------------------------------------------------------------");
             mYeets.slowToStop();
         }
         mYeets.update( pNow );
