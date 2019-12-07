@@ -180,14 +180,13 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // The current target values assume the limelight processing stream is configured to target
     // the bottom of the vision target
     public enum VisionTarget {
-        High(0.0, 0.0), // height of the bottom of the reflective tape in inches for the high port
-        Low(0.0, 0.0); // height of the bottom of the reflective tape in inches for the low port
+        High(0.0),
+        Low(0.0);
 
-        private final double height, distanceNeeded;
+        private final double height;
 
-        VisionTarget( double height, double distanceNeeded)  {
+        VisionTarget(double height)  {
             this.height = height;
-            this.distanceNeeded = distanceNeeded;
         }
 
         /**
@@ -196,13 +195,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
         public double getHeight() {
             return height;
         }
-        public double getDistanceNeeded() {
-            return distanceNeeded;
-        }
     }
-    
-    public final double kDistanceFromHighTarget = 0.0; // Required distance from high target in feet
-    public final double kDistanceFromLowTarget = 0.0; // Required distance from low target in feet
     public static double kDistanceToTargetDeadband = 0.0;
 
     // =============================================================================
