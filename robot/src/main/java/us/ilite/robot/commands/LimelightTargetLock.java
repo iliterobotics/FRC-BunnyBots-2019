@@ -12,10 +12,11 @@ import us.ilite.robot.modules.targetData.ITargetDataProvider;
 
 public class LimelightTargetLock extends TargetLock {
 
-    private ILog mLog = Logger.createLog(LimelightTargetLock.class);
+    private ILog mLog = Logger.createLog(TargetLock.class);
 
     private Limelight mLimelight;
     private ETrackingType mTrackingType;
+    private PIDController mPIDController;
 
     public LimelightTargetLock(Drive pDrive, Limelight pLimelight, double pAllowableError, ETrackingType pTrackingType, IThrottleProvider pThrottleProvider) {
         super(pDrive, pAllowableError, pTrackingType, pLimelight, pThrottleProvider);
