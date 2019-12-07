@@ -2,10 +2,10 @@ package us.ilite.robot;
 
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
-
 import edu.wpi.first.wpilibj.Notifier;
 import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
+import us.ilite.common.io.CodexCsvLogger;
 
 public class CSVLogger implements Runnable {
     private ILog mLog = Logger.createLog(CSVLogger.class);
@@ -19,21 +19,19 @@ public class CSVLogger implements Runnable {
         mShouldContinue = false;
         mIsRunning = false;
     }
-
     /**
      * Starts the periodically called logging by mLoggingNotifier
      */
     public void start() {
-        if(!mIsRunning) {
+        if (!mIsRunning) {
             mShouldContinue = mData.logFromCodexToCSVHeader();
-            mLoggingNotifier.startPeriodic( SystemSettings.kCSVLoggingPeriod );
+            mLoggingNotifier.startPeriodic(SystemSettings.kCSVLoggingPeriod);
             mIsRunning = true;
         }
     }
-
     /**
-     * Stops the periodically called logging by mLoggingNotifier
-     */
+      * Stops the periodically called logging by mLoggingNotifier
+      */
     public void stop() {
         if(mIsRunning) {
             mLoggingNotifier.stop();

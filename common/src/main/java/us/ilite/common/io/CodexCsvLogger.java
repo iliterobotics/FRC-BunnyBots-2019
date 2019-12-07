@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -20,7 +21,7 @@ public class CodexCsvLogger {
 
     private final ILog mLog = Logger.createLog(CodexCsvLogger.class);
     public static final String ROBOT_DIR = "/u";
-    // private static final String USER_DIR = System.getProperty("user.home");
+    private static final String USER_DIR = System.getProperty("user.home");
     private static final String LOG_PATH_FORMAT = "/logs/%s/%s-%s-%s.csv";
 
     // private final ILog mLog = Logger.createLog(CodexCsvLogger.class);
@@ -73,15 +74,16 @@ public class CodexCsvLogger {
     public File file(boolean handleUSBConnection) {
 
         String dir = ROBOT_DIR;
-        // if(!handleUSBConnection) {
-        //     if(Files.notExists(new File("/u").toPath())) {
-        //         dir = USER_DIR;
-        //     } else {
-        //         dir = ROBOT_DIR;
-        //     }
-        // } else {
-        //     dir = USER_DIR;
-        // }
+         if(!handleUSBConnection) {
+             if(Files.notExists(new File("/u").toPath())) {
+                 dir = USER_DIR;
+             } else {
+                 dir = ROBOT_DIR;
+             }
+         } else {
+//             dir = USER_DIR;
+         }
+         mLog.error("*()(@*#)(!@*#()" + dir + "182390182390");
         String mEventName;
         String mMatchType;
         Integer mMatchNumber;
