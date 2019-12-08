@@ -23,7 +23,9 @@ public class CSVLogger implements Runnable {
      * Starts the periodically called logging by mLoggingNotifier
      */
     public void start() {
-        if (!mIsRunning) {
+        mLog.error("eroeorioe ioeir oeir ooi oi oi o ieo \");\n" );
+          if (mIsRunning) {
+            mLog.error("ksdhklh weqhri htelreqhknn");
             mShouldContinue = mData.logFromCodexToCSVHeader();
             mLoggingNotifier.startPeriodic(SystemSettings.kCSVLoggingPeriod);
             mIsRunning = true;
@@ -41,9 +43,10 @@ public class CSVLogger implements Runnable {
     }
 
     public void run() {
+        mLog.error("fhhilhihgkhckytd");
         if(!mIsRunning) {
             if(!mShouldContinue) {
-                mLog.error("USB not found! Stopping logging.");
+                mLog.error("USB not found! Stopping logging. , 9832459823450923473");
                 stop();
             }
             mShouldContinue = mData.logFromCodexToCSVLog();

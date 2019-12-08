@@ -72,7 +72,7 @@ public class Data {
     private List<CodexCsvLogger> mCodexCsvLoggers;
     private MatchMetadata mMatchData;
     private boolean mLogging;
-
+    private ILog mLog = Logger.createLog(Data.class);
 
     public Data(boolean pLogging) {
         mLogging = pLogging;
@@ -152,6 +152,7 @@ public class Data {
                 if(!keepLogging) {
                     break;
                 }
+
             }
         } catch (Exception e) {
             System.out.println(e + "*********** DATA EXCEPTION");

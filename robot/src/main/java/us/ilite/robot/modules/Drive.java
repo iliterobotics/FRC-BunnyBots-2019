@@ -67,9 +67,9 @@ public class Drive extends Loop {
 //	PerfTimer mCalculateTimer = new PerfTimer().alwayLog().setLogMessage("Calculate: %s");
 //	PerfTimer mMotionPlannerTimer = new PerfTimer().alwayLog().setLogMessage("Planner: %s");
 
-	public Drive(Data data, DriveController pDriveController, Clock pSimClock, boolean pSimulated)
+	public Drive(Data pData, DriveController pDriveController, Clock pSimClock, boolean pSimulated)
 	{
-		this.mData = data;
+		this.mData = pData;
 		this.mDriveController = pDriveController;
 		if(pSimulated) {
 			this.mSimClock = pSimClock;
@@ -81,6 +81,7 @@ public class Drive extends Loop {
 				this.mDriveHardware = new NeoDriveHardware(SystemSettings.kDriveGearboxRatio);
 			}
 		}
+		mCSVLogger = new CSVLogger(pData);
 
 		this.mDriveHardware.init();
 	}
@@ -90,10 +91,11 @@ public class Drive extends Loop {
 	}
 
 	public void startCsvLogging() {
+		mCSVLogger.start();
 		mDebugLogger = new ReflectingCSVWriter<>("/home/lvuser/debug.csv", DebugOutput.class);
 		debugOutput = new DebugOutput();
 		mDebugLogger.add(debugOutput);
-		mCSVLogger.start();
+
 
 	}
 
@@ -107,6 +109,7 @@ public class Drive extends Loop {
 
 	@Override
 	public void modeInit(double pNow) {
+		mLogger.error("asdjflkasdj;asdj;lasdj;lfasdj;kldfafdfldjds;o");
 		mTargetAngleLockPid = new PIDController(SystemSettings.kTargetAngleLockGains, SystemSettings.kTargetAngleLockMinInput, SystemSettings.kTargetAngleLockMaxInput, SystemSettings.kControlLoopPeriod);
 		mTargetAngleLockPid.setOutputRange(SystemSettings.kTargetAngleLockMinPower, SystemSettings.kTargetAngleLockMaxPower);
 		mTargetAngleLockPid.setSetpoint(0);
