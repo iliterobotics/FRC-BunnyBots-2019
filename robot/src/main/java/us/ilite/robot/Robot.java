@@ -29,7 +29,7 @@ import us.ilite.lib.drivers.Clock;
 import us.ilite.lib.drivers.GetLocalIP;
 import us.ilite.lib.drivers.VisionGyro;
 import us.ilite.robot.auto.AutonomousRoutines;
-import us.ilite.robot.commands.CharacterizeDrive;
+import us.ilite.robot.auto.paths.CrossNeutralLine;
 import us.ilite.robot.driverinput.DriverInput;
 import us.ilite.robot.loops.LoopManager;
 import us.ilite.robot.modules.*;
@@ -125,6 +125,10 @@ public class Robot extends TimedRobot {
         initMatchMetadata(); // TODO - move this to a DS connection thread
 
         mSettings.loadFromNetworkTables();
+
+        mDrive.setPathFollowing();
+        mDrive.getDriveController().setTrajectory(mAutonomousRoutines.getCrossNeutralLineSequence().getCrossNeutralLineTrajectory(), true);
+
 
         // Init modules after commands are set
         mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager);
