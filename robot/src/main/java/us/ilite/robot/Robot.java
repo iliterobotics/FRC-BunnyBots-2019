@@ -14,7 +14,6 @@ import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.timing.TimedState;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -39,6 +38,7 @@ import us.ilite.robot.modules.*;
 
 public class Robot extends TimedRobot {
 
+
     private final ILog mLogger = Logger.createLog(this.getClass());
 
     private final LoopManager mLoopManager = new LoopManager(SystemSettings.kControlLoopPeriod);
@@ -50,14 +50,17 @@ public class Robot extends TimedRobot {
     private final SystemSettings mSettings = new SystemSettings();
     private final PowerDistributionPanel pdp = new PowerDistributionPanel(SystemSettings.kPowerDistPanelAddress);
     private final DriveController mDriveController = new DriveController(new HenryProfile());
-
     // Module declarations here
     private final CommandManager mAutonomousCommandManager = new CommandManager().setManagerTag("Autonomous Manager");
     private final CommandManager mTeleopCommandManager = new CommandManager().setManagerTag("Teleop Manager");
     private final Drive mDrive = new Drive(mData, mDriveController);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
-    private final DriverInput mDriverInput = new DriverInput( );
+    private final Intake mIntake = new Intake();
+    private final Shooter mShooter = new Shooter();
+    private final Hopper mHopper = new Hopper(mShooter);
+    private final Conveyor mConveyor = new Conveyor(mShooter);
+    private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData);
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
@@ -136,7 +139,7 @@ public class Robot extends TimedRobot {
         mDrive.getDriveController().setTrajectory(mCrossNeutralLineTrajectory, true);
 
         // Init modules after commands are set
-        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager);
+        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mConveyor, mShooter, mIntake, mHopper);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
@@ -160,7 +163,7 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mRunningModules.setModules(mDriverInput, mTeleopCommandManager);
+        mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mShooter, mConveyor, mIntake, mHopper);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 
