@@ -13,7 +13,12 @@ public class Shooter extends Module {
     private VictorSPX mVictor;
     private PIDController kShooterPidController;
     private EShooterState mShooterState;
+
+    private boolean mNotShootingBalls;
+    private int mCyclesNotShootingBalls;
     private double mDesiredOutput;
+    private double mLastCurrent;
+    private double mShootingCurrent;
 
     public enum EShooterState {
         SHOOTING,
@@ -34,11 +39,23 @@ public class Shooter extends Module {
 
     @Override
     public void modeInit(double pNow) {
-
+        mNotShootingBalls = true;
+        mCyclesNotShootingBalls = 0;
     }
 
     @Override
     public void periodicInput(double pNow) {
+        double mCurrentCurrent = mTalon.getOutputCurrent();
+        if (mCurrentCurrent - mLastCurrent >= SystemSettings.kShooterCurrentDropThreshold) {
+            mShootingCurrent = mLastCurrent;
+            mNotShootingBalls = true;
+        }
+
+        if (mCurrentCurrent - mShootingCurrent >= SystemSettings.kShooterCurrentDropThreshold) {
+            mNotShootingBalls = true;
+        } else {
+            mNotShootingBalls = false;
+        }
 
     }
 
@@ -57,6 +74,11 @@ public class Shooter extends Module {
         }
 
         mTalon.set(ControlMode.PercentOutput, mDesiredOutput);
+        mLastCurrent = mTalon.getOutputCurrent();
+
+        if (mNotShootingBalls) {
+            mCyclesNotShootingBalls++;
+        }
     }
 
     public void setShooterState(EShooterState pState) {
@@ -70,5 +92,9 @@ public class Shooter extends Module {
 
     public boolean isMaxVelocity() {
         return mTalon.getSelectedSensorVelocity() == SystemSettings.kMaxShooterVelocity;
+    }
+
+    public int cyclesNotShootingBalls() {
+        return mCyclesNotShootingBalls;
     }
 }
