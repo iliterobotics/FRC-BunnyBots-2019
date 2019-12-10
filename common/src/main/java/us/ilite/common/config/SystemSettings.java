@@ -46,7 +46,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kDriveEffectiveWheelbase = 23.25;
     public static double kDriveTrainMaxTurnRate = 6;
 
-    public static double kDriveClosedLoopVoltageRampRate = 0.7;
+    public static double kDriveClosedLoopVoltageRampRate = 0.5;
     public static double kDriveMinOpenLoopVoltageRampRate = 0.1;
     public static double kDriveMaxOpenLoopVoltageRampRate = 0.9;
     public static int kDriveCurrentLimitAmps = 40;//50;
@@ -176,6 +176,10 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kTargetAngleLockMaxInput = 27;
     public static double kTargetAngleLockFrictionFeedforward = 0.071544619136622825;
     public static double kTargetAngleLockLostTargetThreshold = 10;
+    public static double kYeetPositiveRampRate = 1.0;
+    public static double kYeetCruiseOutput = 1.0;
+    public static double kYeetNegativeRampRate = -1d;
+
 
     // =============================================================================
     // Target Constants
@@ -213,10 +217,12 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kPigeonId = 30;
     public static int kCanifierAddress = 40;
 
-    // TODO set neo drive ids
-    public static int kDriveLeftMasterNeoID = 1;
-    public static int kDriveLeftMiddleNeoID = 3;
-    public static int kDriveLeftRearNeoID = 5;
+    public static  int kDriveLeftMasterTalonId = 7;//1;
+    public static int kDriveLeftMiddleTalonId = 3;
+    public static  int kDriveLeftRearTalonId = 5;//5;
+    public static  int kDriveRightMasterTalonId = 6;//2;
+    public static int kDriveRightMiddleTalonId = 4;
+    public static  int kDriveRightRearTalonId = 4;//6;
 
     public static int kDriveRightMasterNeoID = 2;
     public static int kDriveRightMiddleNeoID = 4;

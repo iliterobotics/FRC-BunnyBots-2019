@@ -1,105 +1,109 @@
 package us.ilite.robot.commands;
 
+import com.flybotix.hfr.util.log.ILog;
+import com.flybotix.hfr.util.log.Logger;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.Data;
-import us.ilite.common.types.drive.EDriveData;
-import us.ilite.lib.drivers.ECommonControlMode;
+import us.ilite.common.config.SystemSettings;
+import us.ilite.robot.driverinput.DriverInput;
 import us.ilite.robot.modules.Drive;
 import us.ilite.robot.modules.DriveMessage;
 
-public class YeetLeftRight {
+public class YeetLeftRight implements ICommand {
+    private ILog mLog = Logger.createLog(YeetLeftRight.class);
 
-//    private Data mData;
-//    private Drive mDrive;
-//
-//    private double mElevatorTicks;
-//    private double mCurrentLeftPercentOutput;
-//    private double mDesiredLeftPercentOutput;
-//    private double mCurrentRightPercentOutput;
-//    private double mDesiredRightPercentOutput;
-//
-//    //Temporary constant, varies when considering elevator position
-//    private double kRampRate = .06; //percent per cycle | 0 to .75 in .25 seconds
-//    private double kCruisePercentOutput = 0.75;
-//
-//    private EYeetSide mSideToTurn;
-//
-//    public enum EYeetSide {
-//        LEFT,
-//        RIGHT
-//    }
-//
-//    public YeetLeftRight(Data pData, Drive pDrive) {
-//        this.mData = pData;
-//        this.mDrive = pDrive;
-//        mElevatorTicks = mData.elevator.get(EElevator.CURRENT_ENCODER_TICKS);
-//    }
-//
-//    @Override
-//    public void init(double pNow) {
-//
-//    }
-//
-//    @Override
-//    public boolean update(double pNow) {
-//
-//        mElevatorTicks = mData.elevator.get(EElevator.CURRENT_ENCODER_TICKS);
-//
-//        switch(mSideToTurn) {
-//            case LEFT:
-//                mCurrentLeftPercentOutput = mData.drive.get(EDriveData.LEFT_MESSAGE_OUTPUT);
-//                mDesiredLeftPercentOutput = mCurrentLeftPercentOutput;
-//                mDesiredRightPercentOutput = 0.0;
-//                ramp();
-//                break;
-//
-//            case RIGHT:
-//                mCurrentRightPercentOutput = mData.drive.get(EDriveData.RIGHT_MESSAGE_OUTPUT);
-//                mDesiredRightPercentOutput = mCurrentRightPercentOutput;
-//                mDesiredLeftPercentOutput = 0.0;
-//                ramp();
-//                break;
-//
-//            default:
-//                mDesiredLeftPercentOutput = 0.0;
-//                mDesiredRightPercentOutput = 0.0;
-//                break;
+    private Drive mDrive;
+    private EYeetSide mSideToTurn;
+    private EYeetceleration mYeetceleration;
+    private double mCurrentTurn;
+    private double mDesiredTurn;
+    private double mVector;
+
+    public enum EYeetSide {
+        LEFT,
+        NOTHING,
+        RIGHT;
+    }
+
+    public enum EYeetceleration {
+        A(SystemSettings.kYeetPositiveRampRate, SystemSettings.kYeetCruiseOutput),
+        DE(SystemSettings.kYeetNegativeRampRate, 0.0);
+
+        private double mRampRate;
+        private double mDesiredOutput;
+
+        EYeetceleration(double pRampRate, double pDesiredOutput) {
+            mRampRate = pRampRate;
+            mDesiredOutput = pDesiredOutput;
+        }
+    }
+
+    public YeetLeftRight(Drive pDrive) {
+        mDesiredTurn = 0d;
+        mCurrentTurn = 0d;
+        mVector = -1d;
+        this.mDrive = pDrive;
+    }
+
+    @Override
+    public void init(double pNow) {
+    }
+
+    @Override
+    public boolean update(double pNow) {
+
+        ramp();
+        double output = mDesiredTurn;
+
+//        if (mSideToTurn == EYeetSide.LEFT || ) {
+//            output *= -1;
 //        }
-//
-//        mDrive.setDriveMessage(new DriveMessage(mDesiredLeftPercentOutput, mDesiredRightPercentOutput, ECommonControlMode.PERCENT_OUTPUT));
-//
-//        return false;
-//    }
-//
-//    public void setSideToTurn(EYeetSide pSideToTurn) {
-//        mSideToTurn = pSideToTurn;
-//    }
-//
-//    public void ramp() {
-//        switch(mSideToTurn){
-//            case LEFT:
-//                if (mCurrentLeftPercentOutput == kCruisePercentOutput || mDesiredLeftPercentOutput + kRampRate <= kCruisePercentOutput) {
-//                    mDesiredLeftPercentOutput += kRampRate;
-//                }
-//
-//            case RIGHT:
-//                if (mCurrentRightPercentOutput == kCruisePercentOutput || mDesiredRightPercentOutput + kRampRate <= kCruisePercentOutput) {
-//                    mDesiredRightPercentOutput += kRampRate;
-//                }
-//        }
-//    }
-//
-//
-//    // Output and ramp rate methods based on elevator ticks
-////    public void getMaxOutput() {
-////
-////    }
-////
-////    public void setRampRate() {
-////
-////    }
-//
-//    @Override
-//    public void shutdown(double pNow) {
-//
-//    }
+        output *= mVector;
+
+
+
+        SmartDashboard.putNumber("Output for Yeets" , output);
+        SmartDashboard.putString("EYeetAccel", mYeetceleration.toString());
+        mDrive.setDriveMessage(DriveMessage.fromThrottleAndTurn(-mDesiredTurn - Math.abs( output )*0.2, output));
+        mCurrentTurn = mDesiredTurn;
+
+        if (mYeetceleration.mDesiredOutput == 0 && mCurrentTurn == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public void turn(EYeetSide pSideToTurn) {
+        mSideToTurn = pSideToTurn;
+        mYeetceleration = EYeetceleration.A;
+
+        if (pSideToTurn == EYeetSide.LEFT) {
+            mVector = 1d;
+        } else {
+            mVector = -1d;
+        }
+
+    }
+
+    public void slowToStop() {
+        mYeetceleration = EYeetceleration.DE;
+        mSideToTurn = EYeetSide.NOTHING;
+    }
+
+    public void ramp() {
+        if (mCurrentTurn != mYeetceleration.mDesiredOutput) {
+            mDesiredTurn += mYeetceleration.mRampRate;
+            mLog.error("mDesiredTurn: ", mDesiredTurn);
+        }
+        if ((mDesiredTurn <= 0 && mSideToTurn == EYeetSide.NOTHING)) {
+            mDesiredTurn = 0;
+        }
+        SmartDashboard.putNumber("Desired Yeet Turn", mDesiredTurn);
+    }
+
+    @Override
+    public void shutdown(double pNow) {
+
+    }
 }

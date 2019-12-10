@@ -17,8 +17,11 @@ import us.ilite.common.types.input.EInputScale;
 import us.ilite.common.types.input.ELogitech310;
 import us.ilite.lib.drivers.ECommonControlMode;
 import us.ilite.lib.drivers.ECommonNeutralMode;
+import us.ilite.robot.commands.YeetLeftRight;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
+
+import java.lang.annotation.ElementType;
 
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
@@ -39,6 +42,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private Joystick mOperatorJoystick;
     private DriveMessage mDriveMessage;
     private PIDController mPIDController;
+    private YeetLeftRight mYeets;
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
 
@@ -53,6 +57,8 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
         this.mDriverJoystick = new Joystick(0);
         this.mOperatorJoystick = new Joystick(1);
+
+        this.mYeets = new YeetLeftRight(mDrive);
 
         this.mPIDController = new PIDController(SystemSettings.kDriveClosedLoopPIDGains,
                 0, SystemSettings.kDriveTrainMaxVelocity, SystemSettings.kControlLoopPeriod );
@@ -71,7 +77,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public double getTurn() {
 
         if (mData.driverinput.isSet(DriveTeamInputMap.DRIVER_TURN_AXIS)) {
-            return mData.driverinput.get(DriveTeamInputMap.DRIVER_TURN_AXIS);
+            return mData.driverinput.get(DriveTeamInputMap.DRIVER_TURN_AXIS) * ((1 - mData.driverinput.get(DriveTeamInputMap.DRIVER_REDUCE_TURN_AXIS) + 0.3));
         } else {
             return 0.0;
         }
@@ -91,11 +97,33 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     @Override
     public void update(double pNow) {
         updateDriveTrain();
+        if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) || mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            updateYeets( pNow );
+        }
     }
 
     @Override
     public void shutdown(double pNow) {
 
+    }
+
+    public void updateYeets(double pNow) {
+
+
+        if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
+                mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            mYeets.slowToStop();
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
+            mYeets.turn(YeetLeftRight.EYeetSide.LEFT);
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
+        }
+        else {
+            mYeets.slowToStop();
+        }
+        mYeets.update( pNow );
     }
 
     private void updateDriveTrain() {
@@ -113,4 +141,13 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //        mDrive.getDriveHardware().
 
     }
+
+    private double getMaxVelocity() {
+        if (mData.driverinput.get(DriveTeamInputMap.DRIVER_NITRO_BUTTON) > 0.5) {
+            return (42*5676/60) * 3;
+        } else {
+            return SystemSettings.kDriveTrainMaxVelocity;
+        }
+    }
+
 }
