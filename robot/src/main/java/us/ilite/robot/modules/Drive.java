@@ -190,7 +190,9 @@ public class Drive extends Loop {
 			switch (this.mDriveControlMode) {
                 case VELOCITY:
 					double turnOutput = mTurnRatePIDController.calculate(mPigeon.getYaw(), pNow);
-					setDriveMessage(DriveMessage.fromThrottleAndTurn(mThrottle, turnOutput));
+					DriveMessage dm = new DriveMessage(mThrottle, mTurn);
+					dm.normalize();
+					setDriveMessage(dm.fromThrottleAndTurn());
 					((NeoDriveHardware)mDriveHardware).setTarget(mDriveMessage);
                     break;
                 case PERCENT_OUTPUT:

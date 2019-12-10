@@ -44,6 +44,15 @@ public class DriveMessage {
     this.rightControlMode = rightControlMode;
   }
 
+
+  // Temporary throttle and turn storage before normalziation so it's normalization is not forced
+  public DriveMessage(double pThrottle, double pTurn) {
+    mThrottle = pThrottle;
+    mTurn = pTurn;
+    leftOutput = 0.0;
+    rightOutput = 0.0;
+  }
+
   /**
    * Tell the drive train to go and turn.  Both are scalars from -1.0 to 1.0.
    * @param pThrottle - positive = forward, negative = reverse
@@ -51,10 +60,11 @@ public class DriveMessage {
    * @return an open loop drivetrain message
    */
   public static DriveMessage fromThrottleAndTurn(double pThrottle, double pTurn) {
-    mThrottle = pThrottle;
-    mTurn = pTurn;
-    normalize(mThrottle, mTurn);
     return new DriveMessage(mThrottle + mTurn, mThrottle - mTurn, ECommonControlMode.PERCENT_OUTPUT);
+  }
+
+  public static DriveMessage fromThrottleAndTurn() {
+    return fromThrottleAndTurn(mThrottle, mTurn);
   }
 
 
@@ -123,6 +133,10 @@ public class DriveMessage {
     }
     throttle /= saturatedOutput;
     turn /= saturatedOutput;
+  }
+
+  public static void normalize() {
+    normalize(mThrottle, mTurn);
   }
 
   public DriveMessage setDemand(double pLeftDemand, double pRightDemand) {
