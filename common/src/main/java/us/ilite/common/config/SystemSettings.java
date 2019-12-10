@@ -217,16 +217,12 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kPigeonId = 30;
     public static int kCanifierAddress = 40;
 
-    public static  int kDriveLeftMasterTalonId = 7;//1;
-    public static int kDriveLeftMiddleTalonId = 3;
-    public static  int kDriveLeftRearTalonId = 5;//5;
-    public static  int kDriveRightMasterTalonId = 6;//2;
-    public static int kDriveRightMiddleTalonId = 4;
-    public static  int kDriveRightRearTalonId = 4;//6;
-
-    public static int kDriveRightMasterNeoID = 2;
-    public static int kDriveRightMiddleNeoID = 4;
-    public static int kDriveRightRearNeoID = 6;
+    public static  int kDriveLeftMasterNeoID = 7;//1;
+//    public static int kDriveLeftMiddleTalonId = 3;
+    public static  int kDriveLeftRearNeoID = 5;//5;
+    public static  int kDriveRightMasterNeoID = 6;//2;
+//    public static int kDriveRightMiddleTalonId = 4;
+    public static  int kDriveRightRearNeoID = 4;//6;
 
 
 
