@@ -9,6 +9,9 @@ import com.flybotix.hfr.util.log.ELevel;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
 
+import com.team254.lib.geometry.Pose2dWithCurvature;
+import com.team254.lib.trajectory.Trajectory;
+import com.team254.lib.trajectory.timing.TimedState;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -58,6 +61,7 @@ public class Robot extends TimedRobot {
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
+    private Trajectory<TimedState<Pose2dWithCurvature>> mCrossNeutralLineTrajectory;
     private MatchMetadata mMatchMeta = null;
 
     private final PerfTimer mClockUpdateTimer = new PerfTimer();
@@ -99,6 +103,8 @@ public class Robot extends TimedRobot {
             mLogger.exception(e);
         }
 
+        mCrossNeutralLineTrajectory = mAutonomousRoutines.getCrossNeutralLineSequence().getCrossNeutralLineTrajectory();
+
         // Handle telemetry initialization
         mData.registerCodices();
         LiveWindow.disableAllTelemetry();
@@ -127,8 +133,7 @@ public class Robot extends TimedRobot {
         mSettings.loadFromNetworkTables();
 
         mDrive.setPathFollowing();
-        mDrive.getDriveController().setTrajectory(mAutonomousRoutines.getCrossNeutralLineSequence().getCrossNeutralLineTrajectory(), true);
-
+        mDrive.getDriveController().setTrajectory(mCrossNeutralLineTrajectory, true);
 
         // Init modules after commands are set
         mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager);
