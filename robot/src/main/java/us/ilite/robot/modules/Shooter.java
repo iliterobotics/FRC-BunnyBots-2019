@@ -85,16 +85,16 @@ public class Shooter extends Module {
         mShooterState = pState;
     }
 
-    @Override
-    public void shutdown(double pNow) {
-        mTalon.set(ControlMode.PercentOutput, 0d);
-    }
-
     public boolean isMaxVelocity() {
         return mTalon.getSelectedSensorVelocity() == SystemSettings.kMaxShooterVelocity;
     }
 
     public int cyclesNotShootingBalls() {
         return mCyclesNotShootingBalls;
+    }
+
+    @Override
+    public void shutdown(double pNow) {
+        mTalon.set(ControlMode.PercentOutput, 0d);
     }
 }

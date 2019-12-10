@@ -1,5 +1,6 @@
 package us.ilite.robot.commands;
 
+import us.ilite.common.config.SystemSettings;
 import us.ilite.robot.modules.Shooter;
 
 public class Shoot implements ICommand {
@@ -19,11 +20,11 @@ public class Shoot implements ICommand {
 
     @Override
     public boolean update(double pNow) {
-        return false;
+        return mShootUntilEmpty && mShooter.cyclesNotShootingBalls() >= SystemSettings.kShootUntilEmptyCycleThreshold;
     }
 
     @Override
     public void shutdown(double pNow) {
-
+        mShooter.shutdown(pNow);
     }
 }
