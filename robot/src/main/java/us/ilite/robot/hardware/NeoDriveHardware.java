@@ -52,11 +52,11 @@ public class NeoDriveHardware implements IDriveHardware {
         configureMotor(mRightMaster);
         configureMotor(mRightRear);
 
-        mLeftMaster.setInverted(true);
+        mLeftMaster.setInverted(false);
         mLeftRear.setInverted(true);
 
-        mRightMaster.setInverted(false);
-        mRightRear.setInverted(true);
+        mRightMaster.setInverted(true);
+        mRightRear.setInverted(false);
 
         // Invert sensor readings by multiplying by 1 or -1
         mLeftMasterEncoder.setPositionConversionFactor(1.0 * kGearRatio);
