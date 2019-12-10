@@ -109,6 +109,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static PIDGains kShooterGains = new PIDGains( 0 ,0,0,0);
     public static int kShooterTalonID = 13;
     public static int kShooterVictorID = 14;
+    public static double kShooterCurrentDropThreshold = 0.0; //find later
+    public static double kShooterNotShootingCurrentThreshold = 0.0; //find later
 
     // =============================================================================
     // Motion Magic Constants
