@@ -17,43 +17,49 @@ import us.ilite.lib.drivers.Pigeon;
 import us.ilite.lib.drivers.SparkMaxFactory;
 import us.ilite.robot.modules.DriveMessage;
 
-public class NeoDriveHardware implements IDriveHardware {
+public class AryaDriveHardware implements IDriveHardware {
 
     private final ILog mLogger = Logger.createLog(SrxDriveHardware.class);
     private final double kGearRatio;
 
     private IMU mGyro;
 
-    private final CANSparkMax mLeftMaster, mRightMaster, mLeftRear, mRightRear;
+    private final CANSparkMax mLeftMaster, mRightMaster, mLeftMiddle, mRightMiddle, mLeftRear, mRightRear;
     private ControlType mLeftControlMode, mRightControlMode;
     private CANSparkMax.IdleMode mLeftNeutralMode, mRightNeutralMode;
     private int mPidSlot = SystemSettings.kDriveVelocityLoopSlot;
     private double mCurrentOpenLoopRampRate = SystemSettings.kDriveMinOpenLoopVoltageRampRate;
     private RangeScale mRangeScale;
 
-    public NeoDriveHardware(double pGearRatio) {
+    public AryaDriveHardware(double pGearRatio) {
         kGearRatio = pGearRatio;
         mGyro = new Pigeon(new PigeonIMU(SystemSettings.kPigeonId), SystemSettings.kGyroCollisionThreshold);
         // mGyro = new NavX(SerialPort.Port.kMXP);
 
         mLeftMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveLeftMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftMiddleNeoID, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
         mLeftRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftRearNeoID, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         mRightMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveRightMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightMiddleNeoID, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
         mRightRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightRearNeoID, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         configureMaster(mLeftMaster, true);
         configureMotor(mLeftMaster);
+        configureMotor(mLeftMiddle);
         configureMotor(mLeftRear);
 
         configureMaster(mRightMaster, false);
         configureMotor(mRightMaster);
+        configureMotor(mRightMiddle);
         configureMotor(mRightRear);
 
         mLeftMaster.setInverted(true);
+        mLeftMiddle.setInverted(true);
         mLeftRear.setInverted(true);
 
         mRightMaster.setInverted(false);
+        mRightMiddle.setInverted(false);
         mRightRear.setInverted(true);
 
         // Invert sensor readings by multiplying by 1 or -1
@@ -63,20 +69,16 @@ public class NeoDriveHardware implements IDriveHardware {
         mRightMaster.getEncoder().setPositionConversionFactor(1.0 * kGearRatio);
         mRightMaster.getEncoder().setVelocityConversionFactor(1.0 * kGearRatio);
 
-        configSparkForVelocity(mLeftMaster);
-        configSparkForVelocity(mRightMaster);
 
         reloadVelocityGains(mLeftMaster);
         reloadVelocityGains(mRightMaster);
-
     }
 
     @Override
     public void init() {
         zero();
         mLeftControlMode = mRightControlMode = ControlType.kDutyCycle;
-//        mLeftNeutralMode = mRightNeutralMode = CANSparkMax.IdleMode.kBrake;
-        mLeftNeutralMode = mRightNeutralMode = CANSparkMax.IdleMode.kCoast;
+        mLeftNeutralMode = mRightNeutralMode = CANSparkMax.IdleMode.kBrake;
 
         set(DriveMessage.kNeutral);
     }
@@ -91,8 +93,8 @@ public class NeoDriveHardware implements IDriveHardware {
         // Bypass state machine in set() and configure directly
         configSparkForPercentOutput(mLeftMaster);
         configSparkForPercentOutput(mRightMaster);
-        setNeutralMode(CANSparkMax.IdleMode.kBrake, mLeftMaster, mLeftRear);
-        setNeutralMode(CANSparkMax.IdleMode.kBrake, mRightMaster, mRightRear);
+        setNeutralMode(CANSparkMax.IdleMode.kBrake, mLeftMaster, mLeftMiddle, mLeftRear);
+        setNeutralMode(CANSparkMax.IdleMode.kBrake, mRightMaster, mRightMiddle, mRightRear);
 
         mLeftMaster.set(0.0);
         mRightMaster.set(0.0);
@@ -103,17 +105,12 @@ public class NeoDriveHardware implements IDriveHardware {
         mLeftControlMode = configForControlMode(mLeftMaster, mLeftControlMode, pDriveMessage.leftControlMode.kRevControlType);
         mRightControlMode = configForControlMode(mRightMaster, mRightControlMode, pDriveMessage.rightControlMode.kRevControlType);
 
-        mLeftNeutralMode = configForNeutralMode(mLeftNeutralMode, pDriveMessage.leftNeutralMode.kRevIdleMode, mLeftMaster, mLeftRear);
-        mRightNeutralMode = configForNeutralMode(mRightNeutralMode, pDriveMessage.rightNeutralMode.kRevIdleMode, mRightMaster, mRightRear);
+        mLeftNeutralMode = configForNeutralMode(mLeftNeutralMode, pDriveMessage.leftNeutralMode.kRevIdleMode, mLeftMaster, mLeftMiddle, mLeftRear);
+        mRightNeutralMode = configForNeutralMode(mRightNeutralMode, pDriveMessage.rightNeutralMode.kRevIdleMode, mRightMaster, mRightMiddle, mRightRear);
 
         mLeftMaster.getPIDController().setReference(pDriveMessage.leftOutput, mLeftControlMode, mPidSlot, pDriveMessage.leftDemand);
         mRightMaster.getPIDController().setReference(pDriveMessage.rightOutput, mRightControlMode, mPidSlot, pDriveMessage.rightDemand);
 
-    }
-
-    public void setTarget(DriveMessage pDriveMessage) {
-        mLeftMaster.getPIDController().setReference(pDriveMessage.leftDemand, ControlType.kVelocity);
-        mRightMaster.getPIDController().setReference(pDriveMessage.rightDemand, ControlType.kVelocity);
     }
 
     /**
@@ -300,32 +297,7 @@ public class NeoDriveHardware implements IDriveHardware {
 
     @Override
     public boolean checkHardware() {
-
-        // TODO Implement testing for VictorSPX
-        // CheckerConfigBuilder checkerConfigBuilder = new CheckerConfigBuilder();
-        // checkerConfigBuilder.setCurrentFloor(2);
-        // checkerConfigBuilder.setCurrentEpsilon(2.0);
-        // checkerConfigBuilder.setRPMFloor(1500);
-        // checkerConfigBuilder.setRPMEpsilon(250);
-        // checkerConfigBuilder.setRPMSupplier(()->mLeftMaster.getSelectedSensorVelocity(0));
-
-        // boolean leftSide = TalonSRXChecker.CheckTalons(Drive.class,
-        //         Arrays.asList(new TalonSRXChecker.TalonSRXConfig("left_master", mLeftMaster),
-        //             new TalonSRXChecker.TalonSRXConfig("left_slave", mLeftRear)),
-        //         checkerConfigBuilder.build());
-
-        // checkerConfigBuilder.setRPMSupplier(()->mRightMaster.getSelectedSensorVelocity(0));
-
-        // boolean rightSide = TalonSRXChecker.CheckTalons(Drive.class,
-        //         Arrays.asList(new TalonSRXChecker.TalonSRXConfig("right_master", mRightMaster),
-        //                 new TalonSRXChecker.TalonSRXConfig("right_slave", mRightRear)),
-        //         checkerConfigBuilder.build());
-        // return leftSide && rightSide;
         return true;
-    }
-
-    public void setMotorReference(CANPIDController pCanpidController, double pReference) {
-        pCanpidController.setReference(pReference, ControlType.kVelocity);
     }
 
 }

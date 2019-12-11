@@ -1,5 +1,6 @@
 package us.ilite.robot.modules;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.LogOutput;
@@ -10,6 +11,7 @@ import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.timing.TimedState;
 import com.team254.lib.util.ReflectingCSVWriter;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.Data;
 import us.ilite.common.config.AbstractSystemSettingsUtils;
 import us.ilite.common.config.SystemSettings;
@@ -25,10 +27,8 @@ import us.ilite.common.types.sensor.EPowerDistPanel;
 import us.ilite.lib.drivers.Clock;
 import us.ilite.lib.drivers.ECommonControlMode;
 import us.ilite.lib.drivers.ECommonNeutralMode;
-import us.ilite.robot.hardware.NeoDriveHardware;
-import us.ilite.robot.hardware.SrxDriveHardware;
-import us.ilite.robot.hardware.IDriveHardware;
-import us.ilite.robot.hardware.SimDriveHardware;
+import us.ilite.lib.drivers.IMU;
+import us.ilite.robot.hardware.*;
 import us.ilite.robot.loops.Loop;
 
 import java.util.ArrayList;
@@ -46,6 +46,7 @@ public class Drive extends Loop {
 	private Data mData;
 
 	private IDriveHardware mDriveHardware;
+	private EDriveHardwareType mDriveHardwareType;
 	private Rotation2d mGyroOffset = new Rotation2d();
 
 	private EDriveState mDriveState;
@@ -53,10 +54,17 @@ public class Drive extends Loop {
 	private double mTargetTrackingThrottle = 0;
 
 	private PIDController mTargetAngleLockPid;
+	private PIDController mTurnRatePIDController;
 	private DriveController mDriveController;
 
 	private Clock mSimClock = null;
 	private double mPreviousTime = 0;
+
+	private DriveControlMode mDriveControlMode = DriveControlMode.PERCENT_OUTPUT;
+
+	private IMU mPigeon;
+	private double mTurn = 0.0;
+	private double mThrottle = 0.0;
 
 	ReflectingCSVWriter<DebugOutput> mDebugLogger = null;
 	DebugOutput debugOutput = new DebugOutput();
@@ -65,26 +73,27 @@ public class Drive extends Loop {
 //	PerfTimer mCalculateTimer = new PerfTimer().alwayLog().setLogMessage("Calculate: %s");
 //	PerfTimer mMotionPlannerTimer = new PerfTimer().alwayLog().setLogMessage("Planner: %s");
 
-	public Drive(Data data, DriveController pDriveController, Clock pSimClock, boolean pSimulated)
-	{
+	public Drive(EDriveHardwareType pDriveHardwareType, Data data, DriveController pDriveController, Clock pSimClock, boolean pSimulated) {
 		this.mData = data;
 		this.mDriveController = pDriveController;
 		if(pSimulated) {
 			this.mSimClock = pSimClock;
 			this.mDriveHardware = new SimDriveHardware(mSimClock, mDriveController.getRobotProfile());
 		} else {
-			if(AbstractSystemSettingsUtils.isPracticeBot()) {
-				this.mDriveHardware = new SrxDriveHardware();
-			} else {
-				this.mDriveHardware = new NeoDriveHardware(SystemSettings.kDriveGearboxRatio);
-			}
+			this.mDriveHardware = pDriveHardwareType.getDriveHardware();
 		}
-
+		mPigeon = mDriveHardware.getImu();
+		mTurnRatePIDController = new PIDController(SystemSettings.kDriveTurnRateGains, -SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kControlLoopPeriod);
 		this.mDriveHardware.init();
 	}
 
-	public Drive(Data data, DriveController pDriveController) {
-		this(data, pDriveController, null, false);
+	public Drive(Data pData, DriveController pDriveController, Clock pSimClock, boolean pSimulated)
+	{
+		this(EDriveHardwareType.MASTER, pData, pDriveController, pSimClock, pSimulated);
+	}
+
+	public Drive(Data pData, DriveController pDriveController) {
+		this(pData, pDriveController, null, false);
 	}
 
 	public void startCsvLogging() {
@@ -108,13 +117,13 @@ public class Drive extends Loop {
 		mTargetAngleLockPid.reset();
 
 		mDriveController.setPlannerMode(DriveMotionPlanner.PlannerMode.FEEDBACK);
-        // Other gains to try: (2.0, 0.7), (0.65, 0.175), (0.0, 0.0)
+		// Other gains to try: (2.0, 0.7), (0.65, 0.175), (0.0, 0.0)
 		mDriveController.getController().setGains(2.0, 0.7);
 
 		mDriveHardware.zero();
 
-	  	setDriveMessage(DriveMessage.kNeutral);
-	  	setDriveState(EDriveState.NORMAL);
+		setDriveMessage(DriveMessage.kNeutral);
+		setDriveState(EDriveState.NORMAL);
 
 //	  	startCsvLogging();
 	}
@@ -159,30 +168,49 @@ public class Drive extends Loop {
 		mData.drive.set(EDriveData.RIGHT_MESSAGE_NEUTRAL_MODE, (double)mDriveMessage.rightNeutralMode.ordinal());
 		mData.drive.set(EDriveData.LEFT_MESSAGE_DEMAND, mDriveMessage.leftDemand);
 		mData.drive.set(EDriveData.RIGHT_MESSAGE_DEMAND, mDriveMessage.rightDemand);
+
+        SmartDashboard.putNumber("Left Output", mDriveMessage.leftOutput);
+        SmartDashboard.putNumber("Right Output", mDriveMessage.rightOutput);
 //
 		mData.imu.set(EGyro.YAW_DEGREES, getHeading().getDegrees());
 		mData.drive.meta().next(true);
 		mData.imu.meta().next(true);
+
+		SmartDashboard.putNumber("Drive Right Velocity", mDriveHardware.getRightVelTicks());
+		SmartDashboard.putNumber("Drive Left Velocity", mDriveHardware.getLeftVelTicks());
 //		SimpleNetworkTable.writeCodexToSmartDashboard(EDriveData.class, mData.drive, mClock.getCurrentTime());
 	}
 
 	@Override
 	public void update(double pNow) {
-        if(mDriveState != EDriveState.NORMAL) {
+		if(mDriveState != EDriveState.NORMAL) {
 			mLogger.error("Invalid drive state - maybe you meant to run this a high frequency?");
 			mDriveState = EDriveState.NORMAL;
 		} else {
-			mDriveHardware.set(mDriveMessage);
+			switch (this.mDriveControlMode) {
+                case VELOCITY:
+					double turnOutput = mTurnRatePIDController.calculate(mPigeon.getYaw(), pNow);
+					setDriveMessage(DriveMessage.fromThrottleAndTurn(mThrottle, turnOutput));
+					((NeoDriveHardware)mDriveHardware).setTarget(mDriveMessage);
+                    break;
+                case PERCENT_OUTPUT:
+					mDriveHardware.set(mDriveMessage);
+			    }
+
 		}
 
 		mPreviousTime = pNow;
 	}
-	
+
 	@Override
 	public void shutdown(double pNow) {
 		stopCsvLogging();
 		mDriveHardware.zero();
 	}
+
+	public void setDriveControlMode(DriveControlMode pDriveControlMode) {
+	    this.mDriveControlMode = pDriveControlMode;
+    }
 
 	@Override
 	public void loop(double pNow) {
@@ -214,7 +242,7 @@ public class Drive extends Loop {
 				 * which means that the derivative of error would be highly inaccurate and cause oscillation.
 				 * Since kD * de/dt = kD * (SP - PV)/dt = ((kD * SP) - (kD * PV)) / dt, and dt = 1 for the Talon, we can add the
 				 * setpoint derivative calculation back in.
-					*/
+				 */
 				double leftDemand = (output.left_feedforward_voltage / 12.0) + SystemSettings.kDriveVelocity_kD * leftAccel / 1023.0;
 				double rightDemand = (output.right_feedforward_voltage / 12.0) + SystemSettings.kDriveVelocity_kD * rightAccel / 1023.0;
 
@@ -257,6 +285,12 @@ public class Drive extends Loop {
 //		mUpdateTimer.stop();
 	}
 
+	public void setTurnAndThrottle(double pTurn, double pThrottle) {
+		mTurn = pTurn;
+		mThrottle = pThrottle;
+		mTurnRatePIDController.setSetpoint(mTurn * SystemSettings.kDriveTrainMaxTurnRate);
+	}
+
 	public synchronized void setTargetAngleLock() {
 		mDriveState = EDriveState.TARGET_ANGLE_LOCK;
 		mDriveHardware.configureMode(ECommonControlMode.PERCENT_OUTPUT);
@@ -292,7 +326,7 @@ public class Drive extends Loop {
 
 	@Override
 	public boolean checkModule(double pNow) {
-        return mDriveHardware.checkHardware();
+		return mDriveHardware.checkHardware();
 	}
 
 
@@ -313,10 +347,10 @@ public class Drive extends Loop {
 	}
 
 	public synchronized IDriveHardware getDriveHardware() {
-	    return mDriveHardware;
-    }
+		return mDriveHardware;
+	}
 
-    public synchronized DriveMessage getDriveMessage() {
+	public synchronized DriveMessage getDriveMessage() {
 		return mDriveMessage;
 	}
 
@@ -381,10 +415,10 @@ public class Drive extends Loop {
 
 	}
 
-	public void setRampRate(double pOpenLoopRampRate) {
-		mDriveHardware.setOpenLoopRampRate(pOpenLoopRampRate);
-	}
-
+	public enum DriveControlMode {
+	    VELOCITY,
+        PERCENT_OUTPUT;
+    }
 }
 	
 	
@@ -397,4 +431,3 @@ public class Drive extends Loop {
 
   
 
-	
