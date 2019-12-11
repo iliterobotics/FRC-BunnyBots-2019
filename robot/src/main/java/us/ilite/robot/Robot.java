@@ -135,8 +135,8 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mDrive.setPathFollowing();
-        mDrive.getDriveController().setTrajectory(mCrossNeutralLineTrajectory, true);
+//        mDrive.setPathFollowing();
+//        mDrive.getDriveController().setTrajectory(mCrossNeutralLineTrajectory, true);
 
         // Init modules after commands are set
         mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mConveyor, mShooter, mIntake, mHopper);
@@ -146,7 +146,7 @@ public class Robot extends TimedRobot {
         mLoopManager.setRunningLoops(mLimelight, mDrive);
         mLoopManager.start();
 
-//        mAutonomousCommandManager.startCommands(new CharacterizeDrive(mDrive, false, true));
+        mAutonomousCommandManager.startCommands(mAutonomousRoutines.getDefault());
 
         initTimer.stop();
         mLogger.info("Autonomous initialization finished. Took: ", initTimer.get(), " seconds");
