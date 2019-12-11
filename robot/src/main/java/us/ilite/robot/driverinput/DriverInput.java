@@ -138,16 +138,5 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
         mDrive.setTurnAndThrottle(turn, throttle);
 
-//        mDrive.getDriveHardware().
-
     }
-
-    private double getMaxVelocity() {
-        if (mData.driverinput.get(DriveTeamInputMap.DRIVER_NITRO_BUTTON) > 0.5) {
-            return (42*5676/60) * 3;
-        } else {
-            return SystemSettings.kDriveTrainMaxVelocity;
-        }
-    }
-
 }
