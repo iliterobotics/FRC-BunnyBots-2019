@@ -52,4 +52,8 @@ public class AutonomousRoutines {
         return mCrossNeutralLine;
     }
 
+    public TrajectoryGenerator getTrajectoryGenerator() {
+        return mTrajectoryGenerator;
+    }
+
 }

@@ -21,6 +21,6 @@ public class HopperFeeding implements ICommand {
 
     @Override
     public void shutdown(double pNow) {
-
+        mHopper.shutdown(pNow);
     }
 }
