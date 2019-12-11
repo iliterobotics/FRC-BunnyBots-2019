@@ -86,6 +86,7 @@ public class LoopManager implements Runnable{
 //                        inputTimer.reset();
 //                        inputTimer.start();
                         mLoopList.periodicInput(Timer.getFPGATimestamp());
+                        mLoopList.update(Timer.getFPGATimestamp());
 //                        inputTimer.stop();
 //                        updateTimer.reset();
 //                        updateTimer.start();
