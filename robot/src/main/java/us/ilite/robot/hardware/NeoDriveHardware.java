@@ -5,6 +5,7 @@ import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
 import com.revrobotics.*;
 import com.team254.lib.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.Conversions;
 import us.ilite.common.lib.util.RangeScale;
@@ -117,8 +118,10 @@ public class NeoDriveHardware implements IDriveHardware {
     }
 
     public void setTarget(DriveMessage pDriveMessage) {
-        mLeftMaster.getPIDController().setReference(pDriveMessage.leftDemand * SystemSettings.kDriveTrainMaxVelocity, ControlType.kVelocity);
-        mRightMaster.getPIDController().setReference(pDriveMessage.rightDemand * SystemSettings.kDriveTrainMaxVelocity, ControlType.kVelocity);
+        SmartDashboard.putNumberArray("Left and right OUTPUTS", new double[] {pDriveMessage.leftOutput, pDriveMessage.rightOutput});
+        SmartDashboard.putNumberArray("Left and right DEMANDS", new double[] {pDriveMessage.leftDemand, pDriveMessage.rightDemand});
+        setMotorReference(mLeftMaster.getPIDController(), pDriveMessage.leftDemand * SystemSettings.kDriveTrainMaxVelocity);
+        setMotorReference(mRightMaster.getPIDController(), pDriveMessage.rightDemand * SystemSettings.kDriveTrainMaxVelocity);
     }
 
     /**

@@ -63,9 +63,9 @@ public class DriveMessage {
     return new DriveMessage(mThrottle + mTurn, mThrottle - mTurn, ECommonControlMode.PERCENT_OUTPUT);
   }
 
-//  public DriveMessage fromThrottleAndTurn() {
-//    return fromThrottleAndTurn(mThrottle, mTurn);
-//  }
+  public DriveMessage fromThrottleAndTurn() {
+    return fromThrottleAndTurn(mThrottle, mTurn);
+  }
 
 
 
