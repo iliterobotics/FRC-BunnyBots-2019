@@ -63,9 +63,9 @@ public class DriveMessage {
     return new DriveMessage(mThrottle + mTurn, mThrottle - mTurn, ECommonControlMode.PERCENT_OUTPUT);
   }
 
-  public static DriveMessage fromThrottleAndTurn() {
-    return fromThrottleAndTurn(mThrottle, mTurn);
-  }
+//  public DriveMessage fromThrottleAndTurn() {
+//    return fromThrottleAndTurn(mThrottle, mTurn);
+//  }
 
 
 
@@ -124,19 +124,26 @@ public class DriveMessage {
     return DriveMessage.fromThrottleAndTurn(throttle, turn).setNeutralMode(ECommonNeutralMode.BRAKE);
   }
 
-  public static void normalize(double throttle, double turn) {
-    double lowestOutput = Math.min(Math.abs(turn), Math.abs(throttle));
-    double highestOutput = Math.max(Math.abs(turn), Math.abs(throttle));
+//  public static void normalize(double throttle, double turn) {
+//    double lowestOutput = Math.min(Math.abs(turn), Math.abs(throttle));
+//    double highestOutput = Math.max(Math.abs(turn), Math.abs(throttle));
+//    double saturatedOutput = 1.0;
+//    if (highestOutput > 0.0) {
+//      saturatedOutput = lowestOutput / highestOutput + 1.0;
+//    }
+//    throttle /= saturatedOutput;
+//    turn /= saturatedOutput;
+//  }
+
+  public void normalize() {
+    double lowestOutput = Math.min(Math.abs(mTurn), Math.abs(mThrottle));
+    double highestOutput = Math.max(Math.abs(mTurn), Math.abs(mThrottle));
     double saturatedOutput = 1.0;
     if (highestOutput > 0.0) {
       saturatedOutput = lowestOutput / highestOutput + 1.0;
     }
-    throttle /= saturatedOutput;
-    turn /= saturatedOutput;
-  }
-
-  public static void normalize() {
-    normalize(mThrottle, mTurn);
+    mThrottle /= saturatedOutput;
+    mTurn /= saturatedOutput;
   }
 
   public DriveMessage setDemand(double pLeftDemand, double pRightDemand) {
