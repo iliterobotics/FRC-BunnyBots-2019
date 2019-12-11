@@ -36,13 +36,13 @@ public class AryaDriveHardware implements IDriveHardware {
         mGyro = new Pigeon(new PigeonIMU(SystemSettings.kPigeonId), SystemSettings.kGyroCollisionThreshold);
         // mGyro = new NavX(SerialPort.Port.kMXP);
 
-        mLeftMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveLeftMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftMiddleNeoID, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mLeftRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftRearNeoID, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kAryaDriveLeftMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kAryaDriveLeftMiddleNeoID, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kAryaDriveLeftRearNeoID, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-        mRightMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveRightMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightMiddleNeoID, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mRightRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightRearNeoID, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kAryaDriveRightMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kAryaDriveRightMiddleNeoID, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kAryaDriveRightRearNeoID, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         configureMaster(mLeftMaster, true);
         configureMotor(mLeftMaster);
