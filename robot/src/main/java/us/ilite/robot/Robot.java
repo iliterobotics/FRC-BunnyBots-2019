@@ -31,6 +31,7 @@ import us.ilite.lib.drivers.VisionGyro;
 import us.ilite.robot.auto.AutonomousRoutines;
 import us.ilite.robot.commands.CharacterizeDrive;
 import us.ilite.robot.driverinput.DriverInput;
+import us.ilite.robot.hardware.EDriveHardwareType;
 import us.ilite.robot.loops.LoopManager;
 import us.ilite.robot.modules.*;
 
@@ -51,7 +52,7 @@ public class Robot extends TimedRobot {
     // Module declarations here
     private final CommandManager mAutonomousCommandManager = new CommandManager().setManagerTag("Autonomous Manager");
     private final CommandManager mTeleopCommandManager = new CommandManager().setManagerTag("Teleop Manager");
-    private final Drive mDrive = new Drive(mData, mDriveController);
+    private final Drive mDrive = new Drive(EDriveHardwareType.ARYA, mData, mDriveController, mClock, false);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
     private final DriverInput mDriverInput = new DriverInput(mData, mDrive);

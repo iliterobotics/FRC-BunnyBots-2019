@@ -31,7 +31,7 @@ public class SrxDriveHardware implements IDriveHardware {
     private IMU mGyro;
 
     private final TalonSRX mLeftMaster, mRightMaster;
-    private final VictorSPX mLeftMiddle, mRightMiddle, mLeftRear, mRightRear;
+    private final VictorSPX mLeftRear, mRightRear;
     private ControlMode mLeftControlMode, mRightControlMode;
     private NeutralMode mLeftNeutralMode, mRightNeutralMode;
 
@@ -40,29 +40,23 @@ public class SrxDriveHardware implements IDriveHardware {
         // mGyro = new NavX(SerialPort.Port.kMXP);
 
         mLeftMaster = TalonSRXFactory.createDefaultTalon(SystemSettings.kDriveLeftMasterNeoID);
-        mLeftMiddle = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveLeftMiddleNeoID, mLeftMaster);
         mLeftRear = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveLeftRearNeoID, mLeftMaster);
 
         mRightMaster = TalonSRXFactory.createDefaultTalon(SystemSettings.kDriveRightMasterNeoID);
-        mRightMiddle = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveRightMiddleNeoID, mRightMaster);
         mRightRear = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kDriveRightRearNeoID, mRightMaster);
 
         configureMaster(mLeftMaster, true);
         configureMotor(mLeftMaster);
-        configureMotor(mLeftMiddle);
         configureMotor(mLeftRear);
 
         configureMaster(mRightMaster, false);
         configureMotor(mRightMaster);
-        configureMotor(mRightMiddle);
         configureMotor(mRightRear);
 
         mLeftMaster.setInverted(true);
-        mLeftMiddle.setInverted(true);
         mLeftRear.setInverted(true);
 
         mRightMaster.setInverted(false);
-        mRightMiddle.setInverted(false);
         mRightRear.setInverted(false);
 
         mLeftMaster.setSensorPhase(false);
@@ -92,8 +86,8 @@ public class SrxDriveHardware implements IDriveHardware {
         // Bypass state machine in set() and configure directly
         configTalonForPercentOutput(mLeftMaster);
         configTalonForPercentOutput(mRightMaster);
-        setNeutralMode(NeutralMode.Brake, mLeftMaster, mLeftMiddle, mLeftRear);
-        setNeutralMode(NeutralMode.Brake, mRightMaster, mRightMiddle, mRightRear);
+        setNeutralMode(NeutralMode.Brake, mLeftMaster, mLeftRear);
+        setNeutralMode(NeutralMode.Brake, mRightMaster, mRightRear);
 
         mLeftMaster.set(ControlMode.PercentOutput, 0.0);
         mRightMaster.set(ControlMode.PercentOutput, 0.0);
@@ -104,8 +98,8 @@ public class SrxDriveHardware implements IDriveHardware {
         mLeftControlMode = configForControlMode(mLeftMaster, mLeftControlMode, pDriveMessage.leftControlMode.kCtreControlMode);
         mRightControlMode = configForControlMode(mRightMaster, mRightControlMode, pDriveMessage.rightControlMode.kCtreControlMode);
 
-        mLeftNeutralMode = configForNeutralMode(mLeftNeutralMode, pDriveMessage.leftNeutralMode.kCtreNeutralMode, mLeftMaster, mLeftMiddle, mLeftRear);
-        mRightNeutralMode = configForNeutralMode(mRightNeutralMode, pDriveMessage.rightNeutralMode.kCtreNeutralMode, mRightMaster, mRightMiddle, mRightRear);
+        mLeftNeutralMode = configForNeutralMode(mLeftNeutralMode, pDriveMessage.leftNeutralMode.kCtreNeutralMode, mLeftMaster, mLeftRear);
+        mRightNeutralMode = configForNeutralMode(mRightNeutralMode, pDriveMessage.rightNeutralMode.kCtreNeutralMode, mRightMaster, mRightRear);
 
         mLeftMaster.set(mLeftControlMode, pDriveMessage.leftOutput, DemandType.ArbitraryFeedForward, pDriveMessage.leftDemand);
         mRightMaster.set(mRightControlMode, pDriveMessage.rightOutput, DemandType.ArbitraryFeedForward, pDriveMessage.rightDemand);
