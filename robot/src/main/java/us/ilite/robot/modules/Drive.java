@@ -189,9 +189,13 @@ public class Drive extends Loop {
 		} else {
 			switch (this.mDriveControlMode) {
                 case VELOCITY:
-					double turnOutput = mTurnRatePIDController.calculate(mPigeon.getYaw(), pNow);
-					setDriveMessage(DriveMessage.fromThrottleAndTurn(mThrottle, turnOutput));
-					((NeoDriveHardware)mDriveHardware).setTarget(mDriveMessage);
+                	if (mDriveState != EDriveState.PATH_FOLLOWING) {
+						double turnOutput = mTurnRatePIDController.calculate(mPigeon.getYaw(), pNow);
+						setDriveMessage(DriveMessage.fromThrottleAndTurn(mThrottle, turnOutput));
+						((NeoDriveHardware) mDriveHardware).setTarget(mDriveMessage);
+					} else {
+                		mDriveHardware.set(mDriveMessage);
+					}
                     break;
                 case PERCENT_OUTPUT:
 					mDriveHardware.set(mDriveMessage);
@@ -232,6 +236,8 @@ public class Drive extends Loop {
 						Conversions.radiansPerSecondToTicksPer100ms(output.right_velocity),
 						ECommonControlMode.VELOCITY);
 
+				mLogger.error("||||||||||||||||||||||||||||       " + output.left_velocity + "    ||||||||||||    " + output.right_velocity  + "    |||||");
+
 				double leftAccel = Conversions.radiansPerSecondToTicksPer100ms(output.left_accel) / 1000.0;
 				double rightAccel = Conversions.radiansPerSecondToTicksPer100ms(output.right_accel) / 1000.0;
 
@@ -247,7 +253,7 @@ public class Drive extends Loop {
 				double rightDemand = (output.right_feedforward_voltage / 12.0) + SystemSettings.kDriveVelocity_kD * rightAccel / 1023.0;
 
 				// Add in the feedforward we've calculated and set motors to Brake mode
-				driveMessage.setDemand(leftDemand, rightDemand);
+				driveMessage.setDemand(leftDemand, -rightDemand);
 				driveMessage.setNeutralMode(ECommonNeutralMode.BRAKE);
 
 				mDriveMessage = driveMessage;

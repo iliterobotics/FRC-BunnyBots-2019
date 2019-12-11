@@ -3,6 +3,7 @@ package us.ilite.robot.driverinput;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.flybotix.hfr.util.log.ELevel;
 import com.flybotix.hfr.util.log.Logger;
+import com.sun.tools.attach.AttachOperationFailedException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +33,10 @@ public class DriverInputTest {
 
     private DriverInput mDriverInput;
     private Limelight mLimelight;
-
+    private Intake mIntake;
+    private Hopper mHopper;
+    private Conveyor mConveyor;
+    private Shooter mShooter;
     private Data mData;
     private Clock mClock;
     private ModuleList mModuleList;
@@ -48,7 +52,10 @@ public class DriverInputTest {
         mTeleopCommandManager = spy(new CommandManager());
         mAutonomousCommandManager = spy(new CommandManager());
         mLimelight = new Limelight(mData);
-        mDriverInput = spy(new DriverInput(mDrive, mData ) );
+        mIntake = new Intake();
+        mHopper = new Hopper(mShooter);
+        mConveyor = new Conveyor(mShooter);
+        mDriverInput = spy(new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData, mDrive) );
         
         mModuleList.setModules(mDriverInput, mTeleopCommandManager, mAutonomousCommandManager, mDrive);
         mModuleList.modeInit(mClock.getCurrentTime());

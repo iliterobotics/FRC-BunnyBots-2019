@@ -199,6 +199,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kTargetAngleLockMaxInput = 27;
     public static double kTargetAngleLockFrictionFeedforward = 0.071544619136622825;
     public static double kTargetAngleLockLostTargetThreshold = 10;
+    public static ELogitech310[] kAutonOverrideTriggers;
+    public static ELogitech310[] kTeleopCommandTriggers;
 
     // =============================================================================
     // Target Constants
@@ -243,6 +245,9 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kDriveRightMasterNeoID = 2;
     public static int kDriveRightMiddleNeoID = 4;
     public static int kDriveRightRearNeoID = 6;
+
+    public static int kPracticeDriveLeftTalonID = 4;
+    public static int kPracticeDriveRightTalonID = 5;
     
     //INTAKE
     public static int kIntakeVictorId = -1;

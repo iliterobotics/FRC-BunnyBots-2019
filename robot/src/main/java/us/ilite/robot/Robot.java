@@ -61,11 +61,10 @@ public class Robot extends TimedRobot {
     private final Shooter mShooter = new Shooter();
     private final Hopper mHopper = new Hopper(mShooter);
     private final Conveyor mConveyor = new Conveyor(mShooter);
-    private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData);
+    private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData, mDrive);
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
-    private Trajectory<TimedState<Pose2dWithCurvature>> mCrossNeutralLineTrajectory;
     private MatchMetadata mMatchMeta = null;
 
     private final PerfTimer mClockUpdateTimer = new PerfTimer();
@@ -107,8 +106,6 @@ public class Robot extends TimedRobot {
             mLogger.exception(e);
         }
 
-        mCrossNeutralLineTrajectory = mAutonomousRoutines.getCrossNeutralLineSequence().getCrossNeutralLineTrajectory();
-
         // Handle telemetry initialization
         mData.registerCodices();
         LiveWindow.disableAllTelemetry();
@@ -140,7 +137,7 @@ public class Robot extends TimedRobot {
 //        mDrive.getDriveController().setTrajectory(mCrossNeutralLineTrajectory, true);
 
         // Init modules after commands are set
-        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mConveyor, mShooter, mIntake, mHopper);
+        mRunningModules.setModules(mAutonomousCommandManager, mConveyor, mShooter, mIntake, mHopper);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 

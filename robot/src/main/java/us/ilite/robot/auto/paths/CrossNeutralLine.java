@@ -26,19 +26,19 @@ public class CrossNeutralLine extends AutoSequence {
 
     public static Pose2d kCrossNeutralLineFromStart = new Pose2d(FieldElementLocations.kNeutralLine, Rotation2d.fromDegrees(0.0));
 
-    public static final List<Pose2d> kSideStartToCrossNeutralLinePath = Arrays.asList(
-            StartingPoses.kStart,
-            kCrossNeutralLineFromStart
-    );
-
-    public Trajectory<TimedState<Pose2dWithCurvature>> getCrossNeutralLineTrajectory() {
-        return mTrajectoryGenerator.generateTrajectory(false, kSideStartToCrossNeutralLinePath, AutonomousRoutines.kDefaultTrajectoryConstraints);
-    }
+//    public static final List<Pose2d> kSideStartToCrossNeutralLinePath = Arrays.asList(
+//            StartingPoses.kStart,
+//            kCrossNeutralLineFromStart
+//    );
+//
+//    public Trajectory<TimedState<Pose2dWithCurvature>> getCrossNeutralLineTrajectory() {
+//        return mTrajectoryGenerator.generateTrajectory(false, kSideStartToCrossNeutralLinePath, AutonomousRoutines.kDefaultTrajectoryConstraints);
+//    }
 
     @Override
     public ICommand[] generateSequence() {
         return new ICommand[] {
-                new FollowTrajectory(getCrossNeutralLineTrajectory(), mDrive, true)
+                new FollowTrajectoryToPoint(mDrive, mTrajectoryGenerator, false, kCrossNeutralLineFromStart)
         };
     }
 }

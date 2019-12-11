@@ -30,7 +30,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
-    private final Data mData;
 //    private final Data mData;
     private Shooter mShooter;
     private Conveyor mConveyor;
@@ -50,12 +49,13 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData) {
+    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData, Drive pDrive) {
         mIntake = pIntake;
         mHopper = pHopper;
         mConveyor = pConveyor;
         mShooter = pShooter;
         mData = pData;
+        mDrive = pDrive;
         mOperatorJoystick = new Joystick(1);
         mDriverInputCodex = mData.driverinput;
         mOperatorInputCodex = mData.operatorinput;

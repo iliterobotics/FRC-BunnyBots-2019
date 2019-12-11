@@ -1,5 +1,7 @@
 package us.ilite.robot.commands;
 
+import com.flybotix.hfr.util.log.ILog;
+import com.flybotix.hfr.util.log.Logger;
 import com.team254.lib.geometry.Pose2d;
 import com.team254.lib.geometry.Pose2dWithCurvature;
 import com.team254.lib.trajectory.Trajectory;
@@ -26,7 +28,7 @@ public class FollowTrajectoryToPoint implements ICommand {
 
     private Drive mDrive;
     private TrajectoryGenerator mTrajectoryGenerator;
-
+    private ILog mLog = Logger.createLog(FollowTrajectoryToPoint.class);
     private boolean mIsReversed;
     private Pose2d mTargetPose;
     private ExecutorService mTrajectoryGenerationThread = Executors.newSingleThreadExecutor();
@@ -52,7 +54,7 @@ public class FollowTrajectoryToPoint implements ICommand {
 
     @Override
     public boolean update(double pNow) {
-
+        mLog.error("******************************************************************************************");
         // The trajectory should (hopefully) only ever be null once
         if(mTrajectoryGenerationTask.isDone() && mTrajectory == null) {
             try {
