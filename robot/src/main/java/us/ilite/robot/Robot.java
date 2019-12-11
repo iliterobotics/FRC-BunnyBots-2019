@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
     // Module declarations here
     private final CommandManager mAutonomousCommandManager = new CommandManager().setManagerTag("Autonomous Manager");
     private final CommandManager mTeleopCommandManager = new CommandManager().setManagerTag("Teleop Manager");
-    private final Drive mDrive = new Drive(EDriveHardwareType.ARYA, mData, mDriveController, mClock, false);
+    private final Drive mDrive = new Drive(EDriveHardwareType.MASTER, mData, mDriveController, mClock, false);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
     private final DriverInput mDriverInput = new DriverInput(mData, mDrive);
