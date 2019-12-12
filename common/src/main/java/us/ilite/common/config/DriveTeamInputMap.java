@@ -40,7 +40,7 @@ public class    DriveTeamInputMap {
 
     OPERATOR_SHOOT = ELogitech310.X_BTN,
     OPERATOR_INTAKE = ELogitech310.A_BTN,
-    OPERATOR_SPIT_OUT = ELogitech310.B_BTN;
+    OPERATOR_SPIT_OUT = ELogitech310.B_BTN,
     OPERATOR_CATAPULT_BTN = null;
 
 }
