@@ -68,9 +68,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     public void updateCatapult() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
+//        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
             mCatapult.releaseCatapult();
-        }
+//        }
     }
 
     @Override
