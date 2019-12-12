@@ -6,16 +6,16 @@ import us.ilite.common.config.SystemSettings;
 public class Catapult extends Module {
 
     private Servo mServo;
+    private ECatapultState mECatapultState;
+    private boolean mHasShot;
 
-    private CatapultState mCatapultState;
-
-    public enum CatapultState {
+    public enum ECatapultState {
         LOCKED(0.0),
         UNLOCKED(0.5);
 
         private double position;
 
-        CatapultState(double position) {
+        ECatapultState(double position) {
             this.position = position;
         }
     }
@@ -26,17 +26,18 @@ public class Catapult extends Module {
 
     @Override
     public void modeInit(double pNow) {
-        mCatapultState = CatapultState.LOCKED;
+        mECatapultState = ECatapultState.LOCKED;
+        mHasShot = false;
     }
 
     @Override
     public void periodicInput(double pNow) {
-
+        mHasShot = mECatapultState == ECatapultState.UNLOCKED;
     }
 
     @Override
     public void update(double pNow) {
-        mServo.set(mCatapultState.position);
+        mServo.set(mECatapultState.position);
     }
 
     @Override
@@ -45,6 +46,6 @@ public class Catapult extends Module {
     }
 
     public void releaseCatapult() {
-        mCatapultState = CatapultState.UNLOCKED;
+        mECatapultState = ECatapultState.UNLOCKED;
     }
 }
