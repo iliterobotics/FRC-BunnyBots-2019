@@ -35,6 +35,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private Conveyor mConveyor;
     private Intake mIntake;
     private Hopper mHopper;
+    private Catapult mCatapult;
 
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
@@ -49,7 +50,8 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData, Drive pDrive) {
+    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData, Drive pDrive, Catapult pCatapult) {
+        mCatapult = pCatapult;
         mIntake = pIntake;
         mHopper = pHopper;
         mConveyor = pConveyor;
@@ -105,9 +107,8 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         updateIntake();
         updateWholeIntakeSystem();
         updateDriveTrain();        
+        updateCatapult();
     }
-    
-
     private void updateDriveTrain() {
 
         mDrive.setDriveControlMode(Drive.DriveControlMode.VELOCITY);
@@ -121,7 +122,12 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         mDrive.setTurnAndThrottle(turn, throttle);
 
 //        mDrive.getDriveHardware().
-
+    }
+    
+    public void updateCatapult() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
+            mCatapult.releaseCatapult();
+        }
     }
 
     private void updateWholeIntakeSystem() {

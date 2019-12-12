@@ -165,7 +165,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
 
     // =============================================================================
     // LimeLight Camera Constants
-    // Note: These constants need to be recalculted for a specific robot geometry
+    // Note: These constants need to be recalculated for a specific robot geometry
     // =============================================================================
     public static double llCameraHeightIn = 58.0;
     public static double llCameraToBumperIn = 10.0;
@@ -259,6 +259,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kCatapultServoChannel = -1;
 
 
+
+    public static int kCatapultServoChannel = -1; //Channel unknown just yet
 
     public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{
             /* Left */
