@@ -48,4 +48,8 @@ public class Catapult extends Module {
     public void releaseCatapult() {
         mECatapultState = ECatapultState.UNLOCKED;
     }
+
+    public boolean hasReleased() {
+        return mHasShot;
+    }
 }

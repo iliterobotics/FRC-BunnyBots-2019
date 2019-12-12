@@ -31,7 +31,9 @@ import us.ilite.lib.drivers.Clock;
 import us.ilite.lib.drivers.GetLocalIP;
 import us.ilite.lib.drivers.VisionGyro;
 import us.ilite.robot.auto.AutonomousRoutines;
-import us.ilite.robot.auto.paths.CrossNeutralLine;
+import us.ilite.robot.auto.paths.ShootBunnyCrossNeutralLine;
+import us.ilite.robot.commands.ICommand;
+import us.ilite.robot.commands.ReleaseCatapult;
 import us.ilite.robot.driverinput.DriverInput;
 import us.ilite.robot.hardware.EDriveHardwareType;
 import us.ilite.robot.loops.LoopManager;
@@ -66,6 +68,7 @@ public class Robot extends TimedRobot {
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
+    private ICommand mReleaseCatapult = new ReleaseCatapult(mCatapult);
     private MatchMetadata mMatchMeta = null;
 
     private final PerfTimer mClockUpdateTimer = new PerfTimer();
@@ -135,7 +138,7 @@ public class Robot extends TimedRobot {
         mSettings.loadFromNetworkTables();
 
 //        mDrive.setPathFollowing();
-//        mDrive.getDriveController().setTrajectory(mCrossNeutralLineTrajectory, true);
+//        mDrive.getDriveController().setTrajectory(mShootBunnyCrossNeutralLineTrajectory, true);
 
         // Init modules after commands are set
         mRunningModules.setModules(mAutonomousCommandManager, mConveyor, mShooter, mIntake, mHopper);
