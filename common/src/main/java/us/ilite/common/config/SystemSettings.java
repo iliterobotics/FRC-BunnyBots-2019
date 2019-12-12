@@ -46,7 +46,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kDriveEffectiveWheelbase = 23.25;
     public static double kDriveTrainMaxTurnRate = 6;
 
-    public static double kDriveClosedLoopVoltageRampRate = 0.5;
+    public static double kDriveClosedLoopVoltageRampRate = 0.1;
     public static double kDriveMinOpenLoopVoltageRampRate = 0.1;
     public static double kDriveMaxOpenLoopVoltageRampRate = 0.9;
     public static int kDriveCurrentLimitAmps = 40;//50;
@@ -65,7 +65,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // Heading Gains
     // =============================================================================
     public static PIDGains kDriveHeadingGains = new PIDGains(0.03, 0.0, 0.0);
-    public static PIDGains kDriveTurnRateGains = new PIDGains(0.0, 0.0,  1);
+    public static PIDGains kDriveTurnRateGains = new PIDGains(1, 0.0,  0.0);
     public static double kDriveLinearPercentOutputLimit = 0.5;
 
     // =============================================================================
