@@ -19,6 +19,7 @@ import java.util.Objects;
 public class DriveMessage {
   private static double mThrottle;
   private static double mTurn;
+  private double mMaxVelocity = SystemSettings.kDriveTrainMaxVelocity;
 
   public static final DriveMessage kNeutral = new DriveMessage(0.0, 0.0,
           ECommonControlMode.PERCENT_OUTPUT)
@@ -26,7 +27,8 @@ public class DriveMessage {
 
   private static CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
 
-  public final double leftOutput, rightOutput;
+  public double leftOutput;
+  public double rightOutput;
   public ECommonControlMode leftControlMode = ECommonControlMode.PERCENT_OUTPUT;
   public ECommonControlMode rightControlMode = ECommonControlMode.PERCENT_OUTPUT;
 
@@ -64,7 +66,9 @@ public class DriveMessage {
   }
 
   public DriveMessage fromThrottleAndTurn() {
-    return fromThrottleAndTurn(mThrottle, mTurn);
+    leftOutput = mThrottle + mTurn;
+    rightOutput = mThrottle - mTurn;
+    return this;
   }
 
 
@@ -144,6 +148,13 @@ public class DriveMessage {
     }
     mThrottle /= saturatedOutput;
     mTurn /= saturatedOutput;
+  }
+
+  public DriveMessage setMaxVelocity(double pMaxVelocity) {
+      mMaxVelocity = pMaxVelocity;
+      this.leftDemand = leftOutput * mMaxVelocity;
+      this.rightDemand = rightOutput * mMaxVelocity;
+      return this;
   }
 
   public DriveMessage setDemand(double pLeftDemand, double pRightDemand) {

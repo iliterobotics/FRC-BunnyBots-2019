@@ -141,8 +141,8 @@ public class NeoDriveHardware implements IDriveHardware {
         mLogger.error("((((((((((((((((((((((((((((((((((((((     " + pDriveMessage.leftDemand + "         ))))))))))))))))))))))))))))");
         mLogger.error("((((((((((((((((((((((((((((((((((((((     " + pDriveMessage.rightDemand + "         ))))))))))))))))))))))))))))");
 
-        setMotorReference(mLeftMaster.getPIDController(), pDriveMessage.leftOutput * SystemSettings.kDriveTrainMaxVelocity);
-        setMotorReference(mRightMaster.getPIDController(), pDriveMessage.rightOutput * SystemSettings.kDriveTrainMaxVelocity);
+        setMotorReference(mLeftMaster.getPIDController(), pDriveMessage.leftDemand);
+        setMotorReference(mRightMaster.getPIDController(), pDriveMessage.rightDemand);
     }
 
     /**

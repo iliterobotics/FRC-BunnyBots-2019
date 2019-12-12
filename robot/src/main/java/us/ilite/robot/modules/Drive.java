@@ -65,6 +65,7 @@ public class Drive extends Loop {
 	private IMU mPigeon;
 	private double mTurn = 0.0;
 	private double mThrottle = 0.0;
+	private double mMaxVelocity = SystemSettings.kDriveTrainMaxVelocity;
 
 	ReflectingCSVWriter<DebugOutput> mDebugLogger = null;
 	DebugOutput debugOutput = new DebugOutput();
@@ -192,6 +193,8 @@ public class Drive extends Loop {
 					double turnOutput = mTurnRatePIDController.calculate(mPigeon.getYaw(), pNow);
 					DriveMessage dm = new DriveMessage(mThrottle, turnOutput);
 					dm.normalize();
+					dm.setMaxVelocity(mMaxVelocity);
+					dm.setMaxVelocityMultiplierDemands();
 					setDriveMessage(dm.fromThrottleAndTurn());
 					((NeoDriveHardware)mDriveHardware).setTarget(mDriveMessage);
                     break;
@@ -291,6 +294,10 @@ public class Drive extends Loop {
 		mTurn = pTurn;
 		mThrottle = pThrottle;
 		mTurnRatePIDController.setSetpoint(mTurn * SystemSettings.kDriveTrainMaxTurnRate);
+	}
+
+	public void setMaxVelocity(double pMaxVelocity) {
+		mMaxVelocity = pMaxVelocity;
 	}
 
 	public synchronized void setTargetAngleLock() {
