@@ -81,7 +81,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     private void updateWholeIntakeSystem() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
+        if ( mOperatorInputCodex.isSet( DriveTeamInputMap.OPERATOR_HOPPER_CLEAN ) ) {
+            mHopper.cleanJam();
+        } if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
             mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
             mConveyor.setConveyorState(Conveyor.EConveyorState.GIVE_TO_SHOOTER);
             mShooter.setShooterState(Shooter.EShooterState.SHOOTING);

@@ -24,6 +24,11 @@ public class Hopper extends Module {
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperTalonId);
         mShooter = pShooter;
     }
+
+    public void cleanJam() {
+        setHopperState( mHopperState.REVERSE );
+    }
+
     @Override
     public void modeInit(double pNow) {
 
