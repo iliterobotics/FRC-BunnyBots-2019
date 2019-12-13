@@ -35,9 +35,9 @@ public class Conveyor extends Module {
     public void update(double pNow) {
         switch (mConveyorState) {
             case GIVE_TO_SHOOTER:
-                if(mShooter.isMaxVelocity()) {
+                //if(mShooter.isMaxVelocity()) {
                     mTalon.set(ControlMode.PercentOutput, SystemSettings.kConveyorTalonPower);
-                }
+                //}
                 break;
             case REVERSE:
                 mTalon.set(ControlMode.PercentOutput, -SystemSettings.kConveyorTalonPower);

@@ -25,10 +25,6 @@ public class Hopper extends Module {
         mShooter = pShooter;
     }
 
-    public void cleanJam() {
-        setHopperState( mHopperState.REVERSE );
-    }
-
     @Override
     public void modeInit(double pNow) {
 
@@ -41,12 +37,12 @@ public class Hopper extends Module {
     public void update(double pNow) {
         switch (mHopperState) {
             case GIVE_TO_SHOOTER:
-                if(mShooter.isMaxVelocity()) {
+                //if(mShooter.isMaxVelocity()) {
                     mTalon.set(ControlMode.PercentOutput, SystemSettings.kHopperTalonPower);
-                }
+                //}
                 break;
             case REVERSE:
-                mTalon.set(ControlMode.PercentOutput, -SystemSettings.kHopperTalonPower);
+                mTalon.set(ControlMode.PercentOutput, SystemSettings.kHopperUnjamTalonPower);
                 break;
             case STOP:
                 mTalon.set(ControlMode.PercentOutput, 0d);

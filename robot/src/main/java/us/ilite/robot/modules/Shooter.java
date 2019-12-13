@@ -3,13 +3,16 @@ package us.ilite.robot.modules;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.control.PIDController;
+import us.ilite.lib.drivers.SparkMaxFactory;
 import us.ilite.robot.driverinput.DriverInput;
 
 public class Shooter extends Module {
     private TalonSRX mTalon;
+    private CANSparkMax mCANSparkMax;
     private PIDController kShooterPidController;
     private EShooterState mShooterState;
 
@@ -27,6 +30,7 @@ public class Shooter extends Module {
 
     public Shooter() {
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kShooterTalonId);
+//        mCANSparkMax = SparkMaxFactory.createDefaultSparkMax(SystemSettings.)
 
         kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooterVelocity, SystemSettings.kControlLoopPeriod );
         kShooterPidController.setOutputRange( 0, 1 );
@@ -60,7 +64,8 @@ public class Shooter extends Module {
     public void update(double pNow) {
         switch (mShooterState) {
             case SHOOTING:
-                mDesiredOutput = kShooterPidController.calculate(mTalon.getSelectedSensorVelocity(), pNow);
+                //mDesiredOutput = kShooterPidController.calculate(mTalon.getSelectedSensorVelocity(), pNow);
+                mDesiredOutput = SystemSettings.kShooterTalonPower;
                 break;
             case CLEAN:
                 mDesiredOutput = -SystemSettings.kShooterTalonPower;

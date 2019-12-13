@@ -14,7 +14,7 @@ public class Intake extends Module {
     public enum EIntakeState {
         INTAKE,
         STOP,
-        OUTTAKE;
+        REVERSE;
     }
 
     public Intake() {
@@ -37,7 +37,7 @@ public class Intake extends Module {
             case INTAKE:
                 mTalon.set(ControlMode.PercentOutput, SystemSettings.kIntakeVictorPower);
                 break;
-            case OUTTAKE:
+            case REVERSE:
                 mTalon.set(ControlMode.PercentOutput, -SystemSettings.kIntakeVictorPower);
                 break;
             case STOP:

@@ -78,21 +78,20 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public void update(double pNow) {
         updateIntake();
         updateWholeIntakeSystem();
+        updateHopper();
     }
 
     private void updateWholeIntakeSystem() {
-        if ( mOperatorInputCodex.isSet( DriveTeamInputMap.OPERATOR_HOPPER_CLEAN ) ) {
-            mHopper.cleanJam();
-        } if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
-            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+//        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_HOPPER_CLEAN)) {
+//            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+//            mConveyor.setConveyorState(Conveyor.EConveyorState.REVERSE);
+//            mShooter.setShooterState(Shooter.EShooterState.CLEAN);
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
+//            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
             mConveyor.setConveyorState(Conveyor.EConveyorState.GIVE_TO_SHOOTER);
             mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
-        } else if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
-            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
-            mConveyor.setConveyorState(Conveyor.EConveyorState.REVERSE);
-            mShooter.setShooterState(Shooter.EShooterState.CLEAN);
         } else {
-            mHopper.setHopperState(Hopper.EHopperState.STOP);
+//            mHopper.setHopperState(Hopper.EHopperState.STOP);
             mConveyor.setConveyorState(Conveyor.EConveyorState.STOP);
             mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
@@ -101,10 +100,20 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private void updateIntake() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE)) {
             mIntake.setIntakeState(Intake.EIntakeState.INTAKE);
-        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
-            mIntake.setIntakeState(Intake.EIntakeState.OUTTAKE);
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_REVERSE_INTAKE)) {
+            mIntake.setIntakeState(Intake.EIntakeState.REVERSE);
         } else {
             mIntake.setIntakeState(Intake.EIntakeState.STOP);
+        }
+    }
+
+    private void updateHopper() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_HOPPER_UNJAM)) {
+            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
+            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+        } else {
+            mHopper.setHopperState(Hopper.EHopperState.STOP);
         }
     }
 
