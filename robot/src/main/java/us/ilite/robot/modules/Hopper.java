@@ -13,7 +13,7 @@ public class Hopper extends Module {
     private EHopperState mHopperState;
     private TalonSRX mTalon;
 
-    private int kJamCurent;
+    private int kJamCurrent;
     private boolean kInReverse;
 
     public enum EHopperState
@@ -36,7 +36,7 @@ public class Hopper extends Module {
     public Hopper() {
         mHopperState = EHopperState.STOP;
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperMotorId);
-        kJamCurent = 0;
+        kJamCurrent = 0;
         kInReverse = false;
     }
     @Override
@@ -68,21 +68,23 @@ public class Hopper extends Module {
         double hopperRatio = hopperCurrent/hopperVoltage;
 
         if ( kInReverse ) {
-            kJamCurent--;
+            kJamCurrent--;
             mTalon.set(ControlMode.PercentOutput, -mHopperState.getPower()/2);
-            if (kJamCurent <= 0) {
+            if (kJamCurrent <= 0) {
                 kInReverse = false;
-                kJamCurent = 0;
+                kJamCurrent = 0;
             }
         }
-        else if (  kJamCurent > SystemSettings.kJamMaxCycles ) {
+        else if (  kJamCurrent > SystemSettings.kJamMaxCycles ) {
             mTalon.set(ControlMode.PercentOutput, -mHopperState.getPower()/2);
             kInReverse = true;
         }
         else if ( hopperRatio > SystemSettings.kMaxCurrentOutput ) {
-            kJamCurent++;
+            kJamCurrent++;
+            mTalon.set(ControlMode.PercentOutput, mHopperState.getPower());
         }
         else {
+            kJamCurrent = 0;
             mTalon.set(ControlMode.PercentOutput, mHopperState.getPower());
         }
     }
