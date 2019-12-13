@@ -10,7 +10,6 @@ import us.ilite.robot.driverinput.DriverInput;
 
 public class Shooter extends Module {
     private TalonSRX mTalon;
-    private VictorSPX mVictor;
     private PIDController kShooterPidController;
     private EShooterState mShooterState;
 
@@ -28,8 +27,6 @@ public class Shooter extends Module {
 
     public Shooter() {
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kShooterTalonId);
-        mVictor = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kShooterVictorId, mTalon);
-        mVictor.setInverted(true);
 
         kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooterVelocity, SystemSettings.kControlLoopPeriod );
         kShooterPidController.setOutputRange( 0, 1 );

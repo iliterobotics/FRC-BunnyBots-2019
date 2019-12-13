@@ -1,16 +1,13 @@
 package us.ilite.robot.modules;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
 import us.ilite.common.config.SystemSettings;
-import us.ilite.robot.modules.Shooter;
 
 
 public class Conveyor extends Module {
     private EConveyorState mConveyorState;
     private TalonSRX mTalon;
-    private VictorSPX mVictor;
     private Shooter mShooter;
     private double mDesiredOutput;
 
@@ -24,7 +21,6 @@ public class Conveyor extends Module {
     public Conveyor(Shooter pShooter) {
         mConveyorState = EConveyorState.STOP;
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kConveyorTalonId);
-        mVictor = TalonSRXFactory.createPermanentSlaveVictor(SystemSettings.kConveyorVictorId, mTalon);
         mShooter = pShooter;
     }
     @Override
