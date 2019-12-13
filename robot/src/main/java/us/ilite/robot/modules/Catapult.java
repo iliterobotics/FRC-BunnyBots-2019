@@ -10,8 +10,8 @@ public class Catapult extends Module {
     private boolean mHasShot;
 
     public enum ECatapultState {
-        LOCKED(0.0),
-        UNLOCKED(0.5);
+        LOCKED(0.5),
+        UNLOCKED(0.75);
 
         private double position;
 
