@@ -37,6 +37,7 @@ public class DriverInputTest {
     private Hopper mHopper;
     private Conveyor mConveyor;
     private Shooter mShooter;
+    private Catapult mCatapult;
     private Data mData;
     private Clock mClock;
     private ModuleList mModuleList;
@@ -55,7 +56,8 @@ public class DriverInputTest {
         mIntake = new Intake();
         mHopper = new Hopper(mShooter);
         mConveyor = new Conveyor(mShooter);
-        mDriverInput = spy(new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData, mDrive) );
+        mCatapult = new Catapult();
+        mDriverInput = spy(new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData, mDrive, mCatapult) );
         
         mModuleList.setModules(mDriverInput, mTeleopCommandManager, mAutonomousCommandManager, mDrive);
         mModuleList.modeInit(mClock.getCurrentTime());

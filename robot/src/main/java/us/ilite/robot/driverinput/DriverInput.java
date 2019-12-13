@@ -35,6 +35,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private Conveyor mConveyor;
     private Intake mIntake;
     private Hopper mHopper;
+    private final Data mData;
     private Catapult mCatapult;
 
     private Timer mGroundCargoTimer = new Timer();

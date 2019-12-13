@@ -260,7 +260,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
 
 
 
-    public static int kCatapultServoChannel = -1; //Channel unknown just yet
+    public static int kCatapultServoChannel = 9;
 
     public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{
             /* Left */
