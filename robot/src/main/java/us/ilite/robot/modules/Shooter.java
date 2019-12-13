@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.ControlType;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.control.PIDController;
@@ -11,7 +13,6 @@ import us.ilite.lib.drivers.SparkMaxFactory;
 import us.ilite.robot.driverinput.DriverInput;
 
 public class Shooter extends Module {
-    private TalonSRX mTalon;
     private CANSparkMax mCANSparkMax;
     private PIDController kShooterPidController;
     private EShooterState mShooterState;
@@ -29,12 +30,11 @@ public class Shooter extends Module {
     }
 
     public Shooter() {
-        mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kShooterTalonId);
-//        mCANSparkMax = SparkMaxFactory.createDefaultSparkMax(SystemSettings.)
+        mCANSparkMax = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kShooterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-        kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooterVelocity, SystemSettings.kControlLoopPeriod );
-        kShooterPidController.setOutputRange( 0, 1 );
-        kShooterPidController.setSetpoint( SystemSettings.kMaxShooterVelocity );
+//        kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooterVelocity, SystemSettings.kControlLoopPeriod );
+//        kShooterPidController.setOutputRange( 0, 1 );
+//        kShooterPidController.setSetpoint( SystemSettings.kMaxShooterVelocity );
         mShooterState = EShooterState.STOP;
     }
 
@@ -46,13 +46,11 @@ public class Shooter extends Module {
 
     @Override
     public void periodicInput(double pNow) {
-        double mCurrentCurrent = mTalon.getOutputCurrent();
+        double mCurrentCurrent = mCANSparkMax.getOutputCurrent();
         if (mCurrentCurrent - mLastCurrent >= SystemSettings.kShooterCurrentDropThreshold) {
             mShootingCurrent = mLastCurrent;
             mNotShootingBalls = true;
-        }
-
-        if (mCurrentCurrent - mShootingCurrent >= SystemSettings.kShooterCurrentDropThreshold) {
+        } else if (mCurrentCurrent - mShootingCurrent >= SystemSettings.kShooterCurrentDropThreshold) {
             mNotShootingBalls = true;
         } else {
             mNotShootingBalls = false;
@@ -65,18 +63,20 @@ public class Shooter extends Module {
         switch (mShooterState) {
             case SHOOTING:
                 //mDesiredOutput = kShooterPidController.calculate(mTalon.getSelectedSensorVelocity(), pNow);
-                mDesiredOutput = SystemSettings.kShooterTalonPower;
+                mDesiredOutput = SystemSettings.kShooterVelocity;
                 break;
             case CLEAN:
-                mDesiredOutput = -SystemSettings.kShooterTalonPower;
+                mDesiredOutput = -SystemSettings.kShooterVelocity;
                 break;
             case STOP:
                 mDesiredOutput = 0d;
                 break;
+
         }
 
-        mTalon.set(ControlMode.PercentOutput, mDesiredOutput);
-        mLastCurrent = mTalon.getOutputCurrent();
+//        mCANSparkMax.set(mDesiredOutput);
+        mCANSparkMax.getPIDController().setReference(mDesiredOutput, ControlType.kVelocity);
+        mLastCurrent = mCANSparkMax.getOutputCurrent();
 
         if (mNotShootingBalls) {
             mCyclesNotShootingBalls++;
@@ -89,12 +89,12 @@ public class Shooter extends Module {
 
     @Override
     public void shutdown(double pNow) {
-        mTalon.set(ControlMode.PercentOutput, 0d);
+        mCANSparkMax.set(0d);
     }
-
-    public boolean isMaxVelocity() {
-        return mTalon.getSelectedSensorVelocity() == SystemSettings.kMaxShooterVelocity;
-    }
+//
+//    public boolean isMaxVelocity() {
+//        return mCANSparkMax.get() == SystemSettings.kMaxShooterVelocity;
+//    }
 
     public int cyclesNotShootingBalls() {
         return mCyclesNotShootingBalls;

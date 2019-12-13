@@ -97,11 +97,11 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // Whole-Intake-System Power
     // =============================================================================
 
-    public static double kIntakeVictorPower = 1d;
+    public static double kIntakeTalonPower = 1d;
     public static double kHopperTalonPower = -1d * 0.333;
     public static double kHopperUnjamTalonPower = 1d;
     public static double kConveyorTalonPower = -1d;
-    public static double kShooterTalonPower = 1d * 0.5;
+    public static double kShooterVelocity = 1d * 0.5;
 
     // ============================================================================
     // Shooter
@@ -241,7 +241,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kIntakeTalonId = 20;
     public static int kHopperTalonId = 9;
     public static int kConveyorTalonId = 11;
-    public static int kShooterTalonId = 16;
+    public static int kShooterNeoID = 16;
 
 
 

@@ -35,10 +35,10 @@ public class Intake extends Module {
     public void update(double pNow) {
         switch (mIntakeState) {
             case INTAKE:
-                mTalon.set(ControlMode.PercentOutput, SystemSettings.kIntakeVictorPower);
+                mTalon.set(ControlMode.PercentOutput, SystemSettings.kIntakeTalonPower);
                 break;
             case REVERSE:
-                mTalon.set(ControlMode.PercentOutput, -SystemSettings.kIntakeVictorPower);
+                mTalon.set(ControlMode.PercentOutput, -SystemSettings.kIntakeTalonPower);
                 break;
             case STOP:
                 mTalon.set(ControlMode.PercentOutput, 0d);
