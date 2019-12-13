@@ -97,9 +97,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     @Override
     public void update(double pNow) {
         updateDriveTrain();
-        if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) || mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+//        if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) || mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
             updateYeets( pNow );
-        }
+//        }
     }
 
     @Override
@@ -108,7 +108,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     public void updateYeets(double pNow) {
-
 
         if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
                 mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
