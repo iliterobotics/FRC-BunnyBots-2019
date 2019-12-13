@@ -3,6 +3,8 @@ package us.ilite.robot.driverinput;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
+import us.ilite.common.Data;
+import us.ilite.common.config.DriveTeamInputMap;
 import us.ilite.common.lib.util.CheesyDriveHelper;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -23,7 +25,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
-//    private final Data mData;
+    private final Data mData;
+    private Catapult mCatapult;
+
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
 
@@ -35,8 +39,12 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput() {
+    public DriverInput(Data pData, Catapult pCatapult) {
+        mData = pData;
+        mCatapult = pCatapult;
 
+        mOperatorJoystick = new Joystick(1);
+        mOperatorInputCodex = mData.operatorinput;
     }
 
     @Override
@@ -56,12 +64,18 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void periodicInput(double pNow) {
-
+        ELogitech310.map(mData.operatorinput, mOperatorJoystick);
     }
 
     @Override
     public void update(double pNow) {
+        updateCatapult();
+    }
 
+    public void updateCatapult() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
+            mCatapult.releaseCatapult();
+        }
     }
 
     @Override
