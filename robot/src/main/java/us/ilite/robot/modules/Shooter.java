@@ -35,6 +35,8 @@ public class Shooter extends Module {
 //        kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooterVelocity, SystemSettings.kControlLoopPeriod );
 //        kShooterPidController.setOutputRange( 0, 1 );
 //        kShooterPidController.setSetpoint( SystemSettings.kMaxShooterVelocity );
+        mCANSparkMax.getPIDController().setP(SystemSettings.kShooterPGain);
+        mCANSparkMax.getPIDController().setFF(SystemSettings.kShooterFF);
         mShooterState = EShooterState.STOP;
     }
 
@@ -66,7 +68,7 @@ public class Shooter extends Module {
                 mDesiredOutput = SystemSettings.kShooterVelocity;
                 break;
             case CLEAN:
-                mDesiredOutput = -SystemSettings.kShooterVelocity;
+                mDesiredOutput = -SystemSettings.kShooterMaxVelocity; //-SystemSettings.kShooterVelocity;
                 break;
             case STOP:
                 mDesiredOutput = 0d;
