@@ -194,7 +194,6 @@ public class Drive extends Loop {
 					DriveMessage dm = new DriveMessage(mThrottle, turnOutput);
 					dm.normalize();
 					dm.setMaxVelocity(mMaxVelocity);
-					dm.setMaxVelocityMultiplierDemands();
 					setDriveMessage(dm.fromThrottleAndTurn());
 					((NeoDriveHardware)mDriveHardware).setTarget(mDriveMessage);
                     break;
