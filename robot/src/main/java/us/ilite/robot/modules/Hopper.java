@@ -12,14 +12,12 @@ import us.ilite.lib.drivers.SparkMaxFactory;
 public class Hopper extends Module {
     private EHopperState mHopperState;
     private TalonSRX mTalon;
-
     private int kJamCurrent;
-    private boolean kInReverse;
 
     public enum EHopperState
     {
         GIVE_TO_SHOOTER(1.0),
-        REVERSE(-1.0),
+        REVERSE(-0.5),
         STOP(0.0);
 
         private double power;
@@ -37,7 +35,6 @@ public class Hopper extends Module {
         mHopperState = EHopperState.STOP;
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperMotorId);
         kJamCurrent = 0;
-        kInReverse = false;
     }
     @Override
     public void modeInit(double pNow) {
@@ -49,7 +46,8 @@ public class Hopper extends Module {
     }
     @Override
     public void update(double pNow) {
-        updateHopper();
+        unjam();
+        mTalon.set(ControlMode.PercentOutput, mHopperState.getPower());
     }
 
     @Override
@@ -62,32 +60,31 @@ public class Hopper extends Module {
         mHopperState = pHopperState;
     }
 
-    public void updateHopper() {
+    public void unjam() {
         double hopperCurrent = mTalon.getOutputCurrent();
         double hopperVoltage = mTalon.getBusVoltage();
         double hopperRatio = hopperCurrent/hopperVoltage;
 
-        if ( kInReverse ) {
+        if ( mHopperState == EHopperState.REVERSE ) {
             kJamCurrent--;
-            mTalon.set(ControlMode.PercentOutput, -mHopperState.getPower()/2);
             if (kJamCurrent <= 0) {
-                kInReverse = false;
                 kJamCurrent = 0;
             }
         }
         else if (  kJamCurrent > SystemSettings.kJamMaxCycles ) {
-            mTalon.set(ControlMode.PercentOutput, -mHopperState.getPower()/2);
-            kInReverse = true;
+            setHopperState(EHopperState.REVERSE);
         }
         else if ( hopperRatio > SystemSettings.kMaxCurrentOutput ) {
             kJamCurrent++;
-            mTalon.set(ControlMode.PercentOutput, mHopperState.getPower());
         }
         else {
             kJamCurrent = 0;
-            mTalon.set(ControlMode.PercentOutput, mHopperState.getPower());
         }
     }
+    public void setZero () {
+        kJamCurrent = 0;
+    }
+
 
 
 
