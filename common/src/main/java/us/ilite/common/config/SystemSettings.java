@@ -101,7 +101,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kHopperTalonPower = -1d * 0.333;
     public static double kHopperUnjamTalonPower = 1d;
     public static double kConveyorTalonPower = -1d;
-    public static double kShooterVelocity = 1d * 0.5;
+    public static double kShooterVelocity = 2800;
 
     // ============================================================================
     // Shooter
