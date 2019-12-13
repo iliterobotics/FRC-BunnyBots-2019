@@ -214,6 +214,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kCatapultServoChannel = -1;
     public static int kHopperCANMotor = 1;
     public static int kHopperMotorId = 0;
+    public static double kMaxCurrentOutput = 1.0;
+    public static double kJamMaxCycles = 5;
 
 
     public static EPowerDistPanel[] kDrivePdpSlots = new EPowerDistPanel[]{

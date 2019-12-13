@@ -13,6 +13,9 @@ public class Hopper extends Module {
     private EHopperState mHopperState;
     private TalonSRX mTalon;
 
+    private int kJamCurent;
+    private boolean kInReverse;
+
     public enum EHopperState
     {
         GIVE_TO_SHOOTER(1.0),
@@ -33,6 +36,8 @@ public class Hopper extends Module {
     public Hopper() {
         mHopperState = EHopperState.STOP;
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kHopperMotorId);
+        kJamCurent = 0;
+        kInReverse = false;
     }
     @Override
     public void modeInit(double pNow) {
@@ -44,7 +49,7 @@ public class Hopper extends Module {
     }
     @Override
     public void update(double pNow) {
-        mTalon.set(ControlMode.PercentOutput, mHopperState.getPower());
+        updateHopper();
     }
 
     @Override
@@ -57,7 +62,30 @@ public class Hopper extends Module {
         mHopperState = pHopperState;
     }
 
+    public void updateHopper() {
+        double hopperCurrent = mTalon.getOutputCurrent();
+        double hopperVoltage = mTalon.getBusVoltage();
+        double hopperRatio = hopperCurrent/hopperVoltage;
 
+        if ( kInReverse ) {
+            kJamCurent--;
+            mTalon.set(ControlMode.PercentOutput, -mHopperState.getPower()/2);
+            if (kJamCurent <= 0) {
+                kInReverse = false;
+                kJamCurent = 0;
+            }
+        }
+        else if (  kJamCurent > SystemSettings.kJamMaxCycles ) {
+            mTalon.set(ControlMode.PercentOutput, -mHopperState.getPower()/2);
+            kInReverse = true;
+        }
+        else if ( hopperRatio > SystemSettings.kMaxCurrentOutput ) {
+            kJamCurent++;
+        }
+        else {
+            mTalon.set(ControlMode.PercentOutput, mHopperState.getPower());
+        }
+    }
 
 
 
