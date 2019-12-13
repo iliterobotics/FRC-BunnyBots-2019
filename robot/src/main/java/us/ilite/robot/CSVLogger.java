@@ -17,7 +17,7 @@ public class CSVLogger implements Runnable {
         mData = pData;
         mLoggingNotifier = new Notifier( this );
         mShouldContinue = false;
-        mIsRunning = false;
+        isRunning();
     }
     /**
      * Starts the periodically called logging by mLoggingNotifier
@@ -52,5 +52,10 @@ public class CSVLogger implements Runnable {
             mShouldContinue = mData.logFromCodexToCSVLog();
         }
     }
+    public boolean isRunning(){
+        mIsRunning = true;
+        return mIsRunning;
+    }
+
 
 }
