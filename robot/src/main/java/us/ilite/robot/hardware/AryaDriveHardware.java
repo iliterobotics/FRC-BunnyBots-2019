@@ -3,10 +3,7 @@ package us.ilite.robot.hardware;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.ControlType;
+import com.revrobotics.*;
 import com.team254.lib.geometry.Rotation2d;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.Conversions;
@@ -30,6 +27,8 @@ public class AryaDriveHardware implements IDriveHardware {
     private int mPidSlot = SystemSettings.kDriveVelocityLoopSlot;
     private double mCurrentOpenLoopRampRate = SystemSettings.kDriveMinOpenLoopVoltageRampRate;
     private RangeScale mRangeScale;
+    private CANEncoder mLeftMasterEncoder, mRightMasterEncoder;
+
 
     public AryaDriveHardware(double pGearRatio) {
         kGearRatio = pGearRatio;
@@ -37,12 +36,15 @@ public class AryaDriveHardware implements IDriveHardware {
         // mGyro = new NavX(SerialPort.Port.kMXP);
 
         mLeftMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kAryaDriveLeftMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kAryaDriveLeftMiddleNeoID, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mLeftRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kAryaDriveLeftRearNeoID, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftMiddle = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kAryaDriveLeftMiddleNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftRear = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kAryaDriveLeftRearNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         mRightMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kAryaDriveRightMasterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kAryaDriveRightMiddleNeoID, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mRightRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kAryaDriveRightRearNeoID, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightMiddle = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kAryaDriveRightMiddleNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightRear = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kAryaDriveRightRearNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
+
+        this.mLeftMasterEncoder = mLeftMaster.getEncoder();
+        this.mRightMasterEncoder = mRightMaster.getEncoder();
 
         configureMaster(mLeftMaster, true);
         configureMotor(mLeftMaster);
@@ -63,11 +65,11 @@ public class AryaDriveHardware implements IDriveHardware {
         mRightRear.setInverted(true);
 
         // Invert sensor readings by multiplying by 1 or -1
-        mLeftMaster.getEncoder().setPositionConversionFactor(1.0 * kGearRatio);
-        mLeftMaster.getEncoder().setVelocityConversionFactor(1.0 * kGearRatio);
+        mLeftMasterEncoder.setPositionConversionFactor(1.0 * kGearRatio);
+        mLeftMasterEncoder.setVelocityConversionFactor(1.0 * kGearRatio);
 
-        mRightMaster.getEncoder().setPositionConversionFactor(1.0 * kGearRatio);
-        mRightMaster.getEncoder().setVelocityConversionFactor(1.0 * kGearRatio);
+        mRightMasterEncoder.setPositionConversionFactor(1.0 * kGearRatio);
+        mRightMasterEncoder.setVelocityConversionFactor(1.0 * kGearRatio);
 
 
         reloadVelocityGains(mLeftMaster);
@@ -87,8 +89,8 @@ public class AryaDriveHardware implements IDriveHardware {
     public void zero() {
         mGyro.zeroAll();
 
-        mLeftMaster.getEncoder().setPosition(0.0);
-        mRightMaster.getEncoder().setPosition(0.0);
+        mLeftMasterEncoder.setPosition(0.0);
+        mRightMasterEncoder.setPosition(0.0);
 
         // Bypass state machine in set() and configure directly
         configSparkForPercentOutput(mLeftMaster);
@@ -230,19 +232,19 @@ public class AryaDriveHardware implements IDriveHardware {
     }
 
     public double getLeftInches() {
-        return Conversions.ticksToInches(mLeftMaster.getEncoder().getPosition());
+        return Conversions.ticksToInches(mLeftMasterEncoder.getPosition());
     }
 
     public double getRightInches() {
-        return Conversions.ticksToInches(mRightMaster.getEncoder().getPosition());
+        return Conversions.ticksToInches(mRightMasterEncoder.getPosition());
     }
 
     public double getLeftVelTicks() {
-        return mLeftMaster.getEncoder().getVelocity();
+        return mLeftMasterEncoder.getVelocity();
     }
 
     public double getRightVelTicks() {
-        return mRightMaster.getEncoder().getVelocity();
+        return mRightMasterEncoder.getVelocity();
     }
 
     /**
