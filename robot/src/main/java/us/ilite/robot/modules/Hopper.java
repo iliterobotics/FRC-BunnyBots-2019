@@ -13,6 +13,7 @@ public class Hopper extends Module {
     private EHopperState mHopperState;
     private TalonSRX mTalon;
     private int kJamCurrent;
+    private boolean kInReverse;
 
     public enum EHopperState
     {
@@ -68,7 +69,9 @@ public class Hopper extends Module {
         if ( mHopperState == EHopperState.REVERSE ) {
             kJamCurrent--;
             if (kJamCurrent <= 0) {
+                kInReverse = false;
                 kJamCurrent = 0;
+                setHopperState(EHopperState.STOP);
             }
         }
         else if (  kJamCurrent > SystemSettings.kJamMaxCycles ) {

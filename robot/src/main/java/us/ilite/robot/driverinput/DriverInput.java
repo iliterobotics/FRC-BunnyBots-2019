@@ -75,7 +75,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public void updateHopper()
     {
         if (mOperatorInputCodex.isSet(OPERATOR_SHOOT)) {
-
+            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
         }
         else if ( mOperatorInputCodex.isSet(OPERATOR_STOP))
         {
