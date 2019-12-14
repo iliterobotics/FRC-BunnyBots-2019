@@ -45,7 +45,9 @@ public class Hopper extends Module {
 
     @Override
     public void update(double pNow) {
-        unjam();
+        if ( mHopperState != EHopperState.REVERSE ) {
+            unjam();
+        }
         if ( !kInReverse ) {
             switch (mHopperState) {
                 case GIVE_TO_SHOOTER:
@@ -76,6 +78,7 @@ public class Hopper extends Module {
                 kJamCurrent = 0;
             }
         } else if (kJamCurrent > SystemSettings.kJamMaxCycles) {
+            kInReverse = true;
             setHopperState(EHopperState.REVERSE);
         } else if (hopperRatio > SystemSettings.kMaxCurrentOutput) {
             kJamCurrent++;
