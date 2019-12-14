@@ -32,6 +32,7 @@ public class DriverInputTest {
 
     private DriverInput mDriverInput;
     private Limelight mLimelight;
+    private Catapult mCatapult;
 
     private Data mData;
     private Clock mClock;
@@ -48,7 +49,8 @@ public class DriverInputTest {
         mTeleopCommandManager = spy(new CommandManager());
         mAutonomousCommandManager = spy(new CommandManager());
         mLimelight = new Limelight(mData);
-        mDriverInput = spy(new DriverInput(mDrive, mData ) );
+        mCatapult = new Catapult();
+        mDriverInput = spy(new DriverInput(mData, mDrive, mCatapult ) );
         
         mModuleList.setModules(mDriverInput, mTeleopCommandManager, mAutonomousCommandManager, mDrive);
         mModuleList.modeInit(mClock.getCurrentTime());
