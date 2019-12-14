@@ -3,6 +3,8 @@ package us.ilite.robot.modules;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.flybotix.hfr.util.log.ILog;
+import com.flybotix.hfr.util.log.Logger;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
@@ -16,6 +18,7 @@ public class Shooter extends Module {
     private CANSparkMax mCANSparkMax;
     private PIDController kShooterPidController;
     private EShooterState mShooterState;
+    private ILog mLog = Logger.createLog(Shooter.class);
 
     private boolean mNotShootingBalls;
     private int mCyclesNotShootingBalls;
@@ -44,6 +47,7 @@ public class Shooter extends Module {
     public void modeInit(double pNow) {
         mNotShootingBalls = true;
         mCyclesNotShootingBalls = 0;
+        mCANSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
 
     @Override
@@ -65,7 +69,7 @@ public class Shooter extends Module {
         switch (mShooterState) {
             case SHOOTING:
                 //mDesiredVelocity = kShooterPidController.calculate(mTalon.getSelectedSensorVelocity(), pNow);
-                mDesiredVelocity = SystemSettings.kShooterVelocity;
+//                mDesiredVelocity = SystemSettings.kShooterVelocity;
 //                mCANSparkMax.set(.5);
                 break;
             case CLEAN:
@@ -77,8 +81,9 @@ public class Shooter extends Module {
 
         }
 
-//        mCANSparkMax.set(mDesiredVelocity);
-        mCANSparkMax.getPIDController().setReference(mDesiredVelocity, ControlType.kVelocity);
+        mCANSparkMax.set(.5);
+        mLog.error("(((((((((((((((((((((( " + mCANSparkMax.getAppliedOutput() + " )))))))))))))))))))))))))");
+//        mCANSparkMax.getPIDController().setReference(mDesiredVelocity, ControlType.kVelocity);
         mLastCurrent = mCANSparkMax.getOutputCurrent();
 
         if (mNotShootingBalls) {

@@ -18,7 +18,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected static final double
             DRIVER_SUB_WARP_AXIS_THRESHOLD = 0.5;
-    private IL, 3 og mLog = Logger.createLog(DriverInput.class);
+    private ILog mLog = Logger.createLog(DriverInput.class);
 
 
     //    protected final Drive mDrive;
