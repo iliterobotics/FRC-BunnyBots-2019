@@ -64,7 +64,8 @@ public class Robot extends TimedRobot {
     private final Hopper mHopper = new Hopper(mShooter);
     private final Conveyor mConveyor = new Conveyor(mShooter);
     private final Catapult mCatapult = new Catapult();
-    private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData, mDrive, mCatapult);
+    private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData, mCatapult, mDrive);
+    
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
     private final AutonomousRoutines mAutonomousRoutines = new AutonomousRoutines(mTrajectoryGenerator, mDrive, mLimelight, mVisionGyro, mData);
@@ -141,7 +142,7 @@ public class Robot extends TimedRobot {
 //        mDrive.getDriveController().setTrajectory(mShootBunnyCrossNeutralLineTrajectory, true);
 
         // Init modules after commands are set
-        mRunningModules.setModules(mAutonomousCommandManager, mConveyor, mShooter, mIntake, mHopper);
+        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mConveyor, mShooter, mIntake, mHopper, mCatapult);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 

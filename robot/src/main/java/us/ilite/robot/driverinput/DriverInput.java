@@ -16,9 +16,11 @@ import us.ilite.common.lib.util.RangeScale;
 import us.ilite.common.types.input.EInputScale;
 import us.ilite.common.types.input.ELogitech310;
 import us.ilite.lib.drivers.ECommonControlMode;
-import us.ilite.lib.drivers.ECommonNeutralMode;
+import us.ilite.robot.commands.YeetLeftRight;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
+
+import java.lang.annotation.ElementType;
 
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
@@ -30,29 +32,27 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
-//    private final Data mData;
+    private final Drive mDrive;
+    private final Data mData;
+    private Catapult mCatapult;
     private Shooter mShooter;
     private Conveyor mConveyor;
     private Intake mIntake;
     private Hopper mHopper;
-    private final Data mData;
-    private Catapult mCatapult;
-
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
     private DriveMessage mDriveMessage;
     private PIDController mPIDController;
-    private Data mData;
+    private YeetLeftRight mYeets;
 
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData, Drive pDrive, Catapult pCatapult) {
-        mCatapult = pCatapult;
+    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData, Catapult pCatapult, Drive pDrive) {
         mIntake = pIntake;
         mHopper = pHopper;
         mConveyor = pConveyor;
@@ -62,12 +62,16 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         mOperatorJoystick = new Joystick(1);
         mDriverInputCodex = mData.driverinput;
         mOperatorInputCodex = mData.operatorinput;
+        mCatapult = pCatapult;
+        mDrive = pDrive;
 
         this.mDriverInputCodex = mData.driverinput;
         this.mOperatorInputCodex = mData.operatorinput;
 
         this.mDriverJoystick = new Joystick(0);
         this.mOperatorJoystick = new Joystick(1);
+
+        this.mYeets = new YeetLeftRight(mDrive);
 
         this.mPIDController = new PIDController(SystemSettings.kDriveClosedLoopPIDGains,
                 0, SystemSettings.kDriveTrainMaxVelocity, SystemSettings.kControlLoopPeriod );
@@ -86,7 +90,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public double getTurn() {
 
         if (mData.driverinput.isSet(DriveTeamInputMap.DRIVER_TURN_AXIS)) {
-            return mData.driverinput.get(DriveTeamInputMap.DRIVER_TURN_AXIS);
+            return mData.driverinput.get(DriveTeamInputMap.DRIVER_TURN_AXIS) * ((1 - mData.driverinput.get(DriveTeamInputMap.DRIVER_REDUCE_TURN_AXIS) + 0.3));
         } else {
             return 0.0;
         }
@@ -107,8 +111,12 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     public void update(double pNow) {
         updateIntake();
         updateWholeIntakeSystem();
-        updateDriveTrain();        
+        updateHopper();
+        updateDriveTrain();
         updateCatapult();
+        if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) || mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            updateYeets( pNow );
+        }
     }
     private void updateDriveTrain() {
 
@@ -132,35 +140,107 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     private void updateWholeIntakeSystem() {
+//        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_HOPPER_CLEAN)) {
+//            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+//            mConveyor.setConveyorState(Conveyor.EConveyorState.REVERSE);
+//            mShooter.setShooterState(Shooter.EShooterState.CLEAN);
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
-            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+//            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
             mConveyor.setConveyorState(Conveyor.EConveyorState.GIVE_TO_SHOOTER);
             mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
-        } else if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
-            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
-            mConveyor.setConveyorState(Conveyor.EConveyorState.REVERSE);
-            mShooter.setShooterState(Shooter.EShooterState.CLEAN);
         } else {
-            mHopper.setHopperState(Hopper.EHopperState.STOP);
+//            mHopper.setHopperState(Hopper.EHopperState.STOP);
             mConveyor.setConveyorState(Conveyor.EConveyorState.STOP);
             mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
         
     }
+        
+    public void updateCatapult() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
+            mCatapult.releaseCatapult();
+        }
+    }
 
     private void updateIntake() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE)) {
             mIntake.setIntakeState(Intake.EIntakeState.INTAKE);
-        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SPIT_OUT)) {
-            mIntake.setIntakeState(Intake.EIntakeState.OUTTAKE);
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_REVERSE_INTAKE)) {
+            mIntake.setIntakeState(Intake.EIntakeState.REVERSE);
         } else {
             mIntake.setIntakeState(Intake.EIntakeState.STOP);
+        }
+    }
+
+    private void updateHopper() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_HOPPER_UNJAM)) {
+            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
+            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+        } else {
+            mHopper.setHopperState(Hopper.EHopperState.STOP);
         }
     }
 
     @Override
     public void shutdown(double pNow) {
 
+    }
+
+    public void updateYeets(double pNow) {
+
+
+        if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
+                mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            mYeets.slowToStop();
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
+            mYeets.turn(YeetLeftRight.EYeetSide.LEFT);
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
+        }
+        else {
+            mYeets.slowToStop();
+        }
+        mYeets.update( pNow );
+    }
+
+    private void updateDriveTrain() {
+
+        mDrive.setDriveControlMode(Drive.DriveControlMode.VELOCITY);
+
+        double throttle = getThrottle();
+        double rotate = getTurn();
+
+
+        double leftDemand = ( throttle + rotate ) /* SystemSettings.kDriveTrainMaxVelocity */;
+        double rightDemand = ( throttle - rotate )/* * SystemSettings.kDriveTrainMaxVelocity*/;
+
+        leftDemand = Math.abs(leftDemand) > 0.01 ? leftDemand : 0.0; //Handling Deadband
+        rightDemand = Math.abs(rightDemand) > 0.01 ? rightDemand : 0.0; //Handling Deadband
+
+        SmartDashboard.putNumber("Left Drive Demand", leftDemand);
+        SmartDashboard.putNumber("Right Drive Demand", rightDemand);
+
+
+        double leftSetpoint = leftDemand * getMaxVelocity();//SystemSettings.kDriveTrainMaxVelocity;
+        double rightSetpoint = rightDemand * getMaxVelocity();//SystemSettings.kDriveTrainMaxVelocity;
+//        mDriveMessage = new DriveMessage(leftDemand * SystemSettings.kDriveTrainMaxVelocity, rightDemand * SystemSettings.kDriveTrainMaxVelocity, ECommonControlMode.VELOCITY);
+//        mDriveMessage = new DriveMessage(leftDemand, rightDemand, ECommonControlMode.PERCENT_OUTPUT);
+        mDriveMessage = new DriveMessage(leftSetpoint, rightSetpoint, ECommonControlMode.VELOCITY);
+        mDrive.setDriveMessage(mDriveMessage);
+
+//        mDrive.getDriveHardware().
+
+    }
+
+    private double getMaxVelocity() {
+        if (mData.driverinput.get(DriveTeamInputMap.DRIVER_NITRO_BUTTON) > 0.5) {
+            return (42*5676/60) * 3;
+        } else {
+            return SystemSettings.kDriveTrainMaxVelocity;
+        }
     }
 
 }
