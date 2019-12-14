@@ -253,7 +253,7 @@ public class Drive extends Loop {
 				double rightDemand = (output.right_feedforward_voltage / 12.0) + SystemSettings.kDriveVelocity_kD * rightAccel / 1023.0;
 
 				// Add in the feedforward we've calculated and set motors to Brake mode
-				driveMessage.setDemand(leftDemand, -rightDemand);
+				driveMessage.setDemand(-leftDemand, -rightDemand);
 				driveMessage.setNeutralMode(ECommonNeutralMode.BRAKE);
 
 				mDriveMessage = driveMessage;
