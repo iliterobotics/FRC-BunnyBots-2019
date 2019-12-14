@@ -41,7 +41,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
-    private Data mData;
     private DriveMessage mDriveMessage;
     private PIDController mPIDController;
     private YeetLeftRight mYeets;

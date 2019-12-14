@@ -3,7 +3,7 @@ package us.ilite.robot.hardware;
 import us.ilite.common.config.SystemSettings;
 
 public enum EDriveHardwareType {
-    ARYA(new AryaDriveHardware(SystemSettings.kDriveGearboxRatio)),
+//    ARYA(new AryaDriveHardware(SystemSettings.kDriveGearboxRatio)),
     PRACTICE(new SrxDriveHardware()),
     MASTER(new NeoDriveHardware(SystemSettings.kDriveGearboxRatio));
 
