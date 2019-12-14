@@ -45,9 +45,7 @@ public class Hopper extends Module {
 
     @Override
     public void update(double pNow) {
-        if ( mHopperState != EHopperState.REVERSE ) {
-            unjam();
-        }
+//        unjam();
         if ( !kInReverse ) {
             switch (mHopperState) {
                 case GIVE_TO_SHOOTER:
