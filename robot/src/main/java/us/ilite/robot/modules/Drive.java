@@ -188,20 +188,17 @@ public class Drive extends Loop {
 			mLogger.error("Invalid drive state - maybe you meant to run this a high frequency?");
 			mDriveState = EDriveState.NORMAL;
 		} else {
-//			switch (this.mDriveControlMode) {
-//                case VELOCITY:
+			switch (this.mDriveControlMode) {
+                case VELOCITY:
 //                	if (mDriveState != EDriveState.PATH_FOLLOWING) {
-//						double turnOutput = mTurnRatePIDController.calculate(mPigeon.getYaw(), pNow);
-//						setDriveMessage(DriveMessage.fromThrottleAndTurn(mThrottle, turnOutput));
-//						((NeoDriveHardware) mDriveHardware).setTarget(mDriveMessage);
+						((NeoDriveHardware) mDriveHardware).setTarget(mDriveMessage);
 //					} else {
 //                		mDriveHardware.set(mDriveMessage);
 //					}
-//                    break;
-//                case PERCENT_OUTPUT:
-//					mDriveHardware.set(mDriveMessage);
-//			    }
-			mDriveHardware.set(mDriveMessage);
+                    break;
+                case PERCENT_OUTPUT:
+					mDriveHardware.set(mDriveMessage);
+			    }
 
 		}
 
