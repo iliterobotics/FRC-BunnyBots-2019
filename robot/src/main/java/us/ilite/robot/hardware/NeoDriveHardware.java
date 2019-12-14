@@ -3,10 +3,7 @@ package us.ilite.robot.hardware;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.ControlType;
+import com.revrobotics.*;
 import com.team254.lib.geometry.Rotation2d;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.Conversions;
@@ -30,6 +27,8 @@ public class NeoDriveHardware implements IDriveHardware {
     private int mPidSlot = SystemSettings.kDriveVelocityLoopSlot;
     private double mCurrentOpenLoopRampRate = SystemSettings.kDriveMinOpenLoopVoltageRampRate;
     private RangeScale mRangeScale;
+    private CANEncoder mLeftMasterEncoder;
+    private CANEncoder mRightMasterEncoder;
 
     public NeoDriveHardware(double pGearRatio) {
         kGearRatio = pGearRatio;
@@ -44,6 +43,9 @@ public class NeoDriveHardware implements IDriveHardware {
         mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightMiddleTalonId, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
         mRightRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightRearTalonId, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
 
+        this.mLeftMasterEncoder = mLeftMaster.getEncoder();
+        this.mRightMasterEncoder = mRightMaster.getEncoder();
+
         configureMaster(mLeftMaster, true);
         configureMotor(mLeftMaster);
         configureMotor(mLeftMiddle);
@@ -54,21 +56,23 @@ public class NeoDriveHardware implements IDriveHardware {
         configureMotor(mRightMiddle);
         configureMotor(mRightRear);
 
-        mLeftMaster.setInverted(true);
+        mLeftMaster.setInverted(false);
         mLeftMiddle.setInverted(true);
         mLeftRear.setInverted(true);
 
-        mRightMaster.setInverted(false);
+        mRightMaster.setInverted(true);
         mRightMiddle.setInverted(false);
         mRightRear.setInverted(true);
 
         // Invert sensor readings by multiplying by 1 or -1
-        mLeftMaster.getEncoder().setPositionConversionFactor(1.0 * kGearRatio);
-        mLeftMaster.getEncoder().setVelocityConversionFactor(1.0 * kGearRatio);
+        mLeftMasterEncoder.setPositionConversionFactor(1.0 * kGearRatio);
+        mLeftMasterEncoder.setVelocityConversionFactor(1.0 * kGearRatio);
 
-        mRightMaster.getEncoder().setPositionConversionFactor(1.0 * kGearRatio);
-        mRightMaster.getEncoder().setVelocityConversionFactor(1.0 * kGearRatio);
+        mRightMasterEncoder.setPositionConversionFactor(1.0 * kGearRatio);
+        mRightMasterEncoder.setVelocityConversionFactor(1.0 * kGearRatio);
 
+        configSparkForVelocity(mLeftMaster);
+        configSparkForVelocity(mRightMaster);
 
         reloadVelocityGains(mLeftMaster);
         reloadVelocityGains(mRightMaster);
@@ -79,18 +83,22 @@ public class NeoDriveHardware implements IDriveHardware {
     public void init() {
         zero();
         mLeftControlMode = mRightControlMode = ControlType.kDutyCycle;
-        mLeftNeutralMode = mRightNeutralMode = CANSparkMax.IdleMode.kBrake;
+//        mLeftNeutralMode = mRightNeutralMode = CANSparkMax.IdleMode.kBrake;
+        mLeftNeutralMode = mRightNeutralMode = CANSparkMax.IdleMode.kCoast;
 
         set(DriveMessage.kNeutral);
     }
 
     @Override
     public void zero() {
+
+        mLogger.error("ZEROING THE ENCODERS!!!!!");
         mGyro.zeroAll();
 
-        mLeftMaster.getEncoder().setPosition(0.0);
-        mRightMaster.getEncoder().setPosition(0.0);
-
+//        mLeftMaster.getEncoder().setPosition(0.0);
+//        mRightMaster.getEncoder().setPosition(0.0);
+        mLeftMasterEncoder.setPosition(0d);
+        mRightMasterEncoder.setPosition(0d);
         // Bypass state machine in set() and configure directly
         configSparkForPercentOutput(mLeftMaster);
         configSparkForPercentOutput(mRightMaster);
@@ -112,6 +120,11 @@ public class NeoDriveHardware implements IDriveHardware {
         mLeftMaster.getPIDController().setReference(pDriveMessage.leftOutput, mLeftControlMode, mPidSlot, pDriveMessage.leftDemand);
         mRightMaster.getPIDController().setReference(pDriveMessage.rightOutput, mRightControlMode, mPidSlot, pDriveMessage.rightDemand);
 
+    }
+
+    public void setTarget(DriveMessage pDriveMessage) {
+        mLeftMaster.getPIDController().setReference(pDriveMessage.leftDemand, ControlType.kVelocity);
+        mRightMaster.getPIDController().setReference(pDriveMessage.rightDemand, ControlType.kVelocity);
     }
 
     /**
@@ -231,19 +244,19 @@ public class NeoDriveHardware implements IDriveHardware {
     }
 
     public double getLeftInches() {
-        return Conversions.ticksToInches(mLeftMaster.getEncoder().getPosition());
+        return Conversions.ticksToInches(mLeftMasterEncoder.getPosition());
     }
 
     public double getRightInches() {
-        return Conversions.ticksToInches(mRightMaster.getEncoder().getPosition());
+        return Conversions.ticksToInches(mRightMasterEncoder.getPosition());
     }
 
     public double getLeftVelTicks() {
-        return mLeftMaster.getEncoder().getVelocity();
+        return mLeftMasterEncoder.getVelocity();
     }
 
     public double getRightVelTicks() {
-        return mRightMaster.getEncoder().getVelocity();
+        return mRightMasterEncoder.getVelocity();
     }
 
     /**
@@ -320,6 +333,10 @@ public class NeoDriveHardware implements IDriveHardware {
         //         checkerConfigBuilder.build());
         // return leftSide && rightSide;
         return true;
+    }
+
+    public void setMotorReference(CANPIDController pCanpidController, double pReference) {
+        pCanpidController.setReference(pReference, ControlType.kVelocity);
     }
 
 }

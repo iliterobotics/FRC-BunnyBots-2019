@@ -3,6 +3,8 @@ package us.ilite.robot.driverinput;
 import com.flybotix.hfr.codex.Codex;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import us.ilite.common.lib.control.PIDController;
 import us.ilite.common.Data;
 import us.ilite.common.config.DriveTeamInputMap;
 import us.ilite.common.lib.util.CheesyDriveHelper;
@@ -11,8 +13,12 @@ import edu.wpi.first.wpilibj.Timer;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.RangeScale;
 import us.ilite.common.types.input.ELogitech310;
+import us.ilite.lib.drivers.ECommonControlMode;
+import us.ilite.robot.commands.YeetLeftRight;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
+
+import java.lang.annotation.ElementType;
 
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
@@ -25,6 +31,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
+    private final Drive mDrive;
     private final Data mData;
     private Catapult mCatapult;
 
@@ -34,27 +41,48 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
+    private DriveMessage mDriveMessage;
+    private PIDController mPIDController;
+    private YeetLeftRight mYeets;
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Data pData, Catapult pCatapult) {
-        mData = pData;
+    public DriverInput(Data pData, Drive pDrive, Catapult pCatapult) {
+        this.mDrive = pDrive;
+        this.mData = pData;
         mCatapult = pCatapult;
 
-        mOperatorJoystick = new Joystick(1);
-        mOperatorInputCodex = mData.operatorinput;
+        this.mDriverInputCodex = mData.driverinput;
+        this.mOperatorInputCodex = mData.operatorinput;
+
+        this.mDriverJoystick = new Joystick(0);
+        this.mOperatorJoystick = new Joystick(1);
+
+        this.mYeets = new YeetLeftRight(mDrive);
+
+        this.mPIDController = new PIDController(SystemSettings.kDriveClosedLoopPIDGains,
+                0, SystemSettings.kDriveTrainMaxVelocity, SystemSettings.kControlLoopPeriod );
     }
 
     @Override
     public double getThrottle() {
-        return 0;
+        if(mData.driverinput.isSet(DriveTeamInputMap.DRIVER_THROTTLE_AXIS)) {
+            return -mData.driverinput.get(DriveTeamInputMap.DRIVER_THROTTLE_AXIS);
+        } else {
+            return 0.0;
+        }
     }
 
     @Override
     public double getTurn() {
-        return 0;
+
+        if (mData.driverinput.isSet(DriveTeamInputMap.DRIVER_TURN_AXIS)) {
+            return mData.driverinput.get(DriveTeamInputMap.DRIVER_TURN_AXIS) * ((1 - mData.driverinput.get(DriveTeamInputMap.DRIVER_REDUCE_TURN_AXIS) + 0.3));
+        } else {
+            return 0.0;
+        }
     }
 
     @Override
@@ -64,22 +92,86 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void periodicInput(double pNow) {
+        ELogitech310.map(mData.driverinput, mDriverJoystick);
         ELogitech310.map(mData.operatorinput, mOperatorJoystick);
     }
 
     @Override
     public void update(double pNow) {
+        updateDriveTrain();
         updateCatapult();
+        if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) || mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            updateYeets( pNow );
+        }
     }
-
+    
     public void updateCatapult() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
             mCatapult.releaseCatapult();
         }
     }
 
+
+
     @Override
     public void shutdown(double pNow) {
 
     }
+
+    public void updateYeets(double pNow) {
+
+
+        if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) &&
+                mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            mYeets.slowToStop();
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT)) {
+            mYeets.turn(YeetLeftRight.EYeetSide.LEFT);
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
+            mYeets.turn(YeetLeftRight.EYeetSide.RIGHT);
+        }
+        else {
+            mYeets.slowToStop();
+        }
+        mYeets.update( pNow );
+    }
+
+    private void updateDriveTrain() {
+
+        mDrive.setDriveControlMode(Drive.DriveControlMode.VELOCITY);
+
+        double throttle = getThrottle();
+        double rotate = getTurn();
+
+
+        double leftDemand = ( throttle + rotate ) /* SystemSettings.kDriveTrainMaxVelocity */;
+        double rightDemand = ( throttle - rotate )/* * SystemSettings.kDriveTrainMaxVelocity*/;
+
+        leftDemand = Math.abs(leftDemand) > 0.01 ? leftDemand : 0.0; //Handling Deadband
+        rightDemand = Math.abs(rightDemand) > 0.01 ? rightDemand : 0.0; //Handling Deadband
+
+        SmartDashboard.putNumber("Left Drive Demand", leftDemand);
+        SmartDashboard.putNumber("Right Drive Demand", rightDemand);
+
+
+        double leftSetpoint = leftDemand * getMaxVelocity();//SystemSettings.kDriveTrainMaxVelocity;
+        double rightSetpoint = rightDemand * getMaxVelocity();//SystemSettings.kDriveTrainMaxVelocity;
+//        mDriveMessage = new DriveMessage(leftDemand * SystemSettings.kDriveTrainMaxVelocity, rightDemand * SystemSettings.kDriveTrainMaxVelocity, ECommonControlMode.VELOCITY);
+//        mDriveMessage = new DriveMessage(leftDemand, rightDemand, ECommonControlMode.PERCENT_OUTPUT);
+        mDriveMessage = new DriveMessage(leftSetpoint, rightSetpoint, ECommonControlMode.VELOCITY);
+        mDrive.setDriveMessage(mDriveMessage);
+
+//        mDrive.getDriveHardware().
+
+    }
+
+    private double getMaxVelocity() {
+        if (mData.driverinput.get(DriveTeamInputMap.DRIVER_NITRO_BUTTON) > 0.5) {
+            return (42*5676/60) * 3;
+        } else {
+            return SystemSettings.kDriveTrainMaxVelocity;
+        }
+    }
+
 }
