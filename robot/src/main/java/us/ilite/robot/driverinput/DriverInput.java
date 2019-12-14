@@ -31,8 +31,10 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
-//    private final Data mData;
     private final Drive mDrive;
+    private final Data mData;
+    private Catapult mCatapult;
+
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
 
@@ -48,9 +50,10 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Data pData, Drive pDrive) {
+    public DriverInput(Data pData, Drive pDrive, Catapult pCatapult) {
         this.mDrive = pDrive;
         this.mData = pData;
+        mCatapult = pCatapult;
 
         this.mDriverInputCodex = mData.driverinput;
         this.mOperatorInputCodex = mData.operatorinput;
@@ -97,10 +100,19 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     @Override
     public void update(double pNow) {
         updateDriveTrain();
+        updateCatapult();
         if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) || mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
             updateYeets( pNow );
         }
     }
+    
+    public void updateCatapult() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
+            mCatapult.releaseCatapult();
+        }
+    }
+
+
 
     @Override
     public void shutdown(double pNow) {
