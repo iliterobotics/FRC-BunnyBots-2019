@@ -5,10 +5,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.control.PIDController;
 import us.ilite.lib.drivers.SparkMaxFactory;
@@ -18,6 +20,8 @@ public class Shooter extends Module {
     private CANSparkMax mCANSparkMax;
     private PIDController kShooterPidController;
     private EShooterState mShooterState;
+    private CANEncoder mCANEncoder;
+
     private ILog mLog = Logger.createLog(Shooter.class);
 
     private boolean mNotShootingBalls;
@@ -41,6 +45,7 @@ public class Shooter extends Module {
         mCANSparkMax.getPIDController().setP(SystemSettings.kShooterPGain);
         mCANSparkMax.getPIDController().setFF(SystemSettings.kShooterFF);
         mShooterState = EShooterState.STOP;
+        mCANEncoder = mCANSparkMax.getEncoder();
     }
 
     @Override
@@ -62,28 +67,34 @@ public class Shooter extends Module {
             mNotShootingBalls = false;
         }
 
+
     }
 
     @Override
     public void update(double pNow) {
         switch (mShooterState) {
             case SHOOTING:
-                //mDesiredVelocity = kShooterPidController.calculate(mTalon.getSelectedSensorVelocity(), pNow);
-//                mDesiredVelocity = SystemSettings.kShooterVelocity;
+//                mDesiredVelocity = kShooterPidController.calculate(mTalon.getSelectedSensorVelocity(), pNow);
+                mDesiredVelocity = SystemSettings.kShooterVelocity;
+                mCANSparkMax.getPIDController().setReference(mDesiredVelocity, ControlType.kVelocity);
 //                mCANSparkMax.set(.5);
                 break;
             case CLEAN:
-                mDesiredVelocity = -SystemSettings.kShooterMaxVelocity; //-SystemSettings.kShooterVelocity;
+//                mDesiredVelocity = -SystemSettings.kShooterMaxVelocity; //-SystemSettings.kShooterVelocity;
+                mCANSparkMax.set(-1.0);
                 break;
             case STOP:
                 mDesiredVelocity = 0d;
+                mCANSparkMax.set(0.0);
                 break;
 
         }
 
-        mCANSparkMax.set(.5);
-        mLog.error("(((((((((((((((((((((( " + mCANSparkMax.getAppliedOutput() + " )))))))))))))))))))))))))");
-//        mCANSparkMax.getPIDController().setReference(mDesiredVelocity, ControlType.kVelocity);
+        SmartDashboard.putNumber("Flywheel Actual Velocity", mCANEncoder.getVelocity());
+        SmartDashboard.putNumber("Flywheel Desired Velocity", mDesiredVelocity);
+//        mCANSparkMax.set(.5);
+//        mLog.error("(((((((((((((((((((((( " + mCANSparkMax.getAppliedOutput() + " )))))))))))))))))))))))))");
+
         mLastCurrent = mCANSparkMax.getOutputCurrent();
 
         if (mNotShootingBalls) {

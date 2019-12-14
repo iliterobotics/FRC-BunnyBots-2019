@@ -2,6 +2,7 @@ package us.ilite.robot.modules;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.robot.modules.Shooter;
 
@@ -10,6 +11,7 @@ public class Hopper extends Module {
     private EHopperState mHopperState;
     private TalonSRX mTalon;
     private Shooter mShooter;
+    private boolean mPrevUnjam;
     // private double mDesiredOutput; TUNE THIS
     private boolean kInReverse;
    //  private int kMaxCurrentOutput; TUNE THIS
@@ -45,7 +47,7 @@ public class Hopper extends Module {
 
     @Override
     public void update(double pNow) {
-//        unjam();
+        unjam();
         if ( !kInReverse ) {
             switch (mHopperState) {
                 case GIVE_TO_SHOOTER:
@@ -62,29 +64,38 @@ public class Hopper extends Module {
             }
         }
 
+        SmartDashboard.putNumber("Hopper Current Drawing", mTalon.getOutputCurrent());
+
     }
 
     public void unjam() {
         double hopperCurrent = mTalon.getOutputCurrent();
-        double hopperVoltage = mTalon.getBusVoltage();
-        double hopperRatio = hopperCurrent / hopperVoltage;
-
-        if (kInReverse) {
-            kJamCurrent--;
-            if (kJamCurrent <= 0) {
-                kInReverse = false;
-                kJamCurrent = 0;
-            }
-        } else if (kJamCurrent > SystemSettings.kJamMaxCycles) {
-            kInReverse = true;
+//        double hopperVoltage = mTalon.getBusVoltage();
+//        double hopperRatio = hopperCurrent / hopperVoltage;
+//
+//        if (kInReverse) {
+//            kJamCurrent--;
+//            if (kJamCurrent <= 0) {
+//                kInReverse = false;
+//                kJamCurrent = 0;
+//            }
+//        } else if (kJamCurrent > SystemSettings.kJamMaxCycles) {
+//            kInReverse = true;
+//            setHopperState(EHopperState.REVERSE);
+//        } else if (hopperRatio > SystemSettings.kMaxCurrentOutput) {
+//            kJamCurrent++;
+//            setHopperState(EHopperState.GIVE_TO_SHOOTER);
+//        } else {
+//            if ( kJamCurrent > 0 ) {
+//                kJamCurrent--;
+//            }
+//        }
+        if (hopperCurrent >= 5 && mHopperState != EHopperState.REVERSE && !mPrevUnjam) {
             setHopperState(EHopperState.REVERSE);
-        } else if (hopperRatio > SystemSettings.kMaxCurrentOutput) {
-            kJamCurrent++;
-            setHopperState(EHopperState.GIVE_TO_SHOOTER);
+            mPrevUnjam = true;
         } else {
-            if ( kJamCurrent > 0 ) {
-                kJamCurrent--;
-            }
+            setHopperState(mHopperState);
+            mPrevUnjam = false;
         }
     }
 
