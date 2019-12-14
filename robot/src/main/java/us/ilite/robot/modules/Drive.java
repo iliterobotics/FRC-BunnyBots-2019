@@ -83,7 +83,7 @@ public class Drive extends Loop {
 			this.mDriveHardware = pDriveHardwareType.getDriveHardware();
 		}
 		mPigeon = mDriveHardware.getImu();
-		mTurnRatePIDController = new PIDController(SystemSettings.kDriveTurnRateGains, -SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kControlLoopPeriod);
+//		mTurnRatePIDController = new PIDController(SystemSettings.kDriveTurnRateGains, -SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kControlLoopPeriod);
 		this.mDriveHardware.init();
 	}
 
@@ -294,7 +294,7 @@ public class Drive extends Loop {
 	public void setTurnAndThrottle(double pTurn, double pThrottle) {
 		mTurn = pTurn;
 		mThrottle = pThrottle;
-		mTurnRatePIDController.setSetpoint(mTurn * SystemSettings.kDriveTrainMaxTurnRate);
+//		mTurnRatePIDController.setSetpoint(mTurn * SystemSettings.kDriveTrainMaxTurnRate);
 	}
 
 	public synchronized void setTargetAngleLock() {

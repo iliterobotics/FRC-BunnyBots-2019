@@ -32,7 +32,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
-    private final Drive mDrive;
     private final Data mData;
     private Catapult mCatapult;
     private Shooter mShooter;
@@ -63,7 +62,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         mDriverInputCodex = mData.driverinput;
         mOperatorInputCodex = mData.operatorinput;
         mCatapult = pCatapult;
-        mDrive = pDrive;
 
         this.mDriverInputCodex = mData.driverinput;
         this.mOperatorInputCodex = mData.operatorinput;
@@ -118,20 +116,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             updateYeets( pNow );
         }
     }
-    private void updateDriveTrain() {
-
-        mDrive.setDriveControlMode(Drive.DriveControlMode.VELOCITY);
-
-        double throttle = getThrottle();
-        double turn = getTurn();
-
-        throttle = Math.abs(throttle) > 0.01 ? throttle : 0.0; //Handling Deadband
-        turn = Math.abs(turn) > 0.01 ? turn : 0.0; //Handling Deadband
-
-        mDrive.setTurnAndThrottle(turn, throttle);
-
-//        mDrive.getDriveHardware().
-    }
     
     public void updateCatapult() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
@@ -154,12 +138,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
         
-    }
-        
-    public void updateCatapult() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
-            mCatapult.releaseCatapult();
-        }
     }
 
     private void updateIntake() {

@@ -118,9 +118,4 @@ public class Shooter extends Module {
     public int cyclesNotShootingBalls() {
         return mCyclesNotShootingBalls;
     }
-
-    @Override
-    public void shutdown(double pNow) {
-        mTalon.set(ControlMode.PercentOutput, 0d);
-    }
 }
