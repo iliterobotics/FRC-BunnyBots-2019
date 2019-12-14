@@ -23,36 +23,45 @@ import java.lang.annotation.ElementType;
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
     protected static final double
-    DRIVER_SUB_WARP_AXIS_THRESHOLD = 0.5;
+            DRIVER_SUB_WARP_AXIS_THRESHOLD = 0.5;
     private ILog mLog = Logger.createLog(DriverInput.class);
 
 
-//    protected final Drive mDrive;
+    //    protected final Drive mDrive;
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
     private final Drive mDrive;
     private final Data mData;
     private Catapult mCatapult;
-
+    private Shooter mShooter;
+    private Conveyor mConveyor;
+    private Intake mIntake;
+    private Hopper mHopper;
     private Timer mGroundCargoTimer = new Timer();
     private RangeScale mRampRateRangeScale;
-
-    private boolean mIsCargo = true; //false;
     private Joystick mDriverJoystick;
     private Joystick mOperatorJoystick;
     private DriveMessage mDriveMessage;
     private PIDController mPIDController;
     private YeetLeftRight mYeets;
 
+
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Data pData, Drive pDrive, Catapult pCatapult) {
-        this.mDrive = pDrive;
-        this.mData = pData;
+    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData, Catapult pCatapult, Drive pDrive) {
+        mIntake = pIntake;
+        mHopper = pHopper;
+        mConveyor = pConveyor;
+        mShooter = pShooter;
+        mData = pData;
+        mOperatorJoystick = new Joystick(1);
+        mDriverInputCodex = mData.driverinput;
+        mOperatorInputCodex = mData.operatorinput;
         mCatapult = pCatapult;
+        mDrive = pDrive;
 
         this.mDriverInputCodex = mData.driverinput;
         this.mOperatorInputCodex = mData.operatorinput;
@@ -98,20 +107,57 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public void update(double pNow) {
+        updateIntake();
+        updateWholeIntakeSystem();
+        updateHopper();
         updateDriveTrain();
         updateCatapult();
         if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) || mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
             updateYeets( pNow );
         }
     }
-    
+
+    private void updateWholeIntakeSystem() {
+//        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_HOPPER_CLEAN)) {
+//            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+//            mConveyor.setConveyorState(Conveyor.EConveyorState.REVERSE);
+//            mShooter.setShooterState(Shooter.EShooterState.CLEAN);
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
+//            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+            mConveyor.setConveyorState(Conveyor.EConveyorState.GIVE_TO_SHOOTER);
+            mShooter.setShooterState(Shooter.EShooterState.SHOOTING);
+        } else {
+//            mHopper.setHopperState(Hopper.EHopperState.STOP);
+            mConveyor.setConveyorState(Conveyor.EConveyorState.STOP);
+            mShooter.setShooterState(Shooter.EShooterState.STOP);
+        }
+    }
+        
     public void updateCatapult() {
         if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
             mCatapult.releaseCatapult();
         }
     }
 
+    private void updateIntake() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE)) {
+            mIntake.setIntakeState(Intake.EIntakeState.INTAKE);
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_REVERSE_INTAKE)) {
+            mIntake.setIntakeState(Intake.EIntakeState.REVERSE);
+        } else {
+            mIntake.setIntakeState(Intake.EIntakeState.STOP);
+        }
+    }
 
+    private void updateHopper() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_HOPPER_UNJAM)) {
+            mHopper.setHopperState(Hopper.EHopperState.REVERSE);
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
+            mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+        } else {
+            mHopper.setHopperState(Hopper.EHopperState.STOP);
+        }
+    }
 
     @Override
     public void shutdown(double pNow) {

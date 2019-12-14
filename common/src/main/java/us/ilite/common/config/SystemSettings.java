@@ -16,7 +16,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
 
     public static double kControlLoopPeriod = 0.01; // seconds
     public static double kCSVLoggingPeriod = 0.02;  // seconds
-
+    public static double kMaxShooterVelocity = 1.0;
     public static double kNetworkTableUpdateRate = 0.01;
 
     public static int sCODEX_COMMS_PORT = 5805;
@@ -89,13 +89,35 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kJoystickPortTester = 2;
 
     public static int kLimelightDefaultPipeline = ETrackingType.TARGET.getPipeline();
-    public static List<ELogitech310> kTeleopCommandTriggers = Arrays.asList(DriveTeamInputMap.DRIVER_TRACK_TARGET_BTN, 
-                                                                            DriveTeamInputMap.DRIVER_TRACK_CARGO_BTN,
-                                                                            DriveTeamInputMap.DRIVER_TRACK_HATCH_BTN);
-
-    public static List<ELogitech310> kAutonOverrideTriggers = Arrays.asList(DriveTeamInputMap.DRIVER_THROTTLE_AXIS,
-                                                                            DriveTeamInputMap.DRIVER_TURN_AXIS);
+//    public static List<ELogitech310> kTeleopCommandTriggers = Arrays.asList(DriveTeamInputMap.DRIVER_TRACK_TARGET_BTN,
+//                                                                            DriveTeamInputMap.DRIVER_TRACK_CARGO_BTN,
+//                                                                            DriveTeamInputMap.DRIVER_TRACK_HATCH_BTN);
+//
+//    public static List<ELogitech310> kAutonOverrideTriggers = Arrays.asList(DriveTeamInputMap.DRIVER_THROTTLE_AXIS,
+//                                                                            DriveTeamInputMap.DRIVER_TURN_AXIS);
     public static double kAutonOverrideAxisThreshold = 0.3;
+
+    // =============================================================================
+    // Whole-Intake-System Power
+    // =============================================================================
+
+    public static double kIntakeTalonPower = 1d;
+    public static double kHopperTalonPower = -1d * 0.3333;
+    public static double kHopperUnjamTalonPower = 1d;
+    public static double kConveyorTalonPower = -1d;
+    public static double kShooterVelocity = 2200;
+
+    // ============================================================================
+    // Shooter
+    // ============================================================================
+
+    public static double kShooterPGain = (1.0/5676d) * 2;
+    public static double kShooterFF = 1.0/5676d;//1.0/473.0;
+    public static double kShooterMaxVelocity = 5676; //RPMs
+    public static int kShooterTalonID = 13;
+    public static int kShooterVictorID = 14;
+    public static double kShooterCurrentDropThreshold = 0.0; //find later
+    public static double kShooterNotShootingCurrentThreshold = 0.0; //find later
 
     // =============================================================================
     // Motion Magic Constants
@@ -138,6 +160,10 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // TO-DO: Configure torque constant
     // =============================================================================
 
+
+
+
+
     // =============================================================================
     // LimeLight Camera Constants
     // Note: These constants need to be recalculated for a specific robot geometry
@@ -177,6 +203,8 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kYeetPositiveRampRate = 1.0;
     public static double kYeetCruiseOutput = 1.0;
     public static double kYeetNegativeRampRate = -1d;
+    public static double kMaxCurrentOutput;
+    public static double kJamMaxCycles;
 
 
     // =============================================================================
@@ -221,6 +249,12 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static  int kDriveRightMasterTalonId = 6;//2;
     public static int kDriveRightMiddleTalonId = 4;
     public static  int kDriveRightRearTalonId = 4;//6;
+
+    //INTAKE
+    public static int kIntakeTalonId = 20;
+    public static int kHopperTalonId = 9;
+    public static int kConveyorTalonId = 11;
+    public static int kShooterNeoID = 16;
 
     public static int kCatapultServoChannel = 9;
 
