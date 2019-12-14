@@ -21,7 +21,7 @@ public class NeoDriveHardware implements IDriveHardware {
 
     private IMU mGyro;
 
-    private final CANSparkMax mLeftMaster, mRightMaster, mLeftMiddle, mRightMiddle, mLeftRear, mRightRear;
+    private final CANSparkMax mLeftMaster, mRightMaster, mLeftRear, mRightRear;
     private ControlType mLeftControlMode, mRightControlMode;
     private CANSparkMax.IdleMode mLeftNeutralMode, mRightNeutralMode;
     private int mPidSlot = SystemSettings.kDriveVelocityLoopSlot;
@@ -36,11 +36,11 @@ public class NeoDriveHardware implements IDriveHardware {
         // mGyro = new NavX(SerialPort.Port.kMXP);
 
         mLeftMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveLeftMasterTalonId, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftMiddleTalonId, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+//        mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftMiddleTalonId, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
         mLeftRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftRearTalonId, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         mRightMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveRightMasterTalonId, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightMiddleTalonId, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+//        mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightMiddleTalonId, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
         mRightRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightRearTalonId, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         this.mLeftMasterEncoder = mLeftMaster.getEncoder();
@@ -48,20 +48,20 @@ public class NeoDriveHardware implements IDriveHardware {
 
         configureMaster(mLeftMaster, true);
         configureMotor(mLeftMaster);
-        configureMotor(mLeftMiddle);
+//        configureMotor(mLeftMiddle);
         configureMotor(mLeftRear);
 
         configureMaster(mRightMaster, false);
         configureMotor(mRightMaster);
-        configureMotor(mRightMiddle);
+//        configureMotor(mRightMiddle);
         configureMotor(mRightRear);
 
         mLeftMaster.setInverted(false);
-        mLeftMiddle.setInverted(true);
+//        mLeftMiddle.setInverted(true);
         mLeftRear.setInverted(true);
 
         mRightMaster.setInverted(true);
-        mRightMiddle.setInverted(false);
+//        mRightMiddle.setInverted(false);
         mRightRear.setInverted(true);
 
         // Invert sensor readings by multiplying by 1 or -1
@@ -102,8 +102,8 @@ public class NeoDriveHardware implements IDriveHardware {
         // Bypass state machine in set() and configure directly
         configSparkForPercentOutput(mLeftMaster);
         configSparkForPercentOutput(mRightMaster);
-        setNeutralMode(CANSparkMax.IdleMode.kBrake, mLeftMaster, mLeftMiddle, mLeftRear);
-        setNeutralMode(CANSparkMax.IdleMode.kBrake, mRightMaster, mRightMiddle, mRightRear);
+        setNeutralMode(CANSparkMax.IdleMode.kBrake, mLeftMaster, mLeftRear);
+        setNeutralMode(CANSparkMax.IdleMode.kBrake, mRightMaster, mRightRear);
 
         mLeftMaster.set(0.0);
         mRightMaster.set(0.0);
@@ -114,8 +114,8 @@ public class NeoDriveHardware implements IDriveHardware {
         mLeftControlMode = configForControlMode(mLeftMaster, mLeftControlMode, pDriveMessage.leftControlMode.kRevControlType);
         mRightControlMode = configForControlMode(mRightMaster, mRightControlMode, pDriveMessage.rightControlMode.kRevControlType);
 
-        mLeftNeutralMode = configForNeutralMode(mLeftNeutralMode, pDriveMessage.leftNeutralMode.kRevIdleMode, mLeftMaster, mLeftMiddle, mLeftRear);
-        mRightNeutralMode = configForNeutralMode(mRightNeutralMode, pDriveMessage.rightNeutralMode.kRevIdleMode, mRightMaster, mRightMiddle, mRightRear);
+        mLeftNeutralMode = configForNeutralMode(mLeftNeutralMode, pDriveMessage.leftNeutralMode.kRevIdleMode, mLeftMaster, mLeftRear);
+        mRightNeutralMode = configForNeutralMode(mRightNeutralMode, pDriveMessage.rightNeutralMode.kRevIdleMode, mRightMaster, mRightRear);
 
         mLeftMaster.getPIDController().setReference(pDriveMessage.leftOutput, mLeftControlMode, mPidSlot, pDriveMessage.leftDemand);
         mRightMaster.getPIDController().setReference(pDriveMessage.rightOutput, mRightControlMode, mPidSlot, pDriveMessage.rightDemand);
