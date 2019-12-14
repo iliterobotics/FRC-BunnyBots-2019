@@ -36,11 +36,9 @@ public class NeoDriveHardware implements IDriveHardware {
         // mGyro = new NavX(SerialPort.Port.kMXP);
 
         mLeftMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveLeftMasterTalonId, CANSparkMaxLowLevel.MotorType.kBrushless);
-//        mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftMiddleTalonId, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
         mLeftRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftRearTalonId, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         mRightMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveRightMasterTalonId, CANSparkMaxLowLevel.MotorType.kBrushless);
-//        mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightMiddleTalonId, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
         mRightRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightRearTalonId, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         this.mLeftMasterEncoder = mLeftMaster.getEncoder();
@@ -48,20 +46,16 @@ public class NeoDriveHardware implements IDriveHardware {
 
         configureMaster(mLeftMaster, true);
         configureMotor(mLeftMaster);
-//        configureMotor(mLeftMiddle);
         configureMotor(mLeftRear);
 
         configureMaster(mRightMaster, false);
         configureMotor(mRightMaster);
-//        configureMotor(mRightMiddle);
         configureMotor(mRightRear);
 
         mLeftMaster.setInverted(false);
-//        mLeftMiddle.setInverted(true);
         mLeftRear.setInverted(true);
 
         mRightMaster.setInverted(true);
-//        mRightMiddle.setInverted(false);
         mRightRear.setInverted(true);
 
         // Invert sensor readings by multiplying by 1 or -1

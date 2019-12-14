@@ -5,6 +5,8 @@ import us.ilite.common.Data;
 import us.ilite.common.lib.trajectory.TrajectoryConstraints;
 import us.ilite.common.lib.trajectory.TrajectoryGenerator;
 import us.ilite.lib.drivers.VisionGyro;
+import us.ilite.robot.auto.paths.AutoSequence;
+import us.ilite.robot.auto.paths.ShootBunnyCrossNeutralLine;
 import us.ilite.robot.commands.*;
 import us.ilite.robot.modules.*;
 
@@ -18,28 +20,42 @@ public class AutonomousRoutines {
     );
 
     private TrajectoryGenerator mTrajectoryGenerator;
+    private ShootBunnyCrossNeutralLine mShootBunnyCrossNeutralLine;
 
     private Drive mDrive;
     private Limelight mLimelight;
     private VisionGyro mVisionGyro;
     private Data mData;
+    private Catapult mCatapult;
 
-    private ICommand[] mMiddleToMiddleCargoToSideRocketSequence;
+    private ICommand[] mStartToShootBunnyCrossNeutralLine;
 
-    public AutonomousRoutines(TrajectoryGenerator mTrajectoryGenerator, Drive mDrive, Limelight mLimelight, VisionGyro mVisionGyro, Data mData) {
+    public AutonomousRoutines(TrajectoryGenerator mTrajectoryGenerator, Drive mDrive, Limelight mLimelight, VisionGyro mVisionGyro, Data mData, Catapult pCatapult) {
         this.mTrajectoryGenerator = mTrajectoryGenerator;
         this.mDrive = mDrive;
         this.mLimelight = mLimelight;
         this.mVisionGyro = mVisionGyro;
         this.mData = mData;
+        mCatapult = pCatapult;
+
+        mShootBunnyCrossNeutralLine = new ShootBunnyCrossNeutralLine(mTrajectoryGenerator, mDrive, mCatapult);
 
     }
 
     public void generateTrajectories() {
+        mStartToShootBunnyCrossNeutralLine = mShootBunnyCrossNeutralLine.generateSequence();
     }
 
     public ICommand[] getDefault() {
-        return mMiddleToMiddleCargoToSideRocketSequence;
+        return mStartToShootBunnyCrossNeutralLine;
+    }
+
+    public ShootBunnyCrossNeutralLine getShootBunnyCrossNeutralLineSequence() {
+        return mShootBunnyCrossNeutralLine;
+    }
+
+    public TrajectoryGenerator getTrajectoryGenerator() {
+        return mTrajectoryGenerator;
     }
 
 }

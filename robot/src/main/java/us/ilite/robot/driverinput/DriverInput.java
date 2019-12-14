@@ -7,11 +7,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.lib.control.PIDController;
 import us.ilite.common.Data;
 import us.ilite.common.config.DriveTeamInputMap;
+import com.team254.lib.util.Util;
 import us.ilite.common.lib.util.CheesyDriveHelper;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.RangeScale;
+import us.ilite.common.types.input.EInputScale;
 import us.ilite.common.types.input.ELogitech310;
 import us.ilite.lib.drivers.ECommonControlMode;
 import us.ilite.robot.commands.YeetLeftRight;
@@ -22,16 +24,14 @@ import java.lang.annotation.ElementType;
 
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
-    protected static final double
-            DRIVER_SUB_WARP_AXIS_THRESHOLD = 0.5;
+    protected static final double DRIVER_SUB_WARP_AXIS_THRESHOLD = 0.5;
     private ILog mLog = Logger.createLog(DriverInput.class);
 
 
-    //    protected final Drive mDrive;
+    protected final Drive mDrive;
 //    private final CommandManager mTeleopCommandManager;
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
-    private final Drive mDrive;
     private final Data mData;
     private Catapult mCatapult;
     private Shooter mShooter;
@@ -57,11 +57,11 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         mConveyor = pConveyor;
         mShooter = pShooter;
         mData = pData;
+        mDrive = pDrive;
         mOperatorJoystick = new Joystick(1);
         mDriverInputCodex = mData.driverinput;
         mOperatorInputCodex = mData.operatorinput;
         mCatapult = pCatapult;
-        mDrive = pDrive;
 
         this.mDriverInputCodex = mData.driverinput;
         this.mOperatorInputCodex = mData.operatorinput;
@@ -116,6 +116,12 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             updateYeets( pNow );
         }
     }
+    
+    public void updateCatapult() {
+        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
+            mCatapult.releaseCatapult();
+        }
+    }
 
     private void updateWholeIntakeSystem() {
 //        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_HOPPER_CLEAN)) {
@@ -131,12 +137,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             mConveyor.setConveyorState(Conveyor.EConveyorState.STOP);
             mShooter.setShooterState(Shooter.EShooterState.STOP);
         }
-    }
         
-    public void updateCatapult() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_CATAPULT_BTN)) {
-            mCatapult.releaseCatapult();
-        }
     }
 
     private void updateIntake() {

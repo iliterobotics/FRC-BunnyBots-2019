@@ -9,8 +9,9 @@ import com.team254.lib.geometry.Rotation2d;
  */
 public class StartingPoses {
 
-    public static final Pose2d kMiddleStart = new Pose2d();
-
+//    public static final Pose2d kLeftStart = new Pose2d();
+//    public static final Pose2d kMiddleStart = new Pose2d();
+    public static final Pose2d kStart = new Pose2d();
     /**
      * X: 4 feet + length from back to center
      * Y: 11.5 feet + length from side of robot to center

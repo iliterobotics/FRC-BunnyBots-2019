@@ -64,6 +64,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // Heading Gains
     // =============================================================================
     public static PIDGains kDriveHeadingGains = new PIDGains(0.03, 0.0, 0.0);
+    public static PIDGains kDriveTurnRateGains = new PIDGains(0.0, 0.0,  1);
     public static double kDriveLinearPercentOutputLimit = 0.5;
 
     // =============================================================================
@@ -116,6 +117,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kShooterMaxVelocity = 5676; //RPMs
     public static int kShooterTalonID = 13;
     public static int kShooterVictorID = 14;
+    public static int kShootUntilEmptyCycleThreshold = 0; //find later
     public static double kShooterCurrentDropThreshold = 0.0; //find later
     public static double kShooterNotShootingCurrentThreshold = 0.0; //find later
 
@@ -238,7 +240,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     }
 
     // =============================================================================
-    // 2019 Module Addresses
+    // Bunnybots Module Addresses
     // =============================================================================
     public static int kPigeonId = 30;
     public static int kCanifierAddress = 40;
@@ -250,6 +252,9 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static int kDriveRightMiddleTalonId = 4;
     public static  int kDriveRightRearTalonId = 4;//6;
 
+    public static int kPracticeDriveLeftTalonID = 4;
+    public static int kPracticeDriveRightTalonID = 5;
+    
     //INTAKE
     public static int kIntakeTalonId = 20;
     public static int kHopperTalonId = 9;
