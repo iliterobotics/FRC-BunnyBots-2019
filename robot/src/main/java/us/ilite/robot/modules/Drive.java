@@ -80,7 +80,8 @@ public class Drive extends Loop {
 			this.mSimClock = pSimClock;
 			this.mDriveHardware = new SimDriveHardware(mSimClock, mDriveController.getRobotProfile());
 		} else {
-			this.mDriveHardware = pDriveHardwareType.getDriveHardware();
+//			this.mDriveHardware = pDriveHardwareType.getDriveHardware();
+			mDriveHardware = new NeoDriveHardware(SystemSettings.kDriveGearboxRatio);
 		}
 		mPigeon = mDriveHardware.getImu();
 //		mTurnRatePIDController = new PIDController(SystemSettings.kDriveTurnRateGains, -SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kControlLoopPeriod);
@@ -187,19 +188,20 @@ public class Drive extends Loop {
 			mLogger.error("Invalid drive state - maybe you meant to run this a high frequency?");
 			mDriveState = EDriveState.NORMAL;
 		} else {
-			switch (this.mDriveControlMode) {
-                case VELOCITY:
-                	if (mDriveState != EDriveState.PATH_FOLLOWING) {
-						double turnOutput = mTurnRatePIDController.calculate(mPigeon.getYaw(), pNow);
-						setDriveMessage(DriveMessage.fromThrottleAndTurn(mThrottle, turnOutput));
-						((NeoDriveHardware) mDriveHardware).setTarget(mDriveMessage);
-					} else {
-                		mDriveHardware.set(mDriveMessage);
-					}
-                    break;
-                case PERCENT_OUTPUT:
-					mDriveHardware.set(mDriveMessage);
-			    }
+//			switch (this.mDriveControlMode) {
+//                case VELOCITY:
+//                	if (mDriveState != EDriveState.PATH_FOLLOWING) {
+//						double turnOutput = mTurnRatePIDController.calculate(mPigeon.getYaw(), pNow);
+//						setDriveMessage(DriveMessage.fromThrottleAndTurn(mThrottle, turnOutput));
+//						((NeoDriveHardware) mDriveHardware).setTarget(mDriveMessage);
+//					} else {
+//                		mDriveHardware.set(mDriveMessage);
+//					}
+//                    break;
+//                case PERCENT_OUTPUT:
+//					mDriveHardware.set(mDriveMessage);
+//			    }
+			mDriveHardware.set(mDriveMessage);
 
 		}
 

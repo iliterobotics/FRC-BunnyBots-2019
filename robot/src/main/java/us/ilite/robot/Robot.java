@@ -142,7 +142,7 @@ public class Robot extends TimedRobot {
 //        mDrive.getDriveController().setTrajectory(mShootBunnyCrossNeutralLineTrajectory, true);
 
         // Init modules after commands are set
-        mRunningModules.setModules(mDriverInput, mAutonomousCommandManager, mTeleopCommandManager, mConveyor, mShooter, mIntake, mHopper, mCatapult);
+        mRunningModules.setModules(mAutonomousCommandManager, mTeleopCommandManager, mConveyor, mShooter, mIntake, mHopper, mCatapult);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 

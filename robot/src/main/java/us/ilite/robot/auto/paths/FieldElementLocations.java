@@ -7,5 +7,5 @@ import com.team254.lib.geometry.Translation2d;
  */
 public class FieldElementLocations {
 
-    public static final Translation2d kNeutralLine = new Translation2d(0.0, 208);
+    public static final Translation2d kNeutralLine = new Translation2d(0.0, 180);
 }
