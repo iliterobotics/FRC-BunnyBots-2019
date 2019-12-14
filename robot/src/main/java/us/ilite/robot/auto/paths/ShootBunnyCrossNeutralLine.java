@@ -41,7 +41,7 @@ public class ShootBunnyCrossNeutralLine extends AutoSequence {
         return new ICommand[] {
                 new ReleaseCatapult(mCatapult),
 //                new FollowTrajectoryToPoint(mDrive, mTrajectoryGenerator, false, kShootBunnyCrossNeutralLineFromStart)
-                new MoveForNCycles(1d, 1d, 100, true, mDrive)
+                new MoveForNCycles(1d, 1d, 25, true, 10, mDrive)
         };
     }
 }

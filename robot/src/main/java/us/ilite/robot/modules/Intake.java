@@ -13,7 +13,7 @@ public class Intake extends Module {
     private TalonSRX mTalon;
     private EIntakeState mIntakeState;
     private ILog mLog = Logger.createLog(Intake.class);
-    
+    // private Hopper mHopper;
     public enum EIntakeState {
         INTAKE(SystemSettings.kIntakeTalonPower),
         STOP(0),
@@ -33,6 +33,7 @@ public class Intake extends Module {
     public Intake() {
         mIntakeState = EIntakeState.STOP;
         mTalon = TalonSRXFactory.createDefaultTalon(SystemSettings.kIntakeTalonId);
+        mTalon.setInverted(true);
     }
 
     @Override
@@ -46,18 +47,6 @@ public class Intake extends Module {
 
     @Override
     public void update(double pNow) {
-//        switch (mIntakeState) {
-//            case INTAKE:
-//                mTalon.set(ControlMode.PercentOutput, -SystemSettings.kIntakeTalonPower);
-//                break;
-//            case REVERSE:
-//                mTalon.set(ControlMode.PercentOutput, SystemSettings.kIntakeTalonPower);
-//                break;
-//            case STOP:
-//                mTalon.set(ControlMode.PercentOutput, 0d);
-//                break;
-//        }
-        mLog.error("---------------------------------------------------" + mIntakeState);
         mTalon.set(ControlMode.PercentOutput, mIntakeState.getPower());
     }
 

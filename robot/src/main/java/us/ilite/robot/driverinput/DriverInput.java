@@ -155,6 +155,8 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             mHopper.setHopperState(Hopper.EHopperState.REVERSE);
         } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
             mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_HOPPER_FULL_POWER)) {
+            mHopper.setHopperState(Hopper.EHopperState.FULL_POWER);
         } else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
         }
