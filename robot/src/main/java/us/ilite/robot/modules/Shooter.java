@@ -65,8 +65,8 @@ public class Shooter extends Module {
         switch (mShooterState) {
             case SHOOTING:
                 //mDesiredVelocity = kShooterPidController.calculate(mTalon.getSelectedSensorVelocity(), pNow);
-//                mDesiredVelocity = SystemSettings.kShooterVelocity;
-                mCANSparkMax.set(.5);
+                mDesiredVelocity = SystemSettings.kShooterVelocity;
+//                mCANSparkMax.set(.5);
                 break;
             case CLEAN:
                 mDesiredVelocity = -SystemSettings.kShooterMaxVelocity; //-SystemSettings.kShooterVelocity;
@@ -78,7 +78,7 @@ public class Shooter extends Module {
         }
 
 //        mCANSparkMax.set(mDesiredVelocity);
-//        mCANSparkMax.getPIDController().setReference(mDesiredVelocity, ControlType.kVelocity);
+        mCANSparkMax.getPIDController().setReference(mDesiredVelocity, ControlType.kVelocity);
         mLastCurrent = mCANSparkMax.getOutputCurrent();
 
         if (mNotShootingBalls) {
