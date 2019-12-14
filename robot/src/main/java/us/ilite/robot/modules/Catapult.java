@@ -19,6 +19,10 @@ public class Catapult extends Module {
         ECatapultState(double position) {
             this.position = position;
         }
+
+        public double getPosition() {
+            return position;
+        }
     }
 
     public Catapult() {
@@ -54,5 +58,9 @@ public class Catapult extends Module {
 
     public boolean hasReleased() {
         return mHasShot;
+    }
+
+    public double getPosition() {
+        return mServo.getPosition();
     }
 }

@@ -16,7 +16,7 @@ public class ReleaseCatapult implements ICommand {
 
     @Override
     public boolean update(double pNow) {
-        return mCatapult.hasReleased();
+        return mCatapult.getPosition() != Catapult.ECatapultState.LOCKED.getPosition();
     }
 
     @Override
