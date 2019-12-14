@@ -183,7 +183,11 @@ public class Drive extends Loop {
 		} else {
 			switch (this.mDriveControlMode) {
                 case VELOCITY:
-					((NeoDriveHardware)mDriveHardware).setTarget(mDriveMessage);
+//                	if (mDriveState != EDriveState.PATH_FOLLOWING) {
+						((NeoDriveHardware) mDriveHardware).setTarget(mDriveMessage);
+//					} else {
+//                		mDriveHardware.set(mDriveMessage);
+//					}
                     break;
                 case PERCENT_OUTPUT:
 					mDriveHardware.set(mDriveMessage);
