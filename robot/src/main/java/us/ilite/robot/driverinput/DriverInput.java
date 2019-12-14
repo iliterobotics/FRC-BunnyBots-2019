@@ -50,7 +50,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Data pData, Drive pDrive, pCatapult) {
+    public DriverInput(Data pData, Drive pDrive, Catapult pCatapult) {
         this.mDrive = pDrive;
         this.mData = pData;
         mCatapult = pCatapult;
