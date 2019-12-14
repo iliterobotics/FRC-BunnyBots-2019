@@ -255,7 +255,7 @@ public class Drive extends Loop {
 
 				// Add in the feedforward we've calculated and set motors to Brake mode
 				driveMessage.setDemand(-leftDemand, -rightDemand);
-				driveMessage.setNeutralMode(ECommonNeutralMode.BRAKE);
+				driveMessage.setNeutralMode(ECommonNeutralMode.BRAKE); // Might have to change this to something else?
 
 				mDriveMessage = driveMessage;
 //				mCalculateTimer.stop();

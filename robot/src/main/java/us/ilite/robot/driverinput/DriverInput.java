@@ -141,9 +141,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     private void updateIntake() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE)) {
+        if (mOperatorInputCodex.get(DriveTeamInputMap.OPERATOR_INTAKE) > 0.5) {
             mIntake.setIntakeState(Intake.EIntakeState.INTAKE);
-        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_REVERSE_INTAKE)) {
+        } else if (mOperatorInputCodex.get(DriveTeamInputMap.OPERATOR_REVERSE_INTAKE) > 0.5) {
             mIntake.setIntakeState(Intake.EIntakeState.REVERSE);
         } else {
             mIntake.setIntakeState(Intake.EIntakeState.STOP);
