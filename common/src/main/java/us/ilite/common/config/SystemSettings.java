@@ -102,9 +102,10 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // Whole-Intake-System Power
     // =============================================================================
 
-    public static double kIntakeTalonPower = 1d;
+    public static double kIntakeTalonPower = 0.75d;
     public static double kHopperTalonPower = -1d * 0.3333;
     public static double kHopperUnjamTalonPower = 1d;
+    public static double kHopperFullPower = 1d;
     public static double kConveyorTalonPower = -1d;
     public static double kShooterVelocity = 2200;
 

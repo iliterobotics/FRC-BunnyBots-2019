@@ -50,6 +50,7 @@ public class Drive extends Loop {
 	private Rotation2d mGyroOffset = new Rotation2d();
 
 	private EDriveState mDriveState;
+	private boolean isPathFollowing;
 	private DriveMessage mDriveMessage;
 	private double mTargetTrackingThrottle = 0;
 
@@ -82,6 +83,7 @@ public class Drive extends Loop {
 		} else {
 //			this.mDriveHardware = pDriveHardwareType.getDriveHardware();
 			mDriveHardware = new NeoDriveHardware(SystemSettings.kDriveGearboxRatio);
+			isPathFollowing = false;
 		}
 		mPigeon = mDriveHardware.getImu();
 //		mTurnRatePIDController = new PIDController(SystemSettings.kDriveTurnRateGains, -SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kDriveTrainMaxTurnRate, SystemSettings.kControlLoopPeriod);
@@ -190,11 +192,11 @@ public class Drive extends Loop {
 		} else {
 			switch (this.mDriveControlMode) {
                 case VELOCITY:
-//                	if (mDriveState != EDriveState.PATH_FOLLOWING) {
+                	if (!isPathFollowing) {
 						((NeoDriveHardware) mDriveHardware).setTarget(mDriveMessage);
-//					} else {
-//                		mDriveHardware.set(mDriveMessage);
-//					}
+					} else {
+                		mDriveHardware.set(mDriveMessage);
+					}
                     break;
                 case PERCENT_OUTPUT:
 					mDriveHardware.set(mDriveMessage);
@@ -253,7 +255,7 @@ public class Drive extends Loop {
 
 				// Add in the feedforward we've calculated and set motors to Brake mode
 				driveMessage.setDemand(-leftDemand, -rightDemand);
-				driveMessage.setNeutralMode(ECommonNeutralMode.BRAKE);
+				driveMessage.setNeutralMode(ECommonNeutralMode.BRAKE); // Might have to change this to something else?
 
 				mDriveMessage = driveMessage;
 //				mCalculateTimer.stop();
@@ -303,6 +305,7 @@ public class Drive extends Loop {
 	}
 
 	public synchronized void setPathFollowing() {
+		isPathFollowing = true;
 		mDriveState = EDriveState.PATH_FOLLOWING;
 		mDriveHardware.configureMode(ECommonControlMode.VELOCITY);
 		mDriveHardware.set(new DriveMessage(0.0, 0.0, ECommonControlMode.VELOCITY));

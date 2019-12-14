@@ -141,9 +141,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     private void updateIntake() {
-        if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_INTAKE)) {
+        if (mOperatorInputCodex.get(DriveTeamInputMap.OPERATOR_INTAKE) > 0.5) {
             mIntake.setIntakeState(Intake.EIntakeState.INTAKE);
-        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_REVERSE_INTAKE)) {
+        } else if (mOperatorInputCodex.get(DriveTeamInputMap.OPERATOR_REVERSE_INTAKE) > 0.5) {
             mIntake.setIntakeState(Intake.EIntakeState.REVERSE);
         } else {
             mIntake.setIntakeState(Intake.EIntakeState.STOP);
@@ -155,6 +155,8 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             mHopper.setHopperState(Hopper.EHopperState.REVERSE);
         } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_SHOOT)) {
             mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
+        } else if (mOperatorInputCodex.isSet(DriveTeamInputMap.OPERATOR_HOPPER_FULL_POWER)) {
+            mHopper.setHopperState(Hopper.EHopperState.FULL_POWER);
         } else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
         }

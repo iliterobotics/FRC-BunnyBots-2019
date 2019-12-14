@@ -165,7 +165,7 @@ public class Robot extends TimedRobot {
         initMatchMetadata();
 
         mSettings.loadFromNetworkTables();
-
+        mDrive.setNormal();
         mRunningModules.setModules(mDriverInput, mTeleopCommandManager, mShooter, mConveyor, mIntake, mHopper, mCatapult);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());

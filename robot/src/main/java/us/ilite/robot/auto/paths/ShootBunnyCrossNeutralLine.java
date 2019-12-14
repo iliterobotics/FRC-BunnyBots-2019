@@ -7,10 +7,7 @@ import com.team254.lib.trajectory.Trajectory;
 import com.team254.lib.trajectory.timing.TimedState;
 import us.ilite.common.lib.trajectory.TrajectoryGenerator;
 import us.ilite.robot.auto.AutonomousRoutines;
-import us.ilite.robot.commands.FollowTrajectory;
-import us.ilite.robot.commands.FollowTrajectoryToPoint;
-import us.ilite.robot.commands.ICommand;
-import us.ilite.robot.commands.ReleaseCatapult;
+import us.ilite.robot.commands.*;
 import us.ilite.robot.modules.Catapult;
 import us.ilite.robot.modules.Drive;
 
@@ -43,7 +40,8 @@ public class ShootBunnyCrossNeutralLine extends AutoSequence {
     public ICommand[] generateSequence() {
         return new ICommand[] {
                 new ReleaseCatapult(mCatapult),
-                new FollowTrajectoryToPoint(mDrive, mTrajectoryGenerator, false, kShootBunnyCrossNeutralLineFromStart)
+//                new FollowTrajectoryToPoint(mDrive, mTrajectoryGenerator, false, kShootBunnyCrossNeutralLineFromStart)
+                new MoveForNCycles(1d, 1d, 25, true, 10, mDrive)
         };
     }
 }

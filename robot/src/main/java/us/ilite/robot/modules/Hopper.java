@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.robot.modules.Shooter;
 
+import javax.naming.ldap.Control;
+
 
 public class Hopper extends Module {
     private EHopperState mHopperState;
@@ -21,6 +23,7 @@ public class Hopper extends Module {
     public enum EHopperState {
         GIVE_TO_SHOOTER,
         REVERSE,
+        FULL_POWER,
         STOP;
     }
 
@@ -47,7 +50,7 @@ public class Hopper extends Module {
 
     @Override
     public void update(double pNow) {
-        unjam();
+//        unjam();
         if ( !kInReverse ) {
             switch (mHopperState) {
                 case GIVE_TO_SHOOTER:
@@ -58,6 +61,8 @@ public class Hopper extends Module {
                 case REVERSE:
                     mTalon.set(ControlMode.PercentOutput, SystemSettings.kHopperUnjamTalonPower);
                     break;
+                case FULL_POWER:
+                    mTalon.set(ControlMode.PercentOutput, SystemSettings.kHopperFullPower);
                 case STOP:
                     mTalon.set(ControlMode.PercentOutput, 0d);
                     break;

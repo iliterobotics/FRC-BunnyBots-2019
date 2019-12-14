@@ -14,7 +14,7 @@ public class AutonomousRoutines {
 
     public static final TrajectoryConstraints kDefaultTrajectoryConstraints = new TrajectoryConstraints(
             100.0,
-            40.0,
+            60,// Was 40.0 originally,
             12.0,
             new CentripetalAccelerationConstraint(20.0)
     );

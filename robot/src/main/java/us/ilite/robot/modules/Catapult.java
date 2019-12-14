@@ -12,7 +12,7 @@ public class Catapult extends Module {
 
     public enum ECatapultState {
         LOCKED(0.5),
-        UNLOCKED(.8);
+        UNLOCKED(.9);
 
         private double position;
 

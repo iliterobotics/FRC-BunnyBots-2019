@@ -14,6 +14,7 @@ public class DriveTeamInputMap {
     OPERATOR_INTAKE = ELogitech310.LEFT_TRIGGER_AXIS,           //intake in/up
     OPERATOR_REVERSE_INTAKE = ELogitech310.RIGHT_TRIGGER_AXIS,   //intake out/down
     OPERATOR_HOPPER_UNJAM = ELogitech310.X_BTN,
+    OPERATOR_HOPPER_FULL_POWER = ELogitech310.B_BTN,
 
     DRIVER_YEET_LEFT = ELogitech310.L_BTN,
     DRIVER_YEET_RIGHT = ELogitech310.R_BTN,
