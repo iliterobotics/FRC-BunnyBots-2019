@@ -14,6 +14,11 @@ import us.ilite.lib.drivers.Pigeon;
 import us.ilite.lib.drivers.SparkMaxFactory;
 import us.ilite.robot.modules.DriveMessage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.concurrent.CancellationException;
+
 public class NeoDriveHardware implements IDriveHardware {
 
     private final ILog mLogger = Logger.createLog(SrxDriveHardware.class);
@@ -22,24 +27,60 @@ public class NeoDriveHardware implements IDriveHardware {
     private IMU mGyro;
 
     private final CANSparkMax mLeftMaster, mRightMaster, mLeftRear, mRightRear;
+    private CANSparkMax mLeftMiddle = null;
+    private CANSparkMax mRightMiddle = null;
+    private ArrayList<CANSparkMax> mLeftDriveList = new ArrayList<>();
+    private ArrayList<CANSparkMax> mRightDriveList = new ArrayList<>();
+    private CANSparkMax[] mLeftDrive;
+    private CANSparkMax[] mRightDrive;
     private ControlType mLeftControlMode, mRightControlMode;
     private CANSparkMax.IdleMode mLeftNeutralMode, mRightNeutralMode;
     private int mPidSlot = SystemSettings.kDriveVelocityLoopSlot;
     private double mCurrentOpenLoopRampRate = SystemSettings.kDriveMinOpenLoopVoltageRampRate;
+    private boolean mSixNeoed = false;
     private RangeScale mRangeScale;
     private CANEncoder mLeftMasterEncoder;
     private CANEncoder mRightMasterEncoder;
 
-    public NeoDriveHardware(double pGearRatio) {
+    public NeoDriveHardware(double pGearRatio, boolean pSixNeoed) {
         kGearRatio = pGearRatio;
+        mSixNeoed = pSixNeoed;
         mGyro = new Pigeon(new PigeonIMU(SystemSettings.kPigeonId), SystemSettings.kGyroCollisionThreshold);
         // mGyro = new NavX(SerialPort.Port.kMXP);
 
         mLeftMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveLeftMasterTalonId, CANSparkMaxLowLevel.MotorType.kBrushless);
-        mLeftRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftRearTalonId, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftDriveList.add(mLeftMaster);
+
 
         mRightMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveRightMasterTalonId, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightDriveList.add(mRightMaster);
+
+        if (mSixNeoed) {
+            mLeftMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftMiddleTalonId, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+            configureMotor(mLeftMiddle);
+            mLeftMiddle.setInverted(true);
+
+            mRightMiddle = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightMiddleTalonId, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+            configureMotor(mRightMiddle);
+            mRightMiddle.setInverted(true);
+
+            mLeftDriveList.add(mLeftMiddle);
+            mRightDriveList.add(mRightMiddle);
+        }
+
+        mLeftRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveLeftRearTalonId, mLeftMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mLeftDriveList.add(mLeftRear);
         mRightRear = SparkMaxFactory.createPermanentSlaveSparkMax(SystemSettings.kDriveRightRearTalonId, mRightMaster, CANSparkMaxLowLevel.MotorType.kBrushless);
+        mRightDriveList.add(mRightRear);
+
+        mLeftDrive = new CANSparkMax[mLeftDriveList.size()];
+        mRightDrive = new CANSparkMax[mLeftDrive.length];
+
+        for (int i = 0; i < mLeftDriveList.size(); i++) {
+            mLeftDrive[i] = mLeftDriveList.get(i);
+            mRightDrive[i] = mRightDriveList.get(i);
+        }
+
 
         this.mLeftMasterEncoder = mLeftMaster.getEncoder();
         this.mRightMasterEncoder = mRightMaster.getEncoder();
@@ -108,8 +149,8 @@ public class NeoDriveHardware implements IDriveHardware {
         mLeftControlMode = configForControlMode(mLeftMaster, mLeftControlMode, pDriveMessage.leftControlMode.kRevControlType);
         mRightControlMode = configForControlMode(mRightMaster, mRightControlMode, pDriveMessage.rightControlMode.kRevControlType);
 
-        mLeftNeutralMode = configForNeutralMode(mLeftNeutralMode, pDriveMessage.leftNeutralMode.kRevIdleMode, mLeftMaster, mLeftRear);
-        mRightNeutralMode = configForNeutralMode(mRightNeutralMode, pDriveMessage.rightNeutralMode.kRevIdleMode, mRightMaster, mRightRear);
+        mLeftNeutralMode = configForNeutralMode(mLeftNeutralMode, pDriveMessage.leftNeutralMode.kRevIdleMode, mLeftDrive);
+        mRightNeutralMode = configForNeutralMode(mRightNeutralMode, pDriveMessage.rightNeutralMode.kRevIdleMode, mRightDrive);
 
         mLeftMaster.getPIDController().setReference(pDriveMessage.leftOutput, mLeftControlMode, mPidSlot, pDriveMessage.leftDemand);
         mRightMaster.getPIDController().setReference(pDriveMessage.rightOutput, mRightControlMode, mPidSlot, pDriveMessage.rightDemand);

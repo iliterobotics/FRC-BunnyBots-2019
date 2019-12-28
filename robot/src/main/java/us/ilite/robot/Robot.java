@@ -9,10 +9,6 @@ import com.flybotix.hfr.util.log.ELevel;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
 
-import com.team254.lib.geometry.Pose2dWithCurvature;
-import com.team254.lib.trajectory.Trajectory;
-import com.team254.lib.trajectory.timing.TimedState;
-import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,11 +27,9 @@ import us.ilite.lib.drivers.Clock;
 import us.ilite.lib.drivers.GetLocalIP;
 import us.ilite.lib.drivers.VisionGyro;
 import us.ilite.robot.auto.AutonomousRoutines;
-import us.ilite.robot.auto.paths.ShootBunnyCrossNeutralLine;
 import us.ilite.robot.commands.ICommand;
 import us.ilite.robot.commands.ReleaseCatapult;
 import us.ilite.robot.driverinput.DriverInput;
-import us.ilite.robot.hardware.EDriveHardwareType;
 import us.ilite.robot.loops.LoopManager;
 import us.ilite.robot.modules.*;
 
@@ -56,7 +50,7 @@ public class Robot extends TimedRobot {
     // Module declarations here
     private final CommandManager mAutonomousCommandManager = new CommandManager().setManagerTag("Autonomous Manager");
     private final CommandManager mTeleopCommandManager = new CommandManager().setManagerTag("Teleop Manager");
-    private final Drive mDrive = new Drive(EDriveHardwareType.PRACTICE, mData, mDriveController, null, false);
+    private final Drive mDrive = new Drive(mData, mDriveController, null, false);
     private final Limelight mLimelight = new Limelight(mData);
     private final VisionGyro mVisionGyro = new VisionGyro(mData);
     private final Intake mIntake = new Intake();
