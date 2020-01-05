@@ -7,6 +7,7 @@ import us.ilite.common.lib.trajectory.TrajectoryGenerator;
 import us.ilite.lib.drivers.VisionGyro;
 import us.ilite.robot.auto.paths.AutoSequence;
 import us.ilite.robot.auto.paths.ShootBunnyCrossNeutralLine;
+import us.ilite.robot.auto.paths.TestTrajectory;
 import us.ilite.robot.commands.*;
 import us.ilite.robot.modules.*;
 
@@ -20,38 +21,39 @@ public class AutonomousRoutines {
     );
 
     private TrajectoryGenerator mTrajectoryGenerator;
-    private ShootBunnyCrossNeutralLine mShootBunnyCrossNeutralLine;
+   // private ShootBunnyCrossNeutralLine mShootBunnyCrossNeutralLine;
+    private TestTrajectory mTestTrajectory;
 
-    private Drive mDrive;
-    private Limelight mLimelight;
-    private VisionGyro mVisionGyro;
-    private Data mData;
-    private Catapult mCatapult;
+   private Drive mDrive;
+   //private Limelight mLimelight;
+   // private VisionGyro mVisionGyro;
+   // private Data mData;
+   // private Catapult mCatapult;
+    private Shooter mShooter;
+    private Hopper mHopper;
+   // private IThrottleProvider mThrottleProvider;
 
-    private ICommand[] mStartToShootBunnyCrossNeutralLine;
+    private ICommand[] mTestTrajectory1;
 
-    public AutonomousRoutines(TrajectoryGenerator mTrajectoryGenerator, Drive mDrive, Limelight mLimelight, VisionGyro mVisionGyro, Data mData, Catapult pCatapult) {
+    public AutonomousRoutines(TrajectoryGenerator mTrajectoryGenerator, Drive mDrive, Shooter pShooter, Hopper pHopper) {
         this.mTrajectoryGenerator = mTrajectoryGenerator;
         this.mDrive = mDrive;
-        this.mLimelight = mLimelight;
-        this.mVisionGyro = mVisionGyro;
-        this.mData = mData;
-        mCatapult = pCatapult;
-
-        mShootBunnyCrossNeutralLine = new ShootBunnyCrossNeutralLine(mTrajectoryGenerator, mDrive, mCatapult);
+        this.mShooter = pShooter;
+        this.mHopper = pHopper;
+        mTestTrajectory = new TestTrajectory(mTrajectoryGenerator, mDrive, mShooter , mHopper);
 
     }
 
     public void generateTrajectories() {
-        mStartToShootBunnyCrossNeutralLine = mShootBunnyCrossNeutralLine.generateSequence();
+        mTestTrajectory1 = mTestTrajectory.generateSequence();
     }
 
     public ICommand[] getDefault() {
-        return mStartToShootBunnyCrossNeutralLine;
+        return mTestTrajectory1;
     }
 
-    public ShootBunnyCrossNeutralLine getShootBunnyCrossNeutralLineSequence() {
-        return mShootBunnyCrossNeutralLine;
+    public TestTrajectory getTestTrajectory() {
+        return mTestTrajectory;
     }
 
     public TrajectoryGenerator getTrajectoryGenerator() {
