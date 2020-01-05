@@ -107,5 +107,8 @@ public class Hopper extends Module {
     public void setHopperState(EHopperState pHopperState) {
         mHopperState = pHopperState;
     }
+    public EHopperState getmHopperState (){
+        return mHopperState;
+    }
 
 }

@@ -105,6 +105,18 @@ public class Shooter extends Module {
     public void setShooterState(EShooterState pState) {
         mShooterState = pState;
     }
+    public EShooterState getmShooterState (){
+        return mShooterState;
+
+    }
+    public double getCurrentVelocity(){
+        return mCANEncoder.getVelocity();
+    }
+
+    public boolean isMaxVelocity() {
+        return mCANEncoder.getVelocity() >= SystemSettings.kMaxShooterVelocity;
+    }
+
 
     @Override
     public void shutdown(double pNow) {
