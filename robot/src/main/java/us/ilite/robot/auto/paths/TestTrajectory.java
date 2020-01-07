@@ -9,16 +9,26 @@ import us.ilite.robot.commands.*;
 import us.ilite.robot.modules.*;
 
 public class TestTrajectory extends AutoSequence {
-  private Drive mDrive;
+
+    private Drive mDrive;
   private Shooter mShooter;
   //private Limelight mAimBot;
  // private ETrackingType mTrackingType;
   private Hopper mHopper;
   private DriveMessage mMessage;
+  private Conveyor mConveyor;
+
   private ILog mLogger  = Logger.createLog(TestTrajectory.class);
 
+  // ICommands
+  private MoveForNCycles first = new MoveForNCycles ( 0.5d , 0.5d , 2 , false , 10 , mDrive);
+  private ShootFlywheel second = new ShootFlywheel(mShooter , mHopper);
+  private FeedToFlywheel third = new FeedToFlywheel(mHopper , mConveyor);
+  private MoveForNCycles fourth = new MoveForNCycles (1d , 1d ,
+          5 , true , 10 , mDrive);
+
     public TestTrajectory(TrajectoryGenerator pTrajectoryGenerator , Drive pDrive , Shooter pShooter,
-                           Hopper pHopper) {
+                           Hopper pHopper , Conveyor pConveyer) {
         super(pTrajectoryGenerator);
         this.mDrive = pDrive;
         this.mShooter = pShooter;
@@ -26,6 +36,7 @@ public class TestTrajectory extends AutoSequence {
         // this.mTrackingType = pTrackingType;
         this.mHopper = pHopper;
         // this.mThrottleProvider = pThrottleProvider;
+        this.mConveyor = pConveyer;
     }
 
     @Override
@@ -37,8 +48,7 @@ public class TestTrajectory extends AutoSequence {
         SmartDashboard.putNumber("Right velocity" , mMessage.rightOutput );
 
 
-        return new ICommand[] { new MoveForNCycles ( 0.5d , 0.5d , 2 , false , 10 , mDrive) ,
-                new ShootFlywheel(mShooter , mHopper) , new FeedToFlywheel(mHopper) , new MoveForNCycles (1d , 1d ,
-                5 , true , 10 , mDrive) };
+        return new ICommand[] { first , second
+                 , third , fourth };
     }
 }
