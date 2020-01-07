@@ -58,4 +58,8 @@ public class Intake extends Module {
     public void setIntakeState(EIntakeState pIntakeState) {
         mIntakeState = pIntakeState;
     }
+
+    public EIntakeState getmIntakeState(){
+        return this.mIntakeState;
+    }
 }

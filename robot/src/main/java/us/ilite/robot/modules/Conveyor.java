@@ -57,6 +57,10 @@ public class Conveyor extends Module {
         mConveyorState = pConveyorState;
     }
 
+    public EConveyorState getmConveyorState(){
+        return this.mConveyorState;
+    }
+
 
 
 
