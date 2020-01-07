@@ -9,8 +9,7 @@ import us.ilite.robot.commands.*;
 import us.ilite.robot.modules.*;
 
 public class TestTrajectory extends AutoSequence {
-
-    private Drive mDrive;
+  private Drive mDrive;
   private Shooter mShooter;
   //private Limelight mAimBot;
  // private ETrackingType mTrackingType;
@@ -18,37 +17,31 @@ public class TestTrajectory extends AutoSequence {
   private DriveMessage mMessage;
   private Conveyor mConveyor;
 
+
   private ILog mLogger  = Logger.createLog(TestTrajectory.class);
-
-  // ICommands
-  private MoveForNCycles first = new MoveForNCycles ( 0.5d , 0.5d , 2 , false , 10 , mDrive);
-  private ShootFlywheel second = new ShootFlywheel(mShooter , mHopper);
-  private FeedToFlywheel third = new FeedToFlywheel(mHopper , mConveyor);
-  private MoveForNCycles fourth = new MoveForNCycles (1d , 1d ,
-          5 , true , 10 , mDrive);
-
     public TestTrajectory(TrajectoryGenerator pTrajectoryGenerator , Drive pDrive , Shooter pShooter,
                            Hopper pHopper , Conveyor pConveyer) {
         super(pTrajectoryGenerator);
         this.mDrive = pDrive;
         this.mShooter = pShooter;
-       // this.mAimBot = pAimBot;
+        // this.mAimBot = pAimBot;
         // this.mTrackingType = pTrackingType;
         this.mHopper = pHopper;
         // this.mThrottleProvider = pThrottleProvider;
         this.mConveyor = pConveyer;
     }
-
     @Override
     public ICommand[] generateSequence() {
-        mLogger.error("-------------------------------------------------------------------390287490128734------------------");
+        mLogger.info("---------------------390287490128734-------------------");
 
         SmartDashboard.putNumber("Velocity" , mShooter.getCurrentVelocity());
         SmartDashboard.putNumber("Left velocity" , mMessage.leftOutput );
         SmartDashboard.putNumber("Right velocity" , mMessage.rightOutput );
 
 
-        return new ICommand[] { first , second
-                 , third , fourth };
+        return new ICommand[] { new MoveForNCycles ( 0.5d , 0.5d , 2 , false , 10 , mDrive) ,
+                new ShootFlywheel(mShooter , mHopper , mConveyor),  new FeedToFlywheel(mHopper , mConveyor), new MoveForNCycles (1d , 1d ,
+                5 , true , 10 , mDrive) };
     }
+
 }

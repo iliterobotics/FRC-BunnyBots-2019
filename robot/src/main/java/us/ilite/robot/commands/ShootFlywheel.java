@@ -9,13 +9,16 @@ import java.util.logging.SocketHandler;
 public class ShootFlywheel implements ICommand {
     private Shooter mShooter;
     private Conveyor mConveyor;
+    private Hopper mHopper;
     private Shooter.EShooterState mShooterState;
     private Hopper.EHopperState mHopperState;
-    private Hopper mHopper;
+    private Conveyor.EConveyorState mConveyorState;
 
-    public ShootFlywheel ( Shooter pShooter, Hopper pHopper ) {
+
+    public ShootFlywheel ( Shooter pShooter, Hopper pHopper , Conveyor pConveyor ) {
         this.mShooter = pShooter;
         this.mHopper = pHopper;
+        this.mConveyor = pConveyor;
     }
 
     @Override
@@ -32,5 +35,6 @@ public class ShootFlywheel implements ICommand {
     public void shutdown(double pNow) {
        mShooterState =  Shooter.EShooterState.STOP;
        mHopperState = Hopper.EHopperState.STOP;
+       mConveyorState = Conveyor.EConveyorState.STOP;
     }
 }

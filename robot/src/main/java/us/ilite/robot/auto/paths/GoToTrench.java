@@ -77,12 +77,12 @@ public class GoToTrench extends AutoSequence {
     @Override
     public ICommand[] generateSequence() {
         mLogger.info("----------------------THE TRENCH SEQUENCE HAS BEGUN-------------------------");
-        return new ICommand[] {  new ShootFlywheel(mShooter, mHopper) , new FeedToFlywheel( mHopper , mConveyor),
+        return new ICommand[] {  new ShootFlywheel(mShooter, mHopper , mConveyor) , new FeedToFlywheel( mHopper , mConveyor),
                 new FollowTrajectory(getStart(), mDrive, true),
                 new FunctionalCommand(() -> System.out.println("TRAJECTORY DONE")),
                 new FollowTrajectory(getMiddle(), mDrive, true) , new ActivateIntake(mIntake),
                 new FollowTrajectory(getEnd(), mDrive, true) ,
                 };
-        
+
     }
 }
