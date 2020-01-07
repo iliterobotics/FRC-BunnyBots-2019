@@ -10,6 +10,7 @@ public class ShootFlywheel implements ICommand {
     private Shooter.EShooterState mShooterState;
     private Hopper.EHopperState mHopperState;
     private Hopper mHopper;
+
     public ShootFlywheel ( Shooter pShooter, Hopper pHopper ) {
         this.mShooter = pShooter;
         this.mHopper = pHopper;
