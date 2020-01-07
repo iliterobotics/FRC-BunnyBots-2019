@@ -18,7 +18,7 @@ public class ActivateIntake implements ICommand {
 
     @Override
     public boolean update(double pNow) {
-        mLogger.info("---------------1223323232323322323--------------------");
+        mLogger.info("---------------intake activated--------------------");
         // Fix this ASAP
         if ( mIntake.getmIntakeState() == Intake.EIntakeState.INTAKE){
             return true;
@@ -28,7 +28,7 @@ public class ActivateIntake implements ICommand {
 
     @Override
     public void shutdown(double pNow) {
-        mLogger.info("---------------asdahfkasdfhaksdjfh--------------------");
+        mLogger.info("---------------INTAKE SHUTDOWN--------------------");
         mIntake.setIntakeState(Intake.EIntakeState.STOP);
     }
 }
