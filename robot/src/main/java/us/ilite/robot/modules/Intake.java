@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
+import edu.wpi.first.wpilibj.CAN;
 import us.ilite.common.config.SystemSettings;
 
 
