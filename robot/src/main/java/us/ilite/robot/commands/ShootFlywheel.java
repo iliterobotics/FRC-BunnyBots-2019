@@ -1,5 +1,6 @@
 package us.ilite.robot.commands;
 
+import us.ilite.robot.modules.Conveyor;
 import us.ilite.robot.modules.Hopper;
 import us.ilite.robot.modules.Shooter;
 
@@ -7,6 +8,7 @@ import java.util.logging.SocketHandler;
 
 public class ShootFlywheel implements ICommand {
     private Shooter mShooter;
+    private Conveyor mConveyor;
     private Shooter.EShooterState mShooterState;
     private Hopper.EHopperState mHopperState;
     private Hopper mHopper;
