@@ -4,14 +4,16 @@ import com.flybotix.hfr.util.log.ILog;
 import com.flybotix.hfr.util.log.Logger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.lib.trajectory.TrajectoryGenerator;
-import us.ilite.common.types.ETrackingType;
-import us.ilite.robot.commands.*;
+import us.ilite.robot.commands.FeedToFlywheel;
+import us.ilite.robot.commands.ICommand;
+import us.ilite.robot.commands.MoveForNCycles;
+import us.ilite.robot.commands.ShootFlywheel;
 import us.ilite.robot.modules.*;
 
 public class TestTrajectory extends AutoSequence {
   private Drive mDrive;
   private Shooter mShooter;
-  //private Limelight mAimBot;
+ // private Limelight mAimBot;
  // private ETrackingType mTrackingType;
   private Hopper mHopper;
   private DriveMessage mMessage;
@@ -43,5 +45,4 @@ public class TestTrajectory extends AutoSequence {
                 new ShootFlywheel(mShooter , mHopper , mConveyor),  new FeedToFlywheel(mHopper , mConveyor), new MoveForNCycles (1d , 1d ,
                 5 , true , 10 , mDrive) };
     }
-
 }
