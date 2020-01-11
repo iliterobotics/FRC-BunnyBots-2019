@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.RangeScale;
+import us.ilite.common.types.ETrackingType;
 import us.ilite.common.types.input.ELogitech310;
 import us.ilite.lib.drivers.ECommonControlMode;
+import us.ilite.robot.commands.LimelightTargetLock;
 import us.ilite.robot.commands.YeetLeftRight;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
@@ -45,6 +47,15 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     private DriveMessage mDriveMessage;
     private PIDController mPIDController;
     private YeetLeftRight mYeets;
+
+    private ETrackingType mTrackingType;
+    private ETrackingType mLastTrackingType = null;
+    private LimelightTargetLock mLimelightTargetLock;
+    private Limelight mLimelight;
+
+    private CommandManager mTeleopCommandManager;
+
+    private double pNow;
 
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
@@ -112,6 +123,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         updateHopper();
         updateDriveTrain();
         updateCatapult();
+        updateLimelightTargetLock();
         if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) || mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
             updateYeets( pNow );
         }
@@ -156,6 +168,19 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
             mHopper.setHopperState(Hopper.EHopperState.GIVE_TO_SHOOTER);
         } else {
             mHopper.setHopperState(Hopper.EHopperState.STOP);
+        }
+    }
+
+    private void updateLimelightTargetLock() {
+        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.LimelightTargetLock)){
+            mLimelightTargetLock.init(pNow);
+
+            if(!mTrackingType.equals(mLastTrackingType)) {
+                mLog.error("Requesting command start");
+                mLog.error("Stopping teleop command queue");
+                mTeleopCommandManager.stopRunningCommands(pNow);
+                mTeleopCommandManager.startCommands(new LimelightTargetLock(mDrive, mLimelight, 2, mTrackingType, this, false).setStopWhenTargetLost(false));
+            }
         }
     }
 

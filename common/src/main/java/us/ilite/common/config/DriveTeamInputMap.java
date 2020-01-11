@@ -9,6 +9,8 @@ public class DriveTeamInputMap {
   
     DRIVER_TURN_AXIS = ELogitech310.RIGHT_X_AXIS,
     DRIVER_THROTTLE_AXIS = ELogitech310.LEFT_Y_AXIS,
+
+    LimelightTargetLock = ELogitech310.B_BTN,
             
     OPERATOR_SHOOT = ELogitech310.A_BTN/*R_BTN*/,               //hopper forward, conveyor up, shooter shoot
     OPERATOR_INTAKE = ELogitech310.LEFT_TRIGGER_AXIS,           //intake in/up
