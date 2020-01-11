@@ -173,12 +173,18 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private void updateLimelightTargetLock() {
         if ( mOperatorInputCodex.isSet(DriveTeamInputMap.LimelightTargetLock)){
+            mTrackingType = ETrackingType.TARGET;
+            System.out.println("*******************STARTING TARGET LOCK*************************");
 
             if(!mTrackingType.equals(mLastTrackingType)) {
                 mLog.error("Requesting command start");
                 mLog.error("Stopping teleop command queue");
                 mTeleopCommandManager.stopRunningCommands(pNow);
                 mTeleopCommandManager.startCommands(new LimelightTargetLock(mDrive, mLimelight, 2, mTrackingType, this, false).setStopWhenTargetLost(false));
+            }
+            else {
+            mTrackingType = ETrackingType.NONE;
+            if(mTeleopCommandManager.isRunningCommands()) mTeleopCommandManager.stopRunningCommands(pNow);
             }
         }
     }
