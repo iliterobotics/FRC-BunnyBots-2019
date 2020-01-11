@@ -56,7 +56,8 @@ public class Robot extends TimedRobot {
     private final Hopper mHopper = new Hopper(mShooter);
     private final Conveyor mConveyor = new Conveyor(mShooter);
     private final Catapult mCatapult = new Catapult();
-    private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData, mCatapult, mDrive);
+    private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData,
+            mCatapult, mDrive , mTeleopCommandManager , mLimelight);
     
 
     private final TrajectoryGenerator mTrajectoryGenerator = new TrajectoryGenerator(mDriveController);
@@ -172,6 +173,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         mLogger.info("Disabled Initialization");
+        mSettings.loadFromNetworkTables();
         mRunningModules.shutdown(mClock.getCurrentTime());
         mLoopManager.stop();
     }

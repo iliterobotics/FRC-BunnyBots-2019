@@ -191,14 +191,14 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // =============================================================================
     // PID TargetLock constants
     // =============================================================================
-    public static PIDGains kTargetAngleLockGains = new PIDGains(0.00001, 0.000, 0.0);
+    public static PIDGains kTargetAngleLockGains = new PIDGains(0.005, 0.000, 0.0);
     public static PIDGains kTargetDistanceLockGains = new PIDGains( 0.1, 0.0, 0.0);
 
     public static double kTargetAngleLockMinPower = -1.0;
     public static double kTargetAngleLockMaxPower = 1.0;
     public static double kTargetAngleLockMinInput = -27;
     public static double kTargetAngleLockMaxInput = 27;
-    public static double kTargetAngleLockFrictionFeedforward = 0.071544619136622825;
+    public static double kTargetAngleLockFrictionFeedforward = 0.017;
     public static double kTargetAngleLockLostTargetThreshold = 10;
     public static double kYeetPositiveRampRate = 1.0;
     public static double kYeetCruiseOutput = 1.0;

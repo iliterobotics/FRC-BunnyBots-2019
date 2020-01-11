@@ -55,14 +55,16 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private CommandManager mTeleopCommandManager;
 
-    private double pNow;
+
 
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
 
     protected Codex<Double, ELogitech310> mDriverInputCodex, mOperatorInputCodex;
 
-    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor, Shooter pShooter, Data pData, Catapult pCatapult, Drive pDrive) {
+    public DriverInput(Intake pIntake, Hopper pHopper, Conveyor pConveyor,
+                       Shooter pShooter, Data pData, Catapult pCatapult,
+                       Drive pDrive , CommandManager pTeleopCommandManager , Limelight pLimelight) {
         mIntake = pIntake;
         mHopper = pHopper;
         mConveyor = pConveyor;
@@ -73,9 +75,13 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         mOperatorInputCodex = mData.operatorinput;
         mCatapult = pCatapult;
         mDrive = pDrive;
+        mTeleopCommandManager = pTeleopCommandManager;
+        mLimelight = pLimelight;
 
         this.mDriverInputCodex = mData.driverinput;
         this.mOperatorInputCodex = mData.operatorinput;
+
+
 
         this.mDriverJoystick = new Joystick(0);
         this.mOperatorJoystick = new Joystick(1);
@@ -123,7 +129,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         updateHopper();
         updateDriveTrain();
         updateCatapult();
-        updateLimelightTargetLock();
+        updateLimelightTargetLock(pNow);
         if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_LEFT) || mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_YEET_RIGHT)) {
             updateYeets( pNow );
         }
@@ -171,22 +177,22 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         }
     }
 
-    private void updateLimelightTargetLock() {
-        if ( mOperatorInputCodex.isSet(DriveTeamInputMap.LimelightTargetLock)){
-            mTrackingType = ETrackingType.TARGET;
+    private void updateLimelightTargetLock(double pNow) {
+        System.out.println("UPDATELIMELIGHTTARGETLOCK");
+        if ( mDriverInputCodex.isSet(DriveTeamInputMap.LimelightTargetLock)){
             System.out.println("*******************STARTING TARGET LOCK*************************");
-
-            if(!mTrackingType.equals(mLastTrackingType)) {
-                mLog.error("Requesting command start");
-                mLog.error("Stopping teleop command queue");
-                mTeleopCommandManager.stopRunningCommands(pNow);
-                mTeleopCommandManager.startCommands(new LimelightTargetLock(mDrive, mLimelight, 2, mTrackingType, this, false).setStopWhenTargetLost(false));
-            }
-            else {
             mTrackingType = ETrackingType.TARGET;
+        }else {
+            mTrackingType = ETrackingType.NONE;
             if(mTeleopCommandManager.isRunningCommands()) mTeleopCommandManager.stopRunningCommands(pNow);
-            }
         }
+        if(!mTrackingType.equals(mLastTrackingType) && mTrackingType.equals(ETrackingType.TARGET)) {
+            mLog.error("Requesting command start");
+            mLog.error("Stopping teleop command queue");
+            mTeleopCommandManager.stopRunningCommands(pNow);
+            mTeleopCommandManager.startCommands(new LimelightTargetLock(mDrive, mLimelight, 2, mTrackingType, this, false).setStopWhenTargetLost(false));
+        }
+        mLastTrackingType = mTrackingType;
     }
 
     @Override
