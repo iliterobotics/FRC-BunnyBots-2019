@@ -77,7 +77,7 @@ public class Limelight extends Loop implements ITargetDataProvider {
             setLedMode(mTrackingType.getLedOn() ? LedMode.LED_ON : LedMode.LED_OFF);
             setPipeline(mTrackingType.getPipeline());
         } else {
-            setTracking(ETrackingType.NONE);
+            setTracking(ETrackingType.TARGET);
         }
     }
 

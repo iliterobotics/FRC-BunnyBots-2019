@@ -183,7 +183,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
                 mTeleopCommandManager.startCommands(new LimelightTargetLock(mDrive, mLimelight, 2, mTrackingType, this, false).setStopWhenTargetLost(false));
             }
             else {
-            mTrackingType = ETrackingType.NONE;
+            mTrackingType = ETrackingType.TARGET;
             if(mTeleopCommandManager.isRunningCommands()) mTeleopCommandManager.stopRunningCommands(pNow);
             }
         }
