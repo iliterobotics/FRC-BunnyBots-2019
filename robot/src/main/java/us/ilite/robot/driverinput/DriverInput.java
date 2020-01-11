@@ -173,7 +173,6 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private void updateLimelightTargetLock() {
         if ( mOperatorInputCodex.isSet(DriveTeamInputMap.LimelightTargetLock)){
-            mLimelightTargetLock.init(pNow);
 
             if(!mTrackingType.equals(mLastTrackingType)) {
                 mLog.error("Requesting command start");
