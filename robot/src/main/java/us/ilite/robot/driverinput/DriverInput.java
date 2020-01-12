@@ -21,8 +21,6 @@ import us.ilite.robot.commands.YeetLeftRight;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
 
-import java.lang.annotation.ElementType;
-
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
     protected static final double
@@ -180,16 +178,20 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private void updateLimelightTargetLock(double pNow) {
         System.out.println(mData.limelight.get(ETargetingData.ty));
-        if ( mDriverInputCodex.isSet(DriveTeamInputMap.LimelightTargetLock)){
+        if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_TARGET)){
             if (mData.limelight.get(ETargetingData.ty) != null) {
                 SmartDashboard.putNumber("Distance to Target", mLimelight.calcTargetDistance(72));
             }
             mTrackingType = ETrackingType.TARGET;
-        }else {
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_BALL)) {
+            mTrackingType = ETrackingType.BALL;
+        }
+        else {
             mTrackingType = ETrackingType.NONE;
             if(mTeleopCommandManager.isRunningCommands()) mTeleopCommandManager.stopRunningCommands(pNow);
         }
-        if(!mTrackingType.equals(mLastTrackingType) && mTrackingType.equals(ETrackingType.TARGET)) {
+        if(!mTrackingType.equals(mLastTrackingType) && !mTrackingType.equals(ETrackingType.NONE)) {
             mLog.error("Requesting command start");
             mLog.error("Stopping teleop command queue");
             mTeleopCommandManager.stopRunningCommands(pNow);
