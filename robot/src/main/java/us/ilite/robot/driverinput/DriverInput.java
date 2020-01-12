@@ -177,7 +177,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     private void updateLimelightTargetLock(double pNow) {
-        System.out.println(mData.limelight.get(ETargetingData.ty));
+        System.out.println(mData.selectedTarget.get(ETargetingData.ty));
         if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_TARGET)){
             if (mData.limelight.get(ETargetingData.ty) != null) {
                 SmartDashboard.putNumber("Distance to Target", mLimelight.calcTargetDistance(72));

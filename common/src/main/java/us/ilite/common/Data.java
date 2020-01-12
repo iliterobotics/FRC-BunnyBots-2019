@@ -13,6 +13,7 @@ import us.ilite.common.io.CodexNetworkTables;
 import us.ilite.common.io.CodexNetworkTablesParser;
 import us.ilite.common.io.CodexCsvLogger;
 import us.ilite.common.lib.util.SimpleNetworkTable;
+import us.ilite.common.types.ERawTargetingData;
 import us.ilite.common.types.ETargetingData;
 import us.ilite.common.types.MatchMetadata;
 import us.ilite.common.types.drive.EDriveData;
@@ -38,6 +39,8 @@ public class Data {
     public final Codex<Double, ELogitech310> operatorinput = Codex.of.thisEnum(ELogitech310.class);
     public final Codex<Double, EPowerDistPanel> pdp = Codex.of.thisEnum(EPowerDistPanel.class);
     public Codex<Double, ETargetingData> limelight = Codex.of.thisEnum(ETargetingData.class);
+    public Codex<Double, ETargetingData> selectedTarget = Codex.of.thisEnum(ETargetingData.class);
+    public Codex<Double, ERawTargetingData> rawLimelight = Codex.of.thisEnum(ERawTargetingData.class);
 
     private final List<CodexSender> mSenders = new ArrayList<>();
 

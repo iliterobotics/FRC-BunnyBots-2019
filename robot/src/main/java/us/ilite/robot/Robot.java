@@ -56,6 +56,7 @@ public class Robot extends TimedRobot {
     private final Hopper mHopper = new Hopper(mShooter);
     private final Conveyor mConveyor = new Conveyor(mShooter);
     private final Catapult mCatapult = new Catapult();
+    private final Vision mVision = new Vision(mData, mLimelight);
     private final DriverInput mDriverInput = new DriverInput(mIntake, mHopper, mConveyor, mShooter, mData,
             mCatapult, mDrive , mTeleopCommandManager , mLimelight);
     
@@ -155,7 +156,7 @@ public class Robot extends TimedRobot {
 
         mSettings.loadFromNetworkTables();
 
-        mRunningModules.setModules(mLimelight , mDriverInput , mTeleopCommandManager, mConveyor, mIntake, mHopper, mCatapult);
+        mRunningModules.setModules(mLimelight , mDriverInput , mTeleopCommandManager, mConveyor, mIntake, mHopper, mCatapult, mVision);
         mRunningModules.modeInit(mClock.getCurrentTime());
         mRunningModules.periodicInput(mClock.getCurrentTime());
 

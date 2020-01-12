@@ -172,6 +172,9 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double llCameraToBumperIn = 0; //22.125;
     public static double llCameraAngleDeg = 24.85;
 
+    public static double llFOVVertical = 49.7;
+    public static double llFOVHorizontal = 59.6;
+
     // Left angle coefficients for angle = a + bx + cx^2
     //    a	0.856905324060421
     //    b	-3.01414088331715
