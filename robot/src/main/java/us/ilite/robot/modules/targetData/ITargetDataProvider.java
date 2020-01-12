@@ -61,8 +61,8 @@ public interface ITargetDataProvider {
         // we read the lime light values from mCurrentTarget, but this may be null if update is not
         // called for the first time
 
-        double d = (getCameraHeightIn() - targetHeight) / 
-            Math.tan( getCameraAngleDeg() - getTargetingData().get(ETargetingData.ty) ) - 
+        double d = (targetHeight - getCameraHeightIn()) /
+            Math.tan( Math.toRadians(getCameraAngleDeg() + getTargetingData().get(ETargetingData.ty)) ) -
             getCameraToBumperIn();
 
         return d;

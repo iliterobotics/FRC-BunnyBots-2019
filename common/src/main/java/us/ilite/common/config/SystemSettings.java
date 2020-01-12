@@ -105,7 +105,7 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     public static double kHopperTalonPower = -1d * 0.3333;
     public static double kHopperUnjamTalonPower = 1d;
     public static double kConveyorTalonPower = -1d;
-    public static double kShooterVelocity = 2200;
+    public static double kShooterVelocity = 3750;
 
     // ============================================================================
     // Shooter
@@ -168,9 +168,9 @@ public class SystemSettings extends NetworkTablesConstantsBase {
     // LimeLight Camera Constants
     // Note: These constants need to be recalculated for a specific robot geometry
     // =============================================================================
-    public static double llCameraHeightIn = 58.0;
-    public static double llCameraToBumperIn = 10.0;
-    public static double llCameraAngleDeg = 28.55;
+    public static double llCameraHeightIn = 31.75;
+    public static double llCameraToBumperIn = 0; //22.125;
+    public static double llCameraAngleDeg = 24.85;
 
     // Left angle coefficients for angle = a + bx + cx^2
     //    a	0.856905324060421

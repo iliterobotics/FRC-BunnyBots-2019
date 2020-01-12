@@ -11,16 +11,22 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 import com.team254.lib.drivers.talon.TalonSRXFactory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.opencv.core.Mat;
+import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.control.PIDController;
+import us.ilite.common.types.ETargetingData;
 import us.ilite.lib.drivers.SparkMaxFactory;
 import us.ilite.robot.driverinput.DriverInput;
+import us.ilite.robot.loops.Loop;
 
-public class Shooter extends Module {
+public class Shooter extends Loop {
     private CANSparkMax mCANSparkMax;
     private PIDController kShooterPidController;
     private EShooterState mShooterState;
     private CANEncoder mCANEncoder;
+    private Data mData;
+    private Limelight mLimelight;
 
     private ILog mLog = Logger.createLog(Shooter.class);
 
@@ -30,15 +36,22 @@ public class Shooter extends Module {
     private double mLastCurrent;
     private double mShootingCurrent;
 
+    @Override
+    public void loop(double pNow) {
+        update(pNow);
+    }
+
     public enum EShooterState {
         SHOOTING,
         CLEAN,
         STOP;
     }
 
-    public Shooter() {
+    public Shooter(Data pData, Limelight pLimelight) {
         mCANSparkMax = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kShooterNeoID, CANSparkMaxLowLevel.MotorType.kBrushless);
 
+        mData = pData;
+        mLimelight = pLimelight;
 //        kShooterPidController = new PIDController(SystemSettings.kShooterGains, 0, SystemSettings.kMaxShooterVelocity, SystemSettings.kControlLoopPeriod );
 //        kShooterPidController.setOutputRange( 0, 1 );
 //        kShooterPidController.setSetpoint( SystemSettings.kMaxShooterVelocity );
@@ -75,7 +88,14 @@ public class Shooter extends Module {
         switch (mShooterState) {
             case SHOOTING:
 //                mDesiredVelocity = kShooterPidController.calculate(mTalon.getSelectedSensorVelocity(), pNow);
-                mDesiredVelocity = SystemSettings.kShooterVelocity;
+//                mDesiredVelocity = SystemSettings.kShooterVelocity;
+                if(mData.limelight.get(ETargetingData.ty) != null) {
+                    double distance = mLimelight.calcTargetDistance(72);
+                    mDesiredVelocity = 0.000020395604243142 * (Math.pow ( distance , 4 ) )
+                            - 0.0166740145118 * (Math.pow ( distance , 3 ) )
+                            + 5.009475610878 * (Math.pow ( distance , 2))
+                            - 651.29825023564 * (Math.pow ( distance , 1)) + 33523.96;
+                }
                 mCANSparkMax.getPIDController().setReference(mDesiredVelocity, ControlType.kVelocity);
 //                mCANSparkMax.set(.5);
                 break;
@@ -87,6 +107,7 @@ public class Shooter extends Module {
                 mDesiredVelocity = 0d;
                 mCANSparkMax.set(0.0);
                 break;
+
 
         }
 

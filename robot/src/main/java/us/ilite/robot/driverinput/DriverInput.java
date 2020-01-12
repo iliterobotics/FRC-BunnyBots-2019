@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.lib.util.RangeScale;
+import us.ilite.common.types.ETargetingData;
 import us.ilite.common.types.ETrackingType;
 import us.ilite.common.types.input.ELogitech310;
 import us.ilite.lib.drivers.ECommonControlMode;
@@ -178,9 +179,11 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     private void updateLimelightTargetLock(double pNow) {
-        System.out.println("UPDATELIMELIGHTTARGETLOCK");
+        System.out.println(mData.limelight.get(ETargetingData.ty));
         if ( mDriverInputCodex.isSet(DriveTeamInputMap.LimelightTargetLock)){
-            System.out.println("*******************STARTING TARGET LOCK*************************");
+            if (mData.limelight.get(ETargetingData.ty) != null) {
+                SmartDashboard.putNumber("Distance to Target", mLimelight.calcTargetDistance(72));
+            }
             mTrackingType = ETrackingType.TARGET;
         }else {
             mTrackingType = ETrackingType.NONE;
