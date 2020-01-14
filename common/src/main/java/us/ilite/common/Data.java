@@ -49,7 +49,7 @@ public class Data {
     };
 
     public final Codex[] mLoggedCodexes = new Codex[] {
-        imu, drive, driverinput, /*operatorinput,*/pdp,  limelight,
+        imu, drive, driverinput, /*operatorinput,*/pdp,  limelight, selectedTarget, rawLimelight,
     };
 
     public final Codex[] mDisplayedCodexes = new Codex[] {
