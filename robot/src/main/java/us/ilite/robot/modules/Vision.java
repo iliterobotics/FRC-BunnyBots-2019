@@ -4,6 +4,7 @@ import com.flybotix.hfr.util.lang.EnumUtils;
 import com.team254.lib.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.types.ERawTargetingData;
@@ -18,7 +19,7 @@ public class Vision extends Module {
     private final Data mData;
     private ETrackingType mTrackingType;
 
-    private final double acceptableError = 0.5;
+    private final double acceptableError = 0.1;
     private int selectedTarget = -1;
 
     public Vision(Data pData, Limelight pLimelight) {
@@ -35,7 +36,7 @@ public class Vision extends Module {
     @Override
     public void periodicInput(double pNow) {
         mData.rawLimelight.reset();
-        boolean targetValid = mTable.getEntry("tv").getDouble((Double.NaN)) < 0.0;
+        boolean targetValid = mTable.getEntry("tv").getDouble((Double.NaN)) > 0.0;
         mData.rawLimelight.set(ERawTargetingData.tv, targetValid ? 1.0 : null);
         mTrackingType = mLimelight.getTracking();
         if (targetValid) {
@@ -73,16 +74,17 @@ public class Vision extends Module {
             mData.rawLimelight.set(ERawTargetingData.tvert1, mTable.getEntry("tvert1").getDouble(Double.NaN));
             mData.rawLimelight.set(ERawTargetingData.tvert2, mTable.getEntry("tvert2").getDouble(Double.NaN));
 
-            mData.rawLimelight.set(ERawTargetingData.targetOrdinal, (double) mLimelight.mVisionTarget.ordinal());
-            mData.rawLimelight.set(ERawTargetingData.calcDistToTarget, mLimelight.calcTargetDistance(mLimelight.mVisionTarget));
-            mData.rawLimelight.set(ERawTargetingData.calcAngleToTarget, mLimelight.calcTargetApproachAngle());
+            mData.rawLimelight.set(ERawTargetingData.targetOrdinal, mData.limelight.get(ETargetingData.targetOrdinal));
+            mData.rawLimelight.set(ERawTargetingData.calcDistToTarget, mData.limelight.get(ETargetingData.calcDistToTarget));
+            mData.rawLimelight.set(ERawTargetingData.calcAngleToTarget, mData.limelight.get(ETargetingData.calcAngleToTarget));
 
-            Optional<Translation2d> p = mLimelight.calcTargetLocation(mLimelight.mVisionTarget);
-            if (p.isPresent()) {
-                mData.rawLimelight.set(ERawTargetingData.calcTargetX, p.get().x());
-                mData.rawLimelight.set(ERawTargetingData.calcTargetY, p.get().y());
+            if (mLimelight.mVisionTarget != null) {
+                Optional<Translation2d> p = mLimelight.calcTargetLocation(mLimelight.mVisionTarget);
+                if (p.isPresent()) {
+                    mData.rawLimelight.set(ERawTargetingData.calcTargetX, p.get().x());
+                    mData.rawLimelight.set(ERawTargetingData.calcTargetY, p.get().y());
+                }
             }
-
         }
     }
 
@@ -100,13 +102,18 @@ public class Vision extends Module {
         mData.selectedTarget.reset();
 
         if (mTrackingType.equals(ETrackingType.BALL)) {
-            boolean targetValid = mTable.getEntry("tv").getDouble((Double.NaN)) < 0.0;
+            mData.selectedTarget.set(ETargetingData.tv, mData.rawLimelight.get(ERawTargetingData.tv));
+            boolean targetValid = mData.selectedTarget.isSet(ETargetingData.tv);
             if (targetValid) {
-                if (Math.abs(mData.rawLimelight.get(ERawTargetingData.ta0) - mData.rawLimelight.get(ERawTargetingData.ta1)) < acceptableError) {
+                System.out.println("ty0 = " + mData.rawLimelight.get(ERawTargetingData.ty0));
+                System.out.println("ty1 = " + mData.rawLimelight.get(ERawTargetingData.ty1));
+                if (Math.abs(mData.rawLimelight.get(ERawTargetingData.ty0) - mData.rawLimelight.get(ERawTargetingData.ty1)) < acceptableError) {
                     selectedTarget = mData.rawLimelight.get(ERawTargetingData.tx0) > mData.rawLimelight.get(ERawTargetingData.tx1) ? 0 : 1;
                 } else {
                     selectedTarget = 0;
                 }
+
+                System.out.println("Selected Target" + selectedTarget);
                 mData.selectedTarget.set(ETargetingData.tx, mTable.getEntry("tx" + selectedTarget).getDouble(Double.NaN) * (SystemSettings.llFOVHorizontal / 2));
                 mData.selectedTarget.set(ETargetingData.ty, mTable.getEntry("ty" + selectedTarget).getDouble(Double.NaN) * (SystemSettings.llFOVVertical / 2));
                 mData.selectedTarget.set(ETargetingData.ta, mTable.getEntry("ta" + selectedTarget).getDouble(Double.NaN));

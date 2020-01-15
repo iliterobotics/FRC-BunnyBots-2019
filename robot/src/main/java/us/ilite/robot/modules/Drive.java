@@ -253,10 +253,9 @@ public class Drive extends Loop {
 				break;
 			case TARGET_ANGLE_LOCK:
 
-				Codex<Double, ETargetingData> targetData = mData.limelight;
+				Codex<Double, ETargetingData> targetData = mData.selectedTarget;
 				double pidOutput;
 				if(mTargetAngleLockPid != null && targetData != null && targetData.isSet(ETargetingData.tv) && targetData.get(ETargetingData.tx) != null) {
-
 					//if there is a target in the limelight's fov, lock onto target using feedback loop
 					pidOutput = mTargetAngleLockPid.calculate(-1.0 * targetData.get(ETargetingData.tx), pNow - mPreviousTime);
 					pidOutput = pidOutput + (Math.signum(mTargetAngleLockPid.getError()) * SystemSettings.kTargetAngleLockFrictionFeedforward);
