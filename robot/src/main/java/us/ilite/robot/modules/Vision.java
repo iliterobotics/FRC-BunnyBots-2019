@@ -4,7 +4,6 @@ import com.flybotix.hfr.util.lang.EnumUtils;
 import com.team254.lib.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
 import us.ilite.common.types.ERawTargetingData;
@@ -19,8 +18,14 @@ public class Vision extends Module {
     private final Data mData;
     private ETrackingType mTrackingType;
 
+    private double lastXPosition = 0.0;
+    private double lastYPosition = 0.0;
     private final double acceptableError = 0.1;
+    private final double acceptableXError = 10.0;
+    private final double acceptableYError = 10.0;
     private int selectedTarget = -1;
+
+    private boolean isTracking = false;
 
     public Vision(Data pData, Limelight pLimelight) {
         mData = pData;
@@ -105,13 +110,21 @@ public class Vision extends Module {
             mData.selectedTarget.set(ETargetingData.tv, mData.rawLimelight.get(ERawTargetingData.tv));
             boolean targetValid = mData.selectedTarget.isSet(ETargetingData.tv);
             if (targetValid) {
-                System.out.println("ty0 = " + mData.rawLimelight.get(ERawTargetingData.ty0));
-                System.out.println("ty1 = " + mData.rawLimelight.get(ERawTargetingData.ty1));
-                if (Math.abs(mData.rawLimelight.get(ERawTargetingData.ty0) - mData.rawLimelight.get(ERawTargetingData.ty1)) < acceptableError) {
-                    selectedTarget = mData.rawLimelight.get(ERawTargetingData.tx0) > mData.rawLimelight.get(ERawTargetingData.tx1) ? 0 : 1;
-                } else {
-                    selectedTarget = 0;
+                //System.out.println("ty0 = " + mData.rawLimelight.get(ERawTargetingData.ty0));
+                //System.out.println("ty1 = " + mData.rawLimelight.get(ERawTargetingData.ty1));
+                System.out.println("IsTracking = " + isTracking);
+                if (!isTracking) {
+                    System.out.println("Choosing target logic");
+                    if (Math.abs(mData.rawLimelight.get(ERawTargetingData.ty0) - mData.rawLimelight.get(ERawTargetingData.ty1)) < acceptableError) {
+                        selectedTarget = mData.rawLimelight.get(ERawTargetingData.tx0) > mData.rawLimelight.get(ERawTargetingData.tx1) ? 0 : 1;
+                        isTracking = true;
+                    } else {
+                        selectedTarget = 0;
+                    }
                 }
+
+
+
 
                 System.out.println("Selected Target" + selectedTarget);
                 mData.selectedTarget.set(ETargetingData.tx, mTable.getEntry("tx" + selectedTarget).getDouble(Double.NaN) * (SystemSettings.llFOVHorizontal / 2));
@@ -130,10 +143,18 @@ public class Vision extends Module {
 
                 mData.selectedTarget.set(ETargetingData.calcTargetX, mData.rawLimelight.get(ERawTargetingData.calcTargetX));
                 mData.selectedTarget.set(ETargetingData.calcTargetY, mData.rawLimelight.get(ERawTargetingData.calcTargetY));
+
+                System.out.println("last tx and ty: " + lastXPosition + ", " + lastYPosition);
+                System.out.println("current tx and ty: " + mData.selectedTarget.get(ETargetingData.tx) + ", " + mData.selectedTarget.get(ETargetingData.ty));
+                if (Math.abs(lastXPosition - mData.selectedTarget.get(ETargetingData.tx)) > acceptableXError ||
+                    Math.abs(lastYPosition - mData.selectedTarget.get(ETargetingData.ty)) > acceptableYError) {
+                      isTracking = false;
+                }
+                lastXPosition = mData.selectedTarget.get(ETargetingData.tx);
+                lastYPosition = mData.selectedTarget.get(ETargetingData.ty);
             }
         } else {          //set selectedTarget codex straight from limelight codex
             for (ETargetingData e : EnumUtils.getEnums(ETargetingData.class)) {
-                mData.limelight.get(ETargetingData.ta);
                 mData.selectedTarget.set(e, mData.limelight.get(e));
             }
             System.out.println("SELECTED TARGET FROM LIMELIGHT");
