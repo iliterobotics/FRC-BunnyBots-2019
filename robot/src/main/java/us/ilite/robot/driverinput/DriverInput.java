@@ -191,6 +191,14 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_BALL)) {
             mTrackingType = ETrackingType.BALL;
         }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_TARGET_ZOOM)){
+            if (mData.selectedTarget.get(ETargetingData.ty) != null) {
+//                SmartDashboard.putNumber("Distance to Target", mLimelight.calcTargetDistance(72));
+                  SmartDashboard.putString("Current state of TARGET LOCK" ,  mLimelight.getTracking().toString());
+                mTrackingType = ETrackingType.TARGET_ZOOM;
+            }
+            mTrackingType = ETrackingType.TARGET;
+        }
         else {
             mTrackingType = ETrackingType.NONE;
             if(mTeleopCommandManager.isRunningCommands()) mTeleopCommandManager.stopRunningCommands(pNow);
