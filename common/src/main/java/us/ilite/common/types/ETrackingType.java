@@ -12,11 +12,11 @@ public enum ETrackingType {
     /*CARGO_LEFT(2, -1, false),
     CARGO_RIGHT(3, 1, false),*/
     BALL(2, 0, false),
-    CARGO(3, 0, true),
+    // CARGO(3, 0, true),
     /*LINE_LEFT(4, -1, false),
     LINE_RIGHT(5, 1, false),*/
-    LINE(5, 0, false),
-    NONE(6, 0, false);
+   // LINE(5, 0, false),
+    NONE(0, 0, false);
 
     private final int kPipelineNum;
     private final boolean kLedOn;
