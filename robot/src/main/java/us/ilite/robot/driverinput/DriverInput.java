@@ -54,7 +54,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private CommandManager mTeleopCommandManager;
 
-    private final double acceptableTargetOffsetError = 0.25;
+
 
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
@@ -177,26 +177,27 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     private void updateLimelightTargetLock(double pNow) {
-        double distance = 0;
         System.out.println(mData.selectedTarget.get(ETargetingData.ty));
-//        mLog.error("--------------------Current state of TARGET LOCK----------------"
-//                ,  mLimelight.getTracking().toString());
+        mLog.error("--------------------Current state of TARGET LOCK----------------"
+                ,  mLimelight.getTracking().toString());
         if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_TARGET)){
             if (mData.selectedTarget.get(ETargetingData.ty) != null) {
-                distance = mLimelight.calcTargetDistance(63);
-                SmartDashboard.putNumber("Distance to Target", distance);
+                SmartDashboard.putNumber("Distance to Target", mLimelight.calcTargetDistance(72));
                 SmartDashboard.putString("Current state of TARGET LOCK" ,  mLimelight.getTracking().toString());
-                SmartDashboard.putNumber("tx", mData.selectedTarget.get(ETargetingData.tx));
+
             }
-            if ( distance > 48 ) {
-                mTrackingType = ETrackingType.TARGET_ZOOM;
-            }
-            else {
-                mTrackingType = ETrackingType.TARGET;
-            }
+            mTrackingType = ETrackingType.TARGET;
         }
         else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_BALL)) {
             mTrackingType = ETrackingType.BALL;
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_TARGET_ZOOM)){
+            if (mData.selectedTarget.get(ETargetingData.ty) != null) {
+//                SmartDashboard.putNumber("Distance to Target", mLimelight.calcTargetDistance(72));
+                  SmartDashboard.putString("Current state of TARGET LOCK" ,  mLimelight.getTracking().toString());
+                mTrackingType = ETrackingType.TARGET_ZOOM;
+            }
+            mTrackingType = ETrackingType.TARGET;
         }
         else {
             mTrackingType = ETrackingType.NONE;

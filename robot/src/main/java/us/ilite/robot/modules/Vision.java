@@ -21,7 +21,6 @@ public class Vision extends Module {
     private double lastXPosition = 0.0;
     private double lastYPosition = 0.0;
     private final double acceptableError = 0.1;
-    private final double acceptableInchError = 2.0; // Should tune to match 18 inches eventually
     private final double acceptableXError = 10.0;
     private final double acceptableYError = 10.0;
     private int selectedTarget = -1;
@@ -121,17 +120,6 @@ public class Vision extends Module {
                         isTracking = true;
                     } else {
                         selectedTarget = 0;
-                    }
-                    if ( mData.rawLimelight.get(ERawTargetingData.tx1) > mData.rawLimelight.get(ERawTargetingData.tx0) ) {
-                        selectedTarget = mData.rawLimelight.get(ERawTargetingData.tx2) > mData.rawLimelight.get(ERawTargetingData.tx1) ? 1 : 2;
-                        isTracking = true;
-                    }
-                    else if ( mData.rawLimelight.get(ERawTargetingData.tx0) > mData.rawLimelight.get(ERawTargetingData.tx1 )) {
-                        selectedTarget = mData.rawLimelight.get(ERawTargetingData.tx0) > mData.rawLimelight.get(ERawTargetingData.tx2) ? 2 : 0;
-                        isTracking = true;
-                    }
-                    else {
-                        selectedTarget = 1;
                     }
                 }
 
