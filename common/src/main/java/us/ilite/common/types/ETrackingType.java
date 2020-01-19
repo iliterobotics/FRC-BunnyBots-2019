@@ -9,8 +9,8 @@ public enum ETrackingType {
     Add one to prioritize right-hand targets.
     */
     TARGET(1, 0, true),
-    BALL(3, 0, false),
-    TARGET_ZOOM( 2, 0, true),
+    BALL(2, 0, false),
+    TARGET_ZOOM( 3, 0, true),
     // CARGO(3, 0, true),
     /*LINE_LEFT(4, -1, false),
     LINE_RIGHT(5, 1, false),*/
