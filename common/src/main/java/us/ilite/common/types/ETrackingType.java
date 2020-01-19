@@ -1,21 +1,10 @@
 package us.ilite.common.types;
 
 public enum ETrackingType {
-
-    /*
-    Target - 0
-    Cargo - 2
-    Line - 4
-    Add one to prioritize right-hand targets.
-    */
+    NONE(0, 0, false),
     TARGET(1, 0, true),
-    BALL(3, 0, false),
     TARGET_ZOOM( 2, 0, true),
-    // CARGO(3, 0, true),
-    /*LINE_LEFT(4, -1, false),
-    LINE_RIGHT(5, 1, false),*/
-   // LINE(5, 0, false),
-    NONE(0, 0, false);
+    BALL(3, 0, false);
 
     private final int kPipelineNum;
     private final boolean kLedOn;

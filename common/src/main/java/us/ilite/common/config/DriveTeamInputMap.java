@@ -12,7 +12,7 @@ public class DriveTeamInputMap {
 
     DRIVER_LIMELIGHT_LOCK_TARGET = ELogitech310.B_BTN,
     DRIVER_LIMELIGHT_LOCK_BALL = ELogitech310.Y_BTN,
-    DRIVER_LIMELIGHT_TARGET_ZOOM = ELogitech310.A_BTN,
+    DRIVER_LIMELIGHT_LOCK_TARGET_ZOOM = ELogitech310.A_BTN,
             
     OPERATOR_SHOOT = ELogitech310.A_BTN/*R_BTN*/,               //hopper forward, conveyor up, shooter shoot
     OPERATOR_INTAKE = ELogitech310.LEFT_TRIGGER_AXIS,           //intake in/up

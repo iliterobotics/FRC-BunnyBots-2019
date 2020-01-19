@@ -123,9 +123,6 @@ public class Vision extends Module {
                     }
                 }
 
-
-
-
                 System.out.println("Selected Target" + selectedTarget);
                 mData.selectedTarget.set(ETargetingData.tx, mTable.getEntry("tx" + selectedTarget).getDouble(Double.NaN) * (SystemSettings.llFOVHorizontal / 2));
                 mData.selectedTarget.set(ETargetingData.ty, mTable.getEntry("ty" + selectedTarget).getDouble(Double.NaN) * (SystemSettings.llFOVVertical / 2));
@@ -157,7 +154,7 @@ public class Vision extends Module {
             for (ETargetingData e : EnumUtils.getEnums(ETargetingData.class)) {
                 mData.selectedTarget.set(e, mData.limelight.get(e));
             }
-            System.out.println("SELECTED TARGET FROM LIMELIGHT");
+//            System.out.println("SELECTED TARGET FROM LIMELIGHT");
         }
     }
 }
