@@ -198,6 +198,9 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_BALL)) {
             mTrackingType = ETrackingType.BALL;
         }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_BALL_DUAL)) {
+            mTrackingType = ETrackingType.BALL_DUAL;
+        }
         else {
             mTrackingType = ETrackingType.NONE;
             if(mTeleopCommandManager.isRunningCommands()) mTeleopCommandManager.stopRunningCommands(pNow);
