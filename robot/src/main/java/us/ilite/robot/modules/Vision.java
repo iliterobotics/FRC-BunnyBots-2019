@@ -12,6 +12,8 @@ import us.ilite.common.types.ETrackingType;
 
 import java.util.Optional;
 
+import static java.lang.Math.*;
+
 public class Vision extends Module {
     private Limelight mLimelight;
     private final NetworkTable mTable = NetworkTableInstance.getDefault().getTable("limelight");
@@ -110,12 +112,8 @@ public class Vision extends Module {
             mData.selectedTarget.set(ETargetingData.tv, mData.rawLimelight.get(ERawTargetingData.tv));
             boolean targetValid = mData.selectedTarget.isSet(ETargetingData.tv);
             if (targetValid) {
-                //System.out.println("ty0 = " + mData.rawLimelight.get(ERawTargetingData.ty0));
-                //System.out.println("ty1 = " + mData.rawLimelight.get(ERawTargetingData.ty1));
-                System.out.println("IsTracking = " + isTracking);
                 if (!isTracking) {
-                    System.out.println("Choosing target logic");
-                    if (Math.abs(mData.rawLimelight.get(ERawTargetingData.ty0) - mData.rawLimelight.get(ERawTargetingData.ty1)) < acceptableError) {
+                    if (abs(mData.rawLimelight.get(ERawTargetingData.ty0) - mData.rawLimelight.get(ERawTargetingData.ty1)) < acceptableError) {
                         selectedTarget = mData.rawLimelight.get(ERawTargetingData.tx0) > mData.rawLimelight.get(ERawTargetingData.tx1) ? 0 : 1;
                         isTracking = true;
                     } else {
@@ -143,9 +141,8 @@ public class Vision extends Module {
 
                 System.out.println("last tx and ty: " + lastXPosition + ", " + lastYPosition);
                 System.out.println("current tx and ty: " + mData.selectedTarget.get(ETargetingData.tx) + ", " + mData.selectedTarget.get(ETargetingData.ty));
-                if (Math.abs(lastXPosition - mData.selectedTarget.get(ETargetingData.tx)) > acceptableXError ||
-                    Math.abs(lastYPosition - mData.selectedTarget.get(ETargetingData.ty)) > acceptableYError) {
-                      isTracking = false;
+                if (abs(lastXPosition - mData.selectedTarget.get(ETargetingData.tx)) > acceptableXError || abs(lastYPosition - mData.selectedTarget.get(ETargetingData.ty)) > acceptableYError) {
+                    isTracking = false;
                 }
                 lastXPosition = mData.selectedTarget.get(ETargetingData.tx);
                 lastYPosition = mData.selectedTarget.get(ETargetingData.ty);

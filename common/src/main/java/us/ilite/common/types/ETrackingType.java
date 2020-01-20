@@ -5,7 +5,8 @@ public enum ETrackingType {
     TARGET(1, 0, true),
     TARGET_ZOOM( 2, 0, true),
     BALL(3, 0, false),
-    BALL_DUAL(4, 0, false);
+    BALL_DUAL(4, 0, false),
+    BALL_TRI(5, 0, false);
 
     private final int kPipelineNum;
     private final boolean kLedOn;
