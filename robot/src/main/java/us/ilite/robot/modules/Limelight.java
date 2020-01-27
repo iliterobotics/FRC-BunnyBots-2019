@@ -30,7 +30,7 @@ public class Limelight extends Loop implements ITargetDataProvider {
     private final Data mData;
 
     private ETrackingType mTrackingType = null;
-    private VisionTarget mVisionTarget = null;
+    public VisionTarget mVisionTarget = null;
 
     public Limelight(Data pData) {
         this.mData = pData;
@@ -146,7 +146,7 @@ public class Limelight extends Loop implements ITargetDataProvider {
 
     @Override
     public Codex<Double, ETargetingData> getTargetingData() {
-        return mData.limelight;
+        return mData.selectedTarget;
     }
 
     @Override

@@ -21,8 +21,6 @@ import us.ilite.robot.commands.YeetLeftRight;
 import us.ilite.robot.modules.*;
 import us.ilite.robot.modules.Module;
 
-import java.lang.annotation.ElementType;
-
 public class DriverInput extends Module implements IThrottleProvider, ITurnProvider {
 
     protected static final double
@@ -56,7 +54,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private CommandManager mTeleopCommandManager;
 
-
+    private double mLimelightZoomThreshold = 7.0;
 
 
     private CheesyDriveHelper mCheesyDriveHelper = new CheesyDriveHelper(SystemSettings.kCheesyDriveGains);
@@ -179,17 +177,38 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     private void updateLimelightTargetLock(double pNow) {
-        System.out.println(mData.limelight.get(ETargetingData.ty));
-        if ( mDriverInputCodex.isSet(DriveTeamInputMap.LimelightTargetLock)){
-            if (mData.limelight.get(ETargetingData.ty) != null) {
+        if ( mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_TARGET)){
+            if (mData.selectedTarget.get(ETargetingData.ty) != null) {
                 SmartDashboard.putNumber("Distance to Target", mLimelight.calcTargetDistance(72));
             }
             mTrackingType = ETrackingType.TARGET;
-        }else {
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_TARGET_ZOOM)){
+            if (mData.selectedTarget.get(ETargetingData.ty) != null) {
+                if (Math.abs(mData.selectedTarget.get(ETargetingData.tx)) < mLimelightZoomThreshold) {
+                    mLimelight.setTracking(ETrackingType.TARGET_ZOOM);
+                    System.out.println("ZOOMING");
+                } else {
+                    mLimelight.setTracking(ETrackingType.TARGET);
+                }
+            } else {
+                mTrackingType = ETrackingType.TARGET;
+            }
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_BALL)) {
+            mTrackingType = ETrackingType.BALL;
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_BALL_DUAL)) {
+            mTrackingType = ETrackingType.BALL_DUAL;
+        }
+        else if (mDriverInputCodex.isSet(DriveTeamInputMap.DRIVER_LIMELIGHT_LOCK_BALL_TRI)) {
+            mTrackingType = ETrackingType.BALL_TRI;
+        }
+        else {
             mTrackingType = ETrackingType.NONE;
             if(mTeleopCommandManager.isRunningCommands()) mTeleopCommandManager.stopRunningCommands(pNow);
         }
-        if(!mTrackingType.equals(mLastTrackingType) && mTrackingType.equals(ETrackingType.TARGET)) {
+        if(!mTrackingType.equals(mLastTrackingType) && !mTrackingType.equals(ETrackingType.NONE)) {
             mLog.error("Requesting command start");
             mLog.error("Stopping teleop command queue");
             mTeleopCommandManager.stopRunningCommands(pNow);
