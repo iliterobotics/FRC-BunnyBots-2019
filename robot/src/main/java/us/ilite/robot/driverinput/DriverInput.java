@@ -24,6 +24,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     protected static final double
             DRIVER_SUB_WARP_AXIS_THRESHOLD = 0.5;
+    private static Data mData;
     private ILog mLog = Logger.createLog(DriverInput.class);
 
 
@@ -32,7 +33,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 //    private final CommandManager mAutonomousCommandManager;
 //    private final Limelight mLimelight;
     private final Drive mDrive;
-    private final Data mData;
+    private DriveModule mNewDrive;
     private Catapult mCatapult;
     private Shooter mShooter;
     private Conveyor mConveyor;
@@ -77,7 +78,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     @Override
     public double getThrottle() {
-        if(mData.driverinput.isSet(DriveTeamInputMap.DRIVER_THROTTLE_AXIS)) {
+        if (mData.driverinput.isSet(DriveTeamInputMap.DRIVER_THROTTLE_AXIS)) {
             return -mData.driverinput.get(DriveTeamInputMap.DRIVER_THROTTLE_AXIS);
         } else {
             return 0.0;
@@ -85,8 +86,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
     }
 
     @Override
-    public double getTurn() {
-
+    public  double getTurn() {
         if (mData.driverinput.isSet(DriveTeamInputMap.DRIVER_TURN_AXIS)) {
             return mData.driverinput.get(DriveTeamInputMap.DRIVER_TURN_AXIS) * ((1 - mData.driverinput.get(DriveTeamInputMap.DRIVER_REDUCE_TURN_AXIS) + 0.3));
         } else {
@@ -185,7 +185,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
 
     private void updateDriveTrain() {
 
-        mDrive.setDriveControlMode(Drive.DriveControlMode.VELOCITY);
+      //  mDrive.setDriveControlMode(Drive.DriveControlMode.VELOCITY);
 
         double throttle = getThrottle();
         double rotate = getTurn();
@@ -201,12 +201,15 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         SmartDashboard.putNumber("Right Drive Demand", rightDemand);
 
 
-        double leftSetpoint = leftDemand * getMaxVelocity();//SystemSettings.kDriveTrainMaxVelocity;
-        double rightSetpoint = rightDemand * getMaxVelocity();//SystemSettings.kDriveTrainMaxVelocity;
+      //  double leftSetpoint = leftDemand * getMaxVelocity();//SystemSettings.kDriveTrainMaxVelocity;
+      //  double rightSetpoint = rightDemand * getMaxVelocity();//SystemSettings.kDriveTrainMaxVelocity;
 //        mDriveMessage = new DriveMessage(leftDemand * SystemSettings.kDriveTrainMaxVelocity, rightDemand * SystemSettings.kDriveTrainMaxVelocity, ECommonControlMode.VELOCITY);
 //        mDriveMessage = new DriveMessage(leftDemand, rightDemand, ECommonControlMode.PERCENT_OUTPUT);
-        mDriveMessage = new DriveMessage(leftSetpoint, rightSetpoint, ECommonControlMode.VELOCITY);
-        mDrive.setDriveMessage(mDriveMessage);
+
+        //TODO No Longer using Drive Message
+       // mDriveMessage = new DriveMessage(leftSetpoint, rightSetpoint, ECommonControlMode.VELOCITY);
+      //  mDrive.setDriveMessage(mDriveMessage);
+        mNewDrive.setDriveState(DriveModule.EDriveState.PERCENT_OUTPUT);
 
 //        mDrive.getDriveHardware().
 
