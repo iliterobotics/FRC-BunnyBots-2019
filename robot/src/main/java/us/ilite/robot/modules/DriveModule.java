@@ -10,7 +10,6 @@ import us.ilite.robot.driverinput.DriverInput;
 
 
 public class DriveModule extends Module{
-
     private CANSparkMax mLeftMaster;
     private CANSparkMax mLeftMiddle;
     private CANSparkMax mLeftFollower;
@@ -25,6 +24,7 @@ public class DriveModule extends Module{
     private EDriveState mDriveState;
     private Data mData;
 
+    private double mLeftDemand, mRightDemand;
 
     public DriveModule() {
         mLeftMaster = SparkMaxFactory.createDefaultSparkMax(SystemSettings.kDriveLeftMasterTalonId, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -68,27 +68,38 @@ public class DriveModule extends Module{
     public void update(double pNow) {
         switch (mDriveState) {
             case PERCENT_OUTPUT:
-               // setDriveState(EDriveState.PERCENT_OUTPUT);
+                mLeftMaster.set(mLeftDemand);
+                mRightMaster.set(mRightDemand);
+                break;
             case NONE:
                 mRightMaster.set(0);
                 mLeftMaster.set(0);
+                break;
+            case VELOCITY:
+                mLeftMaster.set(mLeftDemand*SystemSettings.kDriveTrainMaxVelocity);
+                mRightMaster.set(mRightDemand*SystemSettings.kDriveTrainMaxVelocity);
+                break;
         }
-
     }
 
     @Override
     public void shutdown(double pNow) {
+        mLeftMaster.set(0);
+        mRightMaster.set(0);
+    }
 
-    }
-    public void setDriveState(EDriveState EState, double leftDemand, double rightDemand) {
+    public void setDriveState(EDriveState EState) {
         mDriveState = EState;
-        mLeftMaster.set(leftDemand);
-        mRightMaster.set(rightDemand);
     }
+
     public enum EDriveState {
         PERCENT_OUTPUT,
         NONE,
+        VELOCITY
     }
 
-
+    public void setDesiredPct(double pLeftDemand, double pRightDemand) {
+        mLeftDemand = pLeftDemand;
+        mRightDemand = pRightDemand;
+    }
 }

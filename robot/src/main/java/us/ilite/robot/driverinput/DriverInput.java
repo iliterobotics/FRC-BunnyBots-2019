@@ -190,12 +190,13 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         double throttle = getThrottle();
         double rotate = getTurn();
 
-
         double leftDemand = ( throttle + rotate ) /* SystemSettings.kDriveTrainMaxVelocity */;
         double rightDemand = ( throttle - rotate )/* * SystemSettings.kDriveTrainMaxVelocity*/;
 
         leftDemand = Math.abs(leftDemand) > 0.01 ? leftDemand : 0.0; //Handling Deadband
         rightDemand = Math.abs(rightDemand) > 0.01 ? rightDemand : 0.0; //Handling Deadband
+
+        mNewDrive.setDesiredPct(leftDemand, rightDemand);
 
         SmartDashboard.putNumber("Left Drive Demand", leftDemand);
         SmartDashboard.putNumber("Right Drive Demand", rightDemand);
@@ -209,7 +210,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         //TODO No Longer using Drive Message
        // mDriveMessage = new DriveMessage(leftSetpoint, rightSetpoint, ECommonControlMode.VELOCITY);
       //  mDrive.setDriveMessage(mDriveMessage);
-        mNewDrive.setDriveState(DriveModule.EDriveState.PERCENT_OUTPUT, leftDemand, rightDemand);
+        mNewDrive.setDriveState(DriveModule.EDriveState.PERCENT_OUTPUT);
 
 //        mDrive.getDriveHardware().
 
