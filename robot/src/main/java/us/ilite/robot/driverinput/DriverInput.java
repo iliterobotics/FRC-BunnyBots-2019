@@ -209,7 +209,7 @@ public class DriverInput extends Module implements IThrottleProvider, ITurnProvi
         //TODO No Longer using Drive Message
        // mDriveMessage = new DriveMessage(leftSetpoint, rightSetpoint, ECommonControlMode.VELOCITY);
       //  mDrive.setDriveMessage(mDriveMessage);
-        mNewDrive.setDriveState(DriveModule.EDriveState.PERCENT_OUTPUT);
+        mNewDrive.setDriveState(DriveModule.EDriveState.PERCENT_OUTPUT, leftDemand, rightDemand);
 
 //        mDrive.getDriveHardware().
 

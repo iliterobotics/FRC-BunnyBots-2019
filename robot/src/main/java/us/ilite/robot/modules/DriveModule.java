@@ -68,7 +68,7 @@ public class DriveModule extends Module{
     public void update(double pNow) {
         switch (mDriveState) {
             case PERCENT_OUTPUT:
-
+               // setDriveState(EDriveState.PERCENT_OUTPUT);
             case NONE:
                 mRightMaster.set(0);
                 mLeftMaster.set(0);
@@ -80,8 +80,10 @@ public class DriveModule extends Module{
     public void shutdown(double pNow) {
 
     }
-    public void setDriveState(EDriveState EState) {
+    public void setDriveState(EDriveState EState, double leftDemand, double rightDemand) {
         mDriveState = EState;
+        mLeftMaster.set(leftDemand);
+        mRightMaster.set(rightDemand);
     }
     public enum EDriveState {
         PERCENT_OUTPUT,
