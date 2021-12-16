@@ -22,7 +22,6 @@ public class DriveModule extends Module{
     private CANEncoder mLeftEncoder;
 
     private EDriveState mDriveState;
-    private Data mData;
 
     private double mLeftDemand, mRightDemand;
 

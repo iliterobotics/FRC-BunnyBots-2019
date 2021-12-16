@@ -1,5 +1,8 @@
 package us.ilite.robot.modules;
 
+import us.ilite.common.Data;
+import us.ilite.robot.Robot;
+
 /**
  * The Module class defines how code written to control a specific subsystem (shooter, elevator, arm, etc.).
  * It also contains optional design patterns to adhere to.
@@ -11,6 +14,8 @@ public abstract class Module {
     Although the Clock class removes the need for the now parameter, we will keep it since it may be useful to have
     in order to simulate certain conditions or edge cases.
      */
+
+    private Data db = Robot.DATA;
 
     /**
      * Runs when we init a new robot mode, for example teleopInit() or autonomousInit()

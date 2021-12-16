@@ -42,6 +42,9 @@ public class Robot extends TimedRobot {
     private final Timer initTimer = new Timer();
     private final Clock mClock = new Clock();
     private final Data mData = new Data();
+
+    public static final Data DATA = new Data();
+
     private final SystemSettings mSettings = new SystemSettings();
     private final PowerDistributionPanel pdp = new PowerDistributionPanel(SystemSettings.kPowerDistPanelAddress);
     private final DriveController mDriveController = new DriveController(new HenryProfile());
