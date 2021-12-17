@@ -15,7 +15,7 @@ public abstract class Module {
     in order to simulate certain conditions or edge cases.
      */
 
-    private Data db = Robot.DATA;
+    public Data db = Robot.DATA;
 
     /**
      * Runs when we init a new robot mode, for example teleopInit() or autonomousInit()

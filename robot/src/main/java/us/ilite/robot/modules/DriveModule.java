@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import us.ilite.common.Data;
 import us.ilite.common.config.SystemSettings;
+import us.ilite.common.types.drive.EDriveData;
 import us.ilite.lib.drivers.SparkMaxFactory;
 import us.ilite.robot.driverinput.DriverInput;
 
@@ -60,7 +61,10 @@ public class DriveModule extends Module{
 
     @Override
     public void periodicInput(double pNow) {
-
+        db.drive.set(EDriveData.LEFT_CURRENT, mLeftMaster.getOutputCurrent());
+        db.drive.set(EDriveData.RIGHT_CURRENT, mLeftMaster.getOutputCurrent());
+        db.drive.set(EDriveData.LEFT_VEL_IPS, mLeftEncoder.getVelocity()/1150.0);
+        db.drive.set(EDriveData.RIGHT_VEL_IPS, mLeftEncoder.getVelocity()/1150.0);
     }
 
     @Override
